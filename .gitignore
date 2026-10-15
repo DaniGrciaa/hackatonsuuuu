@@ -1,0 +1,6 @@
+.venv/
+debug/
+salida/
+data/
+__pycache__/
+.DS_Store
