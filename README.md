@@ -164,6 +164,16 @@ Medido **por focos** (cada mancha es un objeto, con 5 px de tolerancia):
 | Extra, marcas a mano de Jesús (solo zonas anotadas) | — | 1,00 | 0,82 |
 | Práctica 26-07, regla física de QuickFire (B11 + B12 > 1, bandas crudas) | 264 / 769 | 0,82 | 0,29 |
 
+**Ajuste de sensibilidad (barrido con las marcas a mano de Jesús en las 3 escenas, la Wildfire y 4 escenas sin incendio):**
+
+| `RED_RATIO` / `Z_CTX` | Marcas de Jesús: recall por píxel | Zonas de fuego anotadas halladas | Escenas sin incendio: píxeles falsos |
+|---|---|---|---|
+| 0,30 / 2,5 | 0,39 | 100 % | 0 · 30 · 34 · 235 |
+| 0,35 / 3,0 | 0,37 | 100 % | 0 · 5 · 5 · 33 |
+| **0,40 / 3,0 (elegido)** | 0,36 | 100 % | **0 · 1 · 1 · 9** |
+
+Más sensibilidad no encuentra ningún foco anotado más; solo engorda los ya hallados y multiplica los falsos (revisados a ojo: suelo rojizo, tejados y bordes de nube). Los 2 puntos que parecen fuego real en la escena del 9 de junio (la Wildfire también los pinta) se detectan con 0,40 / 3,0.
+
 **Escenas sin incendio** (`python tools_c/negativas.py`): 0, 1, 1 y 9 píxeles de fuego, y 0 % de cicatriz en las cuatro. Es el valor intermedio de un barrido de `RED_RATIO` (0,30 daba 0 / 16 / 16 / 108 píxeles y 0,45 daba 0 / 0 / 0 / 3, pero bajaba el recall frente a las marcas de Jesús a 0,68). **Se eligió mirando estas escenas y las de referencia: no hay ninguna reservada**, así que las cifras son optimistas.
 
 - **La Wildfire se usa solo para validar: `core/` no la lee** y no entra en ninguna decisión del programa. Es una referencia ruidosa: el script de Copernicus marca como fuego todo lo muy brillante en la SWIR, y también pinta de rosa suelo pálido, minas y parcelas. Por eso el recall contra ella subestima al detector. `python tools_c/comparar_wildfire.py --montaje` lo hace visible: de los 36 objetos de Niebla que no detectamos, **35 son brillantes pero no naranjas en la SWIR** (suelo pálido probable) y 1 no llega al umbral de brillo. Si se suponen no-fuego, el recall sube a 0,98 (Niebla) y 1,00 (extra); es una **estimación**, comprobada a ojo con 6 de los 36 casos en el montaje, no una medida.
