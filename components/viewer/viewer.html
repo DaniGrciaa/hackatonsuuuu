@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mesa de luz</title>
+<style>
+:root {
+  --slate: #101418;
+  --slate-2: #161b21;
+  --slate-3: #1e252d;
+  --line: #2b343e;
+  --line-2: #3a4551;
+  --ink: #e8e2d4;
+  --ink-2: #a9a497;
+  --ink-3: #737066;
+  --amber: #ffb000;
+  --amber-dim: #8a6410;
+  --ember: #e8590c;
+  --ember-hot: #ff2e2e;
+  --mono: ui-monospace, "JetBrains Mono", "Cascadia Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --sans: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --iz: 1;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--slate); color: var(--ink); font: 14px/1.45 var(--sans); }
+body { overflow: hidden; }
+button { font: inherit; color: inherit; }
+button:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+
+#app { display: grid; grid-template-rows: auto 1fr auto; height: 100vh; }
+
+/* ------------------------------------------------------------------ barra superior */
+.bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding: 10px 14px;
+  border-bottom: 1px solid var(--line); background: var(--slate-2); }
+.brand { display: flex; align-items: baseline; gap: 10px; margin-right: auto; min-width: 0; }
+.brand .tag { font: 600 11px/1 var(--mono); letter-spacing: .14em; color: var(--amber); text-transform: uppercase;
+  border: 1px solid var(--amber-dim); padding: 4px 6px; border-radius: 2px; }
+.brand .scene { font: 600 15px/1.2 var(--sans); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.group { display: flex; align-items: center; gap: 6px; }
+.group > .lbl { font: 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); margin-right: 2px; }
+.seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 4px; overflow: hidden; }
+.seg button { background: transparent; border: 0; padding: 6px 10px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  color: var(--ink-2); border-right: 1px solid var(--line-2); }
+.seg button:last-child { border-right: 0; }
+.seg button:hover { color: var(--ink); background: var(--slate-3); }
+.seg button[aria-pressed="true"] { color: #1a1206; background: var(--amber); }
+.seg svg { width: 16px; height: 16px; flex: none; }
+.tool { background: transparent; border: 1px solid var(--line-2); border-radius: 4px; padding: 6px 10px; cursor: pointer;
+  color: var(--ink-2); display: inline-flex; align-items: center; gap: 6px; }
+.tool:hover { color: var(--ink); background: var(--slate-3); }
+.tool[aria-pressed="true"] { color: var(--amber); border-color: var(--amber-dim); }
+.tool svg { width: 16px; height: 16px; }
+
+/* ------------------------------------------------------------------ cuerpo */
+main { display: grid; grid-template-columns: 320px 1fr; min-height: 0; }
+.panel { border-right: 1px solid var(--line); background: var(--slate-2); overflow-y: auto; min-height: 0; }
+.panel h2 { font: 600 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3);
+  margin: 0; padding: 14px 14px 8px; display: flex; justify-content: space-between; }
+
+/* cifras */
+.figures { padding: 0 14px 6px; display: grid; gap: 10px; }
+.fig { display: grid; grid-template-columns: 74px 1fr; gap: 10px; align-items: baseline; }
+.fig .num { font: 600 20px/1.1 var(--mono); color: var(--amber); text-align: right; font-variant-numeric: tabular-nums; }
+.fig .num.ember { color: #ff6a3d; }
+.fig .txt { color: var(--ink); font-size: 13px; }
+.note { margin: 8px 14px 4px; padding: 8px 10px; border-left: 2px solid var(--amber-dim); color: var(--ink-2); font-size: 12px; background: rgba(255,176,0,.04); }
+
+/* capas */
+.layers { list-style: none; margin: 0; padding: 0 8px 14px; }
+.layer { position: relative; border: 1px solid transparent; border-radius: 4px; padding: 8px 6px 8px 8px; margin-bottom: 2px; }
+.layer:hover, .layer:focus-within { border-color: var(--line-2); background: var(--slate-3); }
+.layer .row { display: flex; align-items: center; gap: 9px; }
+.swatch { width: 26px; height: 18px; flex: none; border-radius: 2px; image-rendering: pixelated; border: 1px solid rgba(255,255,255,.12); }
+.layer .name { flex: 1; min-width: 0; font-weight: 500; font-size: 13.5px; line-height: 1.25; }
+.layer .meta { font: 11px/1.2 var(--mono); color: var(--ink-3); margin-top: 2px; font-variant-numeric: tabular-nums; }
+.switch { position: relative; width: 34px; height: 18px; border-radius: 9px; border: 1px solid var(--line-2); background: var(--slate);
+  cursor: pointer; flex: none; padding: 0; }
+.switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 12px; height: 12px; border-radius: 50%; background: var(--ink-3);
+  transition: transform .18s ease, background .18s ease; }
+.switch[aria-checked="true"] { border-color: var(--amber-dim); background: #2a2008; }
+.switch[aria-checked="true"]::after { transform: translateX(16px); background: var(--amber); }
+.layer .controls { display: flex; align-items: center; gap: 8px; margin: 6px 0 0 35px; }
+.layer input[type=range] { flex: 1; accent-color: var(--amber); height: 14px; min-width: 0; }
+.layer .pct { font: 11px/1 var(--mono); color: var(--ink-3); width: 34px; text-align: right; }
+.solo { background: transparent; border: 1px solid var(--line-2); border-radius: 3px; font-size: 11px; padding: 2px 7px; cursor: pointer; color: var(--ink-2); white-space: nowrap; }
+.solo:hover { color: var(--ink); border-color: var(--ink-3); }
+.layer.off .name { color: var(--ink-2); }
+.layer.off .controls { opacity: .45; }
+.layer.broken .name { color: var(--ink-3); text-decoration: line-through; text-decoration-color: var(--ink-3); }
+.chip { font: 600 10px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 3px 5px; border-radius: 2px; border: 1px solid; flex: none; }
+.chip.err { color: #ff8a7a; border-color: #6b2a22; }
+.chip.na { color: var(--ink-3); border-color: var(--line-2); }
+.layer .why { font-size: 12px; color: var(--ink-2); margin: 4px 0 0 35px; }
+
+.tip { position: fixed; z-index: 50; max-width: 290px; padding: 10px 12px; background: #0b0e11; border: 1px solid var(--line-2);
+  border-left: 3px solid var(--amber); border-radius: 3px; font-size: 12.5px; pointer-events: none; opacity: 0; transition: opacity .12s;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5); }
+.tip.show { opacity: 1; }
+.tip b { display: block; margin-bottom: 4px; font-size: 13px; }
+.tip .kv { font: 11.5px/1.6 var(--mono); color: var(--ink-2); margin-top: 6px; font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------------------------------ mesa */
+.stage { position: relative; overflow: hidden; min-height: 0; cursor: grab; touch-action: none;
+  background-color: #0c0f12;
+  background-image:
+    linear-gradient(rgba(255,176,0,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,176,0,.035) 1px, transparent 1px);
+  background-size: 40px 40px; }
+.stage.dragging { cursor: grabbing; }
+.viewport { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.plate { position: relative; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.2,.7,.2,1); }
+.plate > img.base { display: block; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none;
+  box-shadow: 0 0 0 calc(1px * var(--iz)) var(--line-2), 0 calc(20px * var(--iz)) calc(60px * var(--iz)) rgba(0,0,0,.6); }
+.lens-img { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; display: none; }
+.lens-ring { position: absolute; pointer-events: none; display: none; border-radius: 50%;
+  border: calc(2px * var(--iz)) solid var(--amber); box-shadow: 0 0 0 calc(1px * var(--iz)) rgba(0,0,0,.7); }
+.lens-ring span { position: absolute; left: 50%; top: 100%; transform: translate(-50%, calc(6px * var(--iz))) scale(var(--iz)); transform-origin: 50% 0;
+  font: 600 11px/1 var(--mono); color: #1a1206; background: var(--amber); padding: 3px 5px; border-radius: 2px; white-space: nowrap; }
+
+#sheets { position: absolute; inset: 0; transform-style: preserve-3d; pointer-events: none; }
+.sheet { position: absolute; inset: 0; pointer-events: none; transition: transform .7s cubic-bezier(.2,.7,.2,1), opacity .25s, box-shadow .4s, background-color .4s; }
+.sheet canvas, .sheet svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sheet canvas { image-rendering: pixelated; }
+.sheet .tab { display: none; position: absolute; left: 0; top: 0; transform-origin: 0 100%;
+  transform: translateY(-100%) scale(var(--iz)); white-space: nowrap; font: 600 12px/1 var(--sans); padding: 5px 8px 4px; border-radius: 3px 3px 0 0;
+  color: #120c04; }
+.sheet.hidden { opacity: 0 !important; }
+
+.mode-explode .stage { cursor: default; }
+.mode-explode .sheet { pointer-events: auto; cursor: pointer; background: rgba(232,226,212,.035);
+  box-shadow: inset 0 0 0 calc(1.5px * var(--iz)) rgba(232,226,212,.28); }
+.mode-explode .sheet:hover { box-shadow: inset 0 0 0 calc(2.5px * var(--iz)) var(--amber); }
+.mode-explode .sheet .tab { display: block; }
+.mode-explode .sheet.landed { background: transparent; box-shadow: none; }
+.mode-explode .sheet.landed .tab { opacity: .7; }
+.mode-explode .sheet.hidden { display: none; }
+
+.curtain { position: absolute; inset: 0; pointer-events: none; display: none; }
+.curtain img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.curtain .handle { position: absolute; top: 0; bottom: 0; width: 0; pointer-events: auto; cursor: ew-resize; }
+.curtain .handle::before { content: ""; position: absolute; top: 0; bottom: 0; left: calc(-1px * var(--iz)); width: calc(2px * var(--iz)); background: var(--amber); }
+.curtain .handle::after { content: ""; position: absolute; top: 0; bottom: 0; left: calc(-14px * var(--iz)); width: calc(28px * var(--iz)); }
+.curtain .grip { position: absolute; top: 50%; left: 0; transform: translate(-50%, -50%) scale(var(--iz)); width: 34px; height: 34px; border-radius: 50%;
+  background: var(--amber); color: #1a1206; display: grid; place-items: center; box-shadow: 0 2px 10px rgba(0,0,0,.6); z-index: 2; }
+.curtain .grip svg { width: 20px; height: 20px; }
+.curtain .side { position: absolute; top: calc(10px * var(--iz)); transform: scale(var(--iz)); font: 600 11px/1 var(--mono); letter-spacing: .08em;
+  text-transform: uppercase; background: rgba(11,14,17,.85); color: var(--ink); padding: 5px 7px; border-radius: 2px; white-space: nowrap; }
+.curtain .side.l { right: calc(14px * var(--iz)); transform-origin: 100% 0; }
+.curtain .side.r { left: calc(14px * var(--iz)); transform-origin: 0 0; }
+.mode-curtain .curtain { display: block; }
+
+.hud { position: absolute; left: 10px; bottom: 10px; display: flex; gap: 8px; pointer-events: none; }
+.hud span { font: 11px/1 var(--mono); color: var(--ink-2); background: rgba(11,14,17,.82); border: 1px solid var(--line); padding: 5px 7px; border-radius: 2px;
+  font-variant-numeric: tabular-nums; }
+.hint { position: absolute; right: 10px; bottom: 10px; font-size: 12px; color: var(--ink-2); background: rgba(11,14,17,.82); border: 1px solid var(--line);
+  padding: 5px 8px; border-radius: 2px; pointer-events: none; max-width: 60%; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; font: 12px var(--mono); color: var(--ink-2); letter-spacing: .1em; text-transform: uppercase; }
+
+/* trazos vectoriales */
+.perim { fill: none; stroke-linejoin: round; }
+.perim-under { fill: none; stroke: rgba(0,0,0,.75); stroke-linejoin: round; }
+.focus-core { stroke: #120c04; }
+.focus-ring { fill: none; transform-box: fill-box; transform-origin: center; animation: pulse 2.2s ease-out infinite; }
+@keyframes pulse { 0% { transform: scale(.6); opacity: .9; } 80%, 100% { transform: scale(1.9); opacity: 0; } }
+
+footer { border-top: 1px solid var(--line); background: var(--slate-2); padding: 6px 14px; font-size: 12px; color: var(--ink-3); display: flex; gap: 14px; flex-wrap: wrap; }
+footer b { color: var(--ink-2); font-weight: 500; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+@media (max-width: 760px) {
+  main { grid-template-columns: 1fr; grid-template-rows: 58vh auto; }
+  .panel { order: 2; border-right: 0; border-top: 1px solid var(--line); }
+  body { overflow: auto; }
+  #app { height: auto; min-height: 100vh; }
+  .seg button .t { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .plate, .sheet, .switch::after { transition-duration: .01s !important; }
+  .focus-ring { animation: none; opacity: .55; transform: scale(1.35); }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="bar">
+    <div class="brand"><span class="tag">Mesa de luz</span><span class="scene" id="sceneName"></span></div>
+    <div class="group" role="group" aria-label="Modo del visor">
+      <span class="lbl">Modo</span>
+      <div class="seg" id="modes">
+        <button data-mode="overlay" aria-pressed="true" title="Las capas se apilan sobre la imagen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="m2 13 10 5 10-5"/></svg><span class="t">Superponer</span></button>
+        <button data-mode="curtain" aria-pressed="false" title="Un deslizador compara dos vistas">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M12 2v20"/><path d="m8 12-2 0m10 0 2 0"/></svg><span class="t">Cortina</span></button>
+        <button data-mode="explode" aria-pressed="false" title="Las capas se separan como hojas de acetato">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 17 9 4 9-4-9-4-9 4Z"/><path d="m3 11 9 4 9-4" stroke-dasharray="2.5 2.5"/><path d="m3 5 9 4 9-4-9-4-9 4Z"/></svg><span class="t">Despiece</span></button>
+      </div>
+    </div>
+    <div class="group" role="group" aria-label="Imagen de fondo">
+      <span class="lbl">Fondo</span>
+      <div class="seg" id="bases"></div>
+    </div>
+    <div class="group">
+      <button class="tool" id="lensBtn" aria-pressed="false" title="Lupa: muestra otra imagen bajo el cursor">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>Lupa</button>
+      <button class="tool" id="fitBtn" title="Encajar la imagen (también con doble clic)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>Encajar</button>
+      <button class="tool" id="shotBtn" title="Descargar una imagen PNG de la vista actual">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4v11m0 0-4-4m4 4 4-4"/><path d="M4 17v3h16v-3"/></svg>Captura PNG</button>
+    </div>
+  </header>
+
+  <main>
+    <aside class="panel" aria-label="Resumen y capas">
+      <h2>Lo que se ve</h2>
+      <div class="figures" id="figures"></div>
+      <div class="note" id="geoNote"></div>
+      <h2><span>Capas</span><span id="layerCount"></span></h2>
+      <ul class="layers" id="layers"></ul>
+    </aside>
+
+    <section class="stage" id="stage" aria-label="Imagen satélite con capas">
+      <div class="viewport" id="viewport">
+        <div class="plate" id="plate">
+          <img class="base" id="baseImg" alt="">
+          <img class="lens-img" id="lensImg" alt="">
+          <div id="sheets"></div>
+          <div class="lens-ring" id="lensRing"><span id="lensLbl">SWIR</span></div>
+          <div class="curtain" id="curtain">
+            <img id="curtainImg" alt="">
+            <span class="side l" id="sideL">Con capas</span>
+            <span class="side r" id="sideR"></span>
+            <div class="handle" id="handle" role="slider" tabindex="0" aria-label="Posición de la cortina" aria-valuemin="0" aria-valuemax="100">
+              <div class="grip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m9 7-5 5 5 5M15 7l5 5-5 5"/></svg></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="loading" id="loading">Preparando las capas…</div>
+      <div class="hud"><span id="coords">X — · Y — px</span><span id="zoomLbl">100 %</span></div>
+      <div class="hint" id="hint"></div>
+    </section>
+  </main>
+
+  <footer>
+    <span><b>Rueda</b> zoom · <b>Arrastrar</b> mover · <b>Doble clic</b> encajar</span>
+    <span id="footNote"></span>
+  </footer>
+</div>
+<div class="tip" id="tip" role="tooltip"></div>
+<div class="sr" aria-live="polite" id="live"></div>
+
+<script type="application/json" id="payload">__PAYLOAD__</script>
+<script>
+(() => {
+"use strict";
+const P = JSON.parse(document.getElementById("payload").textContent);
+const W = P.ancho, H = P.alto;
+const $ = (id) => document.getElementById(id);
+const nf = (x, d = 0) => Number(x).toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d });
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const TYPE_RANK = { relleno: 0, contorno: 1, puntos: 2 };
+const SVGNS = "http://www.w3.org/2000/svg";
+
+const stage = $("stage"), viewport = $("viewport"), plate = $("plate"), baseImg = $("baseImg");
+plate.style.width = W + "px"; plate.style.height = H + "px";
+viewport.style.perspective = (Math.max(W, H) * 2.2) + "px";
+$("sceneName").textContent = P.titulo || "Escena";
+
+const state = {
+  mode: "overlay", base: P.bases[0].id, lens: false, curtainX: 0.5, curtainBase: null,
+  s: 1, tx: 0, ty: 0, fit: 1,
+  layers: {},
+};
+const basesById = Object.fromEntries(P.bases.map((b) => [b.id, b]));
+
+// ---------------------------------------------------------------- fondo
+const baseSeg = $("bases");
+for (const b of P.bases) {
+  const bt = document.createElement("button");
+  bt.textContent = b.nombre; bt.dataset.base = b.id; bt.setAttribute("aria-pressed", "false");
+  bt.addEventListener("click", () => setBase(b.id));
+  baseSeg.appendChild(bt);
+}
+function setBase(id) {
+  state.base = id;
+  baseImg.src = basesById[id].src;
+  for (const bt of baseSeg.children) bt.setAttribute("aria-pressed", String(bt.dataset.base === id));
+  // la cortina y la lupa enseñan "la otra" imagen
+  const other = P.bases.find((b) => b.id !== id) || basesById[id];
+  state.curtainBase = (id === "swir" ? (basesById.tc || other) : (basesById.swir || other)).id;
+  $("curtainImg").src = basesById[state.curtainBase].src;
+  $("sideR").textContent = basesById[state.curtainBase].nombre + " sin capas";
+  $("sideL").textContent = basesById[id].nombre + " con capas";
+  const lensBase = basesById[state.curtainBase];
+  $("lensImg").src = lensBase.src; $("lensLbl").textContent = lensBase.nombre;
+  $("lensBtn").disabled = P.bases.length < 2; $("lensBtn").style.opacity = P.bases.length < 2 ? .4 : 1;
+}
+
+// ---------------------------------------------------------------- tramas (que el color no sea lo único que distingue)
+const PERIOD = Math.max(6, Math.round(Math.max(W, H) / 320));
+function patternOn(kind, x, y, p) {
+  switch (kind) {
+    case "diagonal": return ((x + y) % p) < Math.max(2, p / 3);
+    case "cruzado": return ((x + y) % p) < 2 || (((x - y) % p) + p) % p < 2;
+    case "horizontal": return (y % p) < Math.max(2, p / 3);
+    case "puntos": return (x % p) < 2 && (y % p) < 2;
+    default: return false;
+  }
+}
+function hexRgb(h) { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+
+function paintMask(L, bits) {
+  const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+  const ctx = cv.getContext("2d");
+  const out = ctx.createImageData(W, H), o = out.data;
+  const [r, g, b] = hexRgb(L.color);
+  const edge = Math.max(1, Math.round(Math.max(W, H) / 1100));
+  const at = (x, y) => x >= 0 && y >= 0 && x < W && y < H && bits[y * W + x];
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const i = y * W + x;
+      if (!bits[i]) continue;
+      let a;
+      if (L.tipo === "puntos") a = 255;
+      else if (L.tipo === "contorno") a = 26;                      // velo muy suave: el trazo lo pone el SVG
+      else {
+        const border = !at(x - edge, y) || !at(x + edge, y) || !at(x, y - edge) || !at(x, y + edge);
+        a = border ? 255 : (L.patron === "liso" ? 135 : (patternOn(L.patron, x, y, PERIOD) ? 215 : 70));
+      }
+      const k = i * 4; o[k] = r; o[k + 1] = g; o[k + 2] = b; o[k + 3] = a;
+    }
+  }
+  ctx.putImageData(out, 0, 0);
+  return cv;
+}
+
+function swatch(L) {
+  const cv = document.createElement("canvas"); cv.width = 26; cv.height = 18; cv.className = "swatch";
+  const ctx = cv.getContext("2d"); const [r, g, b] = hexRgb(L.color);
+  ctx.fillStyle = "#0c0f12"; ctx.fillRect(0, 0, 26, 18);
+  if (L.tipo === "contorno") {
+    ctx.strokeStyle = L.color; ctx.lineWidth = 2; ctx.setLineDash([4, 3]); ctx.strokeRect(3, 3, 20, 12);
+  } else if (L.tipo === "puntos") {
+    ctx.fillStyle = L.color; ctx.strokeStyle = L.color;
+    ctx.beginPath(); ctx.arc(13, 9, 3, 0, 7); ctx.fill();
+    ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(13, 9, 6.5, 0, 7); ctx.stroke();
+  } else {
+    const id = ctx.getImageData(0, 0, 26, 18), d = id.data;
+    for (let y = 0; y < 18; y++) for (let x = 0; x < 26; x++) {
+      const k = (y * 26 + x) * 4, border = x === 0 || y === 0 || x === 25 || y === 17;
+      const a = border ? 1 : (L.patron === "liso" ? .6 : (patternOn(L.patron, x, y, 6) ? .9 : .3));
+      d[k] = d[k] * (1 - a) + r * a; d[k + 1] = d[k + 1] * (1 - a) + g * a; d[k + 2] = d[k + 2] * (1 - a) + b * a;
+    }
+    ctx.putImageData(id, 0, 0);
+  }
+  return cv;
+}
+
+function loadBits(src) {
+  return new Promise((res, rej) => {
+    const im = new Image();
+    im.onload = () => {
+      const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+      const ctx = cv.getContext("2d"); ctx.imageSmoothingEnabled = false; ctx.drawImage(im, 0, 0, W, H);
+      const d = ctx.getImageData(0, 0, W, H).data, bits = new Uint8Array(W * H);
+      for (let i = 0; i < bits.length; i++) bits[i] = d[i * 4] > 127 ? 1 : 0;
+      res(bits);
+    };
+    im.onerror = () => rej(new Error("máscara ilegible"));
+    im.src = src;
+  });
+}
+
+// ---------------------------------------------------------------- vectores (perímetro y focos)
+function buildSvg(L) {
+  const svg = document.createElementNS(SVGNS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("preserveAspectRatio", "none");
+  if (L.tipo === "contorno" && L.contornos) {
+    const d = L.contornos.map((c) => {
+      let s = "M" + c[0] + " " + c[1];
+      for (let i = 2; i < c.length; i += 2) s += "L" + c[i] + " " + c[i + 1];
+      return s + "Z";
+    }).join("");
+    for (const cls of ["perim-under", "perim"]) {
+      const p = document.createElementNS(SVGNS, "path");
+      p.setAttribute("d", d); p.setAttribute("class", cls);
+      if (cls === "perim") p.setAttribute("stroke", L.color);
+      svg.appendChild(p);
+    }
+  }
+  if (L.tipo === "puntos" && L.puntos) {
+    for (const [x, y] of L.puntos) {
+      const ring = document.createElementNS(SVGNS, "circle");
+      ring.setAttribute("cx", x); ring.setAttribute("cy", y); ring.setAttribute("class", "focus-ring"); ring.setAttribute("stroke", L.color);
+      ring.style.animationDelay = (-Math.random() * 2.2).toFixed(2) + "s";
+      const core = document.createElementNS(SVGNS, "circle");
+      core.setAttribute("cx", x); core.setAttribute("cy", y); core.setAttribute("class", "focus-core"); core.setAttribute("fill", L.color);
+      svg.append(ring, core);
+    }
+  }
+  return svg;
+}
+
+function refreshVectorScale() {
+  const iz = 1 / state.s;
+  plate.style.setProperty("--iz", iz);
+  for (const p of plate.querySelectorAll(".perim")) { p.setAttribute("stroke-width", 2.4 * iz); p.setAttribute("stroke-dasharray", `${10 * iz} ${6 * iz}`); }
+  for (const p of plate.querySelectorAll(".perim-under")) p.setAttribute("stroke-width", 4.4 * iz);
+  for (const c of plate.querySelectorAll(".focus-core")) { c.setAttribute("r", 3.6 * iz); c.setAttribute("stroke-width", 1.2 * iz); }
+  for (const c of plate.querySelectorAll(".focus-ring")) { c.setAttribute("r", 7 * iz); c.setAttribute("stroke-width", 1.6 * iz); }
+}
+let dashT = 0;
+function animateDash(t) {
+  dashT = t;
+  const off = -(t / 60) * (1 / state.s);
+  for (const p of plate.querySelectorAll(".perim")) p.setAttribute("stroke-dashoffset", off);
+  requestAnimationFrame(animateDash);
+}
+
+// ---------------------------------------------------------------- panel de capas
+const order = P.capas.map((L, i) => ({ L, i }))
+  .sort((a, b) => (TYPE_RANK[a.L.tipo] - TYPE_RANK[b.L.tipo]) || (b.i - a.i)); // de abajo a arriba
+const sheetsBox = $("sheets");
+const tip = $("tip");
+
+function metaText(L) {
+  if (L.estado !== "ok") return "";
+  const m = L.metricas;
+  if (L.tipo === "puntos") return `${nf(m.regiones)} focos · ${nf(m.area_px)} px`;
+  if (L.tipo === "contorno") return `${nf(m.perimetro_px)} px de contorno`;
+  return `${nf(m.pct_imagen, m.pct_imagen < 1 ? 2 : 1)} % · ${nf(m.regiones)} zonas`;
+}
+
+function tipHtml(L) {
+  const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  let h = `<b>${esc(L.nombre)}</b>${esc(L.descripcion)}`;
+  if (L.estado === "ok") {
+    const m = L.metricas;
+    h += `<div class="kv">área ${nf(m.area_px)} px · ${nf(m.pct_imagen, 2)} %<br>zonas ${nf(m.regiones)} · contorno ${nf(m.perimetro_px)} px<br>calculada en ${nf(L.tiempo_s, 2)} s</div>`;
+  } else {
+    h += `<div class="kv">${esc(L.error || "No disponible")}</div>`;
+  }
+  return h;
+}
+
+function showTip(el, L) {
+  tip.innerHTML = tipHtml(L); tip.classList.add("show");
+  const r = el.getBoundingClientRect(), tw = tip.offsetWidth, th = tip.offsetHeight;
+  let x = r.right + 8, y = r.top;
+  if (x + tw > window.innerWidth - 6) x = Math.max(6, r.left + 12);
+  if (x + tw > window.innerWidth - 6 || x < r.right) y = r.bottom + 6;
+  y = Math.min(y, window.innerHeight - th - 6);
+  tip.style.left = x + "px"; tip.style.top = Math.max(6, y) + "px";
+}
+const hideTip = () => tip.classList.remove("show");
+
+const list = $("layers");
+let okCount = 0;
+for (const L of P.capas) {
+  const li = document.createElement("li");
+  li.className = "layer"; li.tabIndex = -1;
+  const row = document.createElement("div"); row.className = "row";
+  row.appendChild(swatch(L));
+  const nm = document.createElement("div"); nm.className = "name";
+  nm.innerHTML = `<div></div><div class="meta"></div>`;
+  nm.firstChild.textContent = L.nombre; nm.lastChild.textContent = metaText(L);
+  row.appendChild(nm);
+  li.appendChild(row);
+  li.addEventListener("mouseenter", () => showTip(li, L));
+  li.addEventListener("mouseleave", hideTip);
+  li.addEventListener("focusin", () => showTip(li, L));
+  li.addEventListener("focusout", hideTip);
+
+  if (L.estado !== "ok") {
+    li.classList.add("broken");
+    const chip = document.createElement("span");
+    chip.className = "chip " + (L.estado === "error" ? "err" : "na");
+    chip.textContent = L.estado === "error" ? "Error" : "No disponible";
+    row.appendChild(chip);
+    const why = document.createElement("div"); why.className = "why";
+    why.textContent = L.estado === "error" ? "No se pudo calcular esta capa; el resto sigue disponible." : (L.error || "Falta un componente opcional.");
+    li.appendChild(why);
+    li.tabIndex = 0;
+    list.appendChild(li);
+    continue;
+  }
+  okCount++;
+  const sw = document.createElement("button");
+  sw.className = "switch"; sw.setAttribute("role", "switch"); sw.setAttribute("aria-label", "Mostrar " + L.nombre);
+  row.appendChild(sw);
+  const ctr = document.createElement("div"); ctr.className = "controls";
+  const rng = document.createElement("input"); rng.type = "range"; rng.min = 0; rng.max = 100; rng.value = 100;
+  rng.setAttribute("aria-label", "Opacidad de " + L.nombre);
+  const pct = document.createElement("span"); pct.className = "pct"; pct.textContent = "100 %";
+  const solo = document.createElement("button"); solo.className = "solo"; solo.textContent = "Solo esta";
+  solo.title = "Ocultar todas las demás capas";
+  ctr.append(rng, pct, solo);
+  li.appendChild(ctr);
+  list.appendChild(li);
+
+  const sheet = document.createElement("div"); sheet.className = "sheet"; sheet.dataset.id = L.id;
+  const tab = document.createElement("span"); tab.className = "tab"; tab.textContent = L.nombre; tab.style.background = L.color;
+  sheet.appendChild(tab);
+  state.layers[L.id] = { L, li, sw, rng, pct, sheet, on: !!L.visible, opacity: 1, landed: false };
+  sw.addEventListener("click", () => setOn(L.id, !state.layers[L.id].on));
+  rng.addEventListener("input", () => setOpacity(L.id, rng.value / 100));
+  solo.addEventListener("click", () => { for (const id in state.layers) setOn(id, id === L.id); announce("Solo " + L.nombre); });
+}
+$("layerCount").textContent = `${okCount}/${P.capas.length}`;
+for (const { L } of order) if (state.layers[L.id]) sheetsBox.appendChild(state.layers[L.id].sheet);
+
+function setOn(id, on) {
+  const S = state.layers[id]; S.on = on;
+  S.sw.setAttribute("aria-checked", String(on));
+  S.li.classList.toggle("off", !on);
+  S.sheet.classList.toggle("hidden", !on);
+  if (state.mode === "explode") layoutExplode();
+}
+function setOpacity(id, v) {
+  const S = state.layers[id]; S.opacity = v;
+  S.pct.textContent = Math.round(v * 100) + " %";
+  S.sheet.style.opacity = v;
+}
+function announce(t) { $("live").textContent = t; }
+
+// ---------------------------------------------------------------- cifras clave en frases llanas
+function figures() {
+  const by = Object.fromEntries(P.capas.map((L) => [L.id, L]));
+  const ok = (id) => by[id] && by[id].estado === "ok";
+  const rows = [];
+  if (ok("burn")) {
+    const m = by.burn.metricas;
+    rows.push(m.area_px > 0
+      ? [nf(m.pct_imagen, 1) + " %", `de la imagen aparece afectada por el fuego, repartida en ${nf(m.regiones)} ${m.regiones === 1 ? "zona" : "zonas"}.`, ""]
+      : ["0 %", "No se ha encontrado zona quemada en esta imagen.", ""]);
+  }
+  if (ok("fire")) {
+    const m = by.fire.metricas, f = by.fire.focos_por_ubicacion;
+    let t = m.regiones === 0 ? "No se ve fuego activo." :
+      `${m.regiones === 1 ? "foco de fuego activo visible" : "focos de fuego activo visibles"}`;
+    if (m.regiones > 0 && f) t += `; ${nf(f["frente de la cicatriz"])} en el borde de la zona quemada.`;
+    else if (m.regiones > 0) t += ".";
+    rows.push([nf(m.regiones), t, "ember"]);
+  }
+  if (ok("burn_active") && ok("burn") && by.burn.metricas.area_px > 0) {
+    const p = 100 * by.burn_active.metricas.area_px / by.burn.metricas.area_px;
+    rows.push([nf(p, 1) + " %", "de la zona quemada tiene todavía fuego muy cerca.", "ember"]);
+  }
+  if (ok("perimeter") && by.perimeter.metricas.area_px > 0) {
+    rows.push([nf(by.perimeter.metricas.perimetro_px), "píxeles mide el perímetro que rodea el incendio.", ""]);
+  }
+  if (ok("smoke") && by.smoke.metricas.area_px > 0) {
+    rows.push([nf(by.smoke.metricas.pct_imagen, 1) + " %", "de la imagen está cubierta de humo.", ""]);
+  }
+  const box = $("figures");
+  for (const [n, t, cls] of rows) {
+    const d = document.createElement("div"); d.className = "fig";
+    d.innerHTML = `<div class="num ${cls}"></div><div class="txt"></div>`;
+    d.firstChild.textContent = n; d.lastChild.textContent = t;
+    box.appendChild(d);
+  }
+  if (!rows.length) box.innerHTML = `<div class="txt" style="color:var(--ink-2)">No hay cifras disponibles.</div>`;
+  const [aw, ah] = P.tamano_analisis || [W, H];
+  $("geoNote").textContent = `Cifras en píxeles de la imagen analizada (${nf(aw)} × ${nf(ah)} px). La imagen no lleva georreferenciación, así que no se dan hectáreas ni kilómetros.`;
+  $("footNote").textContent = (P.avisos || []).length ? "Avisos: " + P.avisos.join(" · ") : "";
+}
+
+// ---------------------------------------------------------------- zoom y arrastre
+function applyView() {
+  viewport.style.transform = `translate(${state.tx}px, ${state.ty}px) scale(${state.s})`;
+  $("zoomLbl").textContent = nf(state.s * 100) + " %";
+  refreshVectorScale();
+}
+function fitView(k = 1) {
+  const r = stage.getBoundingClientRect();
+  const s = Math.min((r.width - 24) / W, (r.height - 24) / H) * k;
+  state.fit = Math.min((r.width - 24) / W, (r.height - 24) / H);
+  state.s = s; state.tx = (r.width - W * s) / 2; state.ty = (r.height - H * s) / 2;
+  applyView();
+}
+function toImage(cx, cy) {
+  const r = stage.getBoundingClientRect();
+  return [(cx - r.left - state.tx) / state.s, (cy - r.top - state.ty) / state.s];
+}
+stage.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  const r = stage.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
+  const ns = Math.min(Math.max(state.s * Math.exp(-e.deltaY * 0.0015), state.fit * 0.4), 24);
+  state.tx = mx - (mx - state.tx) * (ns / state.s); state.ty = my - (my - state.ty) * (ns / state.s); state.s = ns;
+  applyView(); updateLens(e);
+}, { passive: false });
+
+let drag = null, moved = false;
+stage.addEventListener("pointerdown", (e) => {
+  if (e.button !== 0 || e.target.closest(".handle")) return;
+  drag = { x: e.clientX, y: e.clientY, tx: state.tx, ty: state.ty }; moved = false;
+  stage.setPointerCapture(e.pointerId);
+});
+stage.addEventListener("pointermove", (e) => {
+  if (drag) {
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (Math.abs(dx) + Math.abs(dy) > 4) { moved = true; stage.classList.add("dragging"); }
+    if (moved) { state.tx = drag.tx + dx; state.ty = drag.ty + dy; applyView(); }
+  }
+  updateLens(e);
+  if (state.mode !== "explode") {
+    const [x, y] = toImage(e.clientX, e.clientY), k = P.factor_analisis || 1;
+    $("coords").textContent = (x >= 0 && y >= 0 && x < W && y < H) ? `X ${nf(x * k)} · Y ${nf(y * k)} px` : "X — · Y — px";
+  }
+});
+const endDrag = (e) => {
+  if (!drag) return;
+  drag = null; stage.classList.remove("dragging");
+  if (stage.hasPointerCapture(e.pointerId)) stage.releasePointerCapture(e.pointerId);
+  // la captura del puntero redirige el clic al escenario: en el despiece se resuelve aquí qué hoja se ha pulsado
+  if (!moved && state.mode === "explode") {
+    stage.style.pointerEvents = "none";
+    const hit = document.elementFromPoint(e.clientX, e.clientY);
+    stage.style.pointerEvents = "";
+    const sh = hit && hit.closest(".sheet");
+    if (sh) toggleLanded(sh.dataset.id);
+  }
+  setTimeout(() => { moved = false; }, 0);
+};
+stage.addEventListener("pointerup", endDrag);
+stage.addEventListener("pointercancel", endDrag);
+stage.addEventListener("pointerleave", () => { $("lensRing").style.display = "none"; $("lensImg").style.display = "none"; });
+stage.addEventListener("dblclick", () => refit());
+$("fitBtn").addEventListener("click", () => refit());
+window.addEventListener("resize", () => refit());
+
+// ---------------------------------------------------------------- lupa
+const LENS_R = 90;
+function updateLens(e) {
+  const ring = $("lensRing"), img = $("lensImg");
+  if (!state.lens || state.mode === "explode" || !e) { ring.style.display = "none"; img.style.display = "none"; return; }
+  const [x, y] = toImage(e.clientX, e.clientY), r = LENS_R / state.s;
+  img.style.display = "block"; ring.style.display = "block";
+  img.style.clipPath = `circle(${r}px at ${x}px ${y}px)`;
+  ring.style.left = (x - r) + "px"; ring.style.top = (y - r) + "px"; ring.style.width = ring.style.height = (2 * r) + "px";
+}
+$("lensBtn").addEventListener("click", () => {
+  state.lens = !state.lens; $("lensBtn").setAttribute("aria-pressed", String(state.lens));
+  if (!state.lens) updateLens(null);
+  announce(state.lens ? "Lupa activada" : "Lupa desactivada");
+});
+
+// ---------------------------------------------------------------- cortina
+function setCurtain(v) {
+  state.curtainX = Math.min(Math.max(v, 0), 1);
+  $("curtainImg").style.clipPath = `inset(0 0 0 ${state.curtainX * 100}%)`;
+  $("handle").style.left = (state.curtainX * 100) + "%";
+  $("sideL").style.right = `calc(${(1 - state.curtainX) * 100}% + 14px * var(--iz))`;
+  $("sideR").style.left = `calc(${state.curtainX * 100}% + 14px * var(--iz))`;
+  $("handle").setAttribute("aria-valuenow", Math.round(state.curtainX * 100));
+}
+{
+  const h = $("handle"); let on = false;
+  h.addEventListener("pointerdown", (e) => { on = true; h.setPointerCapture(e.pointerId); e.stopPropagation(); });
+  h.addEventListener("pointermove", (e) => { if (on) setCurtain(toImage(e.clientX, e.clientY)[0] / W); });
+  h.addEventListener("pointerup", (e) => { on = false; h.releasePointerCapture(e.pointerId); });
+  h.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") setCurtain(state.curtainX - 0.02);
+    if (e.key === "ArrowRight") setCurtain(state.curtainX + 0.02);
+  });
+}
+
+// ---------------------------------------------------------------- modos
+const HINTS = {
+  overlay: "Las capas se apilan sobre la imagen. Activa o desactiva cada una en el panel.",
+  curtain: "Arrastra la línea ámbar para comparar la vista con capas y la imagen sin ellas.",
+  explode: "Cada capa es una hoja de acetato. Haz clic en una para devolverla a su sitio; otro clic la vuelve a levantar.",
+};
+const explodeGap = () => Math.max(W, H) * 0.08;
+// encuadre del despiece: se reduce y se baja para que quepa la pila de hojas levantadas
+function fitExplode() {
+  const n = order.filter(({ L }) => state.layers[L.id] && state.layers[L.id].on).length;
+  fitView(n > 3 ? 0.62 : 0.72);
+  state.ty += 0.4 * explodeGap() * n * state.s;
+  applyView();
+}
+const refit = () => (state.mode === "explode" ? fitExplode() : fitView(1));
+function layoutExplode() {
+  const vis = order.filter(({ L }) => state.layers[L.id] && state.layers[L.id].on);
+  const gap = explodeGap();
+  let k = 0;
+  for (const { L } of order) {
+    const S = state.layers[L.id]; if (!S) continue;
+    if (state.mode !== "explode") { S.sheet.style.transform = ""; continue; }
+    if (!S.on) continue;
+    k++;
+    S.sheet.style.transform = S.landed ? "translateZ(1px)" : `translateZ(${k * gap}px)`;
+  }
+  return vis.length;
+}
+function toggleLanded(id) {
+  const S = state.layers[id]; if (!S) return;
+  S.landed = !S.landed; S.sheet.classList.toggle("landed", S.landed);
+  layoutExplode();
+  announce(S.L.nombre + (S.landed ? " vuelve a su sitio" : " se levanta"));
+}
+function setMode(m) {
+  state.mode = m;
+  document.body.classList.remove("mode-overlay", "mode-curtain", "mode-explode");
+  document.body.classList.add("mode-" + m);
+  for (const bt of $("modes").children) bt.setAttribute("aria-pressed", String(bt.dataset.mode === m));
+  if (m === "explode") {
+    for (const id in state.layers) { state.layers[id].landed = false; state.layers[id].sheet.classList.remove("landed"); }
+    plate.style.transform = "rotateX(56deg) rotateZ(-24deg)";
+    $("coords").textContent = "Vista en perspectiva";
+    updateLens(null);
+    fitExplode();
+  } else {
+    plate.style.transform = "";
+    fitView(1);
+  }
+  layoutExplode();
+  $("hint").textContent = HINTS[m];
+  announce("Modo " + { overlay: "superponer", curtain: "cortina", explode: "despiece" }[m]);
+}
+for (const bt of $("modes").children) bt.addEventListener("click", () => setMode(bt.dataset.mode));
+
+// ---------------------------------------------------------------- captura PNG
+function loadImg(src) { return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; }); }
+async function capture() {
+  const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+  const ctx = cv.getContext("2d");
+  ctx.drawImage(await loadImg(basesById[state.base].src), 0, 0, W, H);
+  const lw = Math.max(2, Math.max(W, H) / 700);
+  for (const { L } of order) {
+    const S = state.layers[L.id];
+    if (!S || !S.on || !S.canvas) continue;
+    ctx.globalAlpha = S.opacity;
+    ctx.drawImage(S.canvas, 0, 0);
+    if (L.tipo === "contorno" && L.contornos) {
+      const p = new Path2D();
+      for (const c of L.contornos) { p.moveTo(c[0], c[1]); for (let i = 2; i < c.length; i += 2) p.lineTo(c[i], c[i + 1]); p.closePath(); }
+      ctx.setLineDash([]); ctx.strokeStyle = "rgba(0,0,0,.75)"; ctx.lineWidth = lw * 1.8; ctx.stroke(p);
+      ctx.setLineDash([lw * 4, lw * 2.5]); ctx.strokeStyle = L.color; ctx.lineWidth = lw; ctx.stroke(p);
+      ctx.setLineDash([]);
+    }
+    if (L.tipo === "puntos" && L.puntos) {
+      ctx.strokeStyle = L.color; ctx.lineWidth = lw * 0.8;
+      for (const [x, y] of L.puntos) { ctx.beginPath(); ctx.arc(x, y, lw * 5, 0, 7); ctx.stroke(); }
+    }
+  }
+  ctx.globalAlpha = 1;
+  // sello: escena y aviso de unidades
+  const fs = Math.max(12, Math.round(W / 110));
+  ctx.font = `600 ${fs}px ui-monospace, Consolas, monospace`;
+  const txt = `${P.titulo || "escena"} · fondo ${basesById[state.base].nombre} · cifras en píxeles, sin georreferenciación`;
+  const tw = ctx.measureText(txt).width;
+  ctx.fillStyle = "rgba(11,14,17,.85)"; ctx.fillRect(0, H - fs * 2, tw + fs * 1.6, fs * 2);
+  ctx.fillStyle = "#ffb000"; ctx.fillText(txt, fs * 0.8, H - fs * 0.65);
+  cv.toBlob((blob) => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `vista_${(P.titulo || "escena").replace(/[^\w-]+/g, "_")}.png`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }, "image/png");
+  announce("Captura descargada");
+}
+$("shotBtn").addEventListener("click", () => capture().catch((e) => announce("No se pudo crear la captura: " + e.message)));
+
+// ---------------------------------------------------------------- arranque
+setBase(state.base);
+setCurtain(0.5);
+figures();
+for (const id in state.layers) { setOn(id, state.layers[id].on); setOpacity(id, 1); }
+setMode("overlay");
+if (!reduceMotion) requestAnimationFrame(animateDash);
+
+Promise.all(Object.values(state.layers).map(async (S) => {
+  try {
+    const bits = await loadBits(S.L.mascara);
+    S.canvas = paintMask(S.L, bits);
+    S.sheet.insertBefore(S.canvas, S.sheet.firstChild);
+    S.sheet.insertBefore(buildSvg(S.L), S.canvas.nextSibling);
+  } catch (e) {
+    S.li.querySelector(".meta").textContent = "No se pudo dibujar la capa";
+  }
+})).then(() => { $("loading").remove(); refreshVectorScale(); document.body.dataset.ready = "1"; });
+})();
+</script>
+</body>
+</html>
