@@ -6348,6 +6348,8 @@
    ]
   }
  ],
- "avisos": [],
- "tiempo_s": 1.75
+ "avisos": [
+  "sin escala conocida: cifras en píxeles (añade escala.json o --m-per-px para hectáreas)"
+ ],
+ "tiempo_s": 2.02
 }

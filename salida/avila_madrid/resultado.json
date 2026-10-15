@@ -23,7 +23,11 @@
   6141,
   9930
  ],
- "escala": 0.2618,
+ "escala": {
+  "m_por_px_x": 12.381,
+  "m_por_px_y": 12.318,
+  "fuente": "alineación SIFT+RANSAC con 2026-07-26-00_00_2026-07-26-23_59_Sentinel-2_L2A_True_color.tiff (UTM, 34.95 x 33.45 m/px); 1478 puntos, error medio 0.75 px"
+ },
  "pixeles_quemados_trabajo": 218781,
  "pixeles_quemados_original_equiv": 3191254,
  "porcentaje_quemado": 5.23,
@@ -7782,5 +7786,9 @@
   }
  ],
  "avisos": [],
- "tiempo_s": 3.59
+ "hectareas": 48669.5,
+ "hectareas_con_actividad": 6105.6,
+ "hectareas_posible_bajo_humo": 7735.3,
+ "perimetro_km": 584.02,
+ "tiempo_s": 3.62
 }

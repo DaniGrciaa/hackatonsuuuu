@@ -8955,7 +8955,8 @@
   }
  ],
  "avisos": [
-  "logo de Copernicus detectado en ['tc']; se enmascara la esquina"
+  "logo de Copernicus detectado en ['tc']; se enmascara la esquina",
+  "sin escala conocida: cifras en píxeles (añade escala.json o --m-per-px para hectáreas)"
  ],
- "tiempo_s": 1.95
+ "tiempo_s": 1.89
 }

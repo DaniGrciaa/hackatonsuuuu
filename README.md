@@ -124,6 +124,12 @@ Más sensibilidad no encuentra ningún foco anotado más; solo engorda los ya ha
 - **Se pierde mucho en la escena de práctica:** la mitad de sus focos físicos no son "rojos" en la SWIR, porque el humo sube el canal B04. Se probó a comparar solo B12 con B8A, que el humo no toca: ganaba de 3 a 5 puntos de recall, pero bajaba la precisión y daba píxeles falsos en la escena sin incendio. Se descartó.
 - Hay algún foco en mitad de la cicatriz (posibles rescoldos) que no podemos confirmar.
 
+### Escala: hectáreas y kilómetros
+Las JPG de Copernicus Browser no traen escala ni coordenadas. Si se conoce, se guarda en `<escena>/escala.json` (metros por píxel de la imagen original) y `run.py` y la app dan hectáreas y km. Si no, todo sale en píxeles y se avisa: no se inventa una escala.
+- **Ávila-Madrid: 12,38 × 12,32 m/px (0,01525 ha por píxel).** Se midió alineando su True Color con el GeoTIFF de práctica del mismo día, que sí está georreferenciado (UTM 30N, 34,95 × 33,45 m/px): 1.478 puntos coherentes, error medio de 0,75 px, intervalo del 95 % de ±0,005 m/px. Reproducible con `python tools_c/escala_desde_geotiff.py <tiff> data/avila_madrid --guardar`.
+- Resultado: 48.670 ha afectadas (487 km²), dentro del rango de la referencia dNBR de esa zona (336–605 km² según el umbral). Perímetro de unos 584 km: incluye el borde de las islas y depende de la resolución, así que es aproximado.
+- **Niebla y La Mierla: sin escala**, porque no hay GeoTIFF de esas zonas. Se puede añadir con un GeoTIFF de Copernicus de la misma zona y el mismo script, o con `--m-per-px`.
+
 ## Por qué así: decisiones y medidas
 
 | Variante | Ávila-Madrid | Niebla | Escena sin incendio | Escena extra |
