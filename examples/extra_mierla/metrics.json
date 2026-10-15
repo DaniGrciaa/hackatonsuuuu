@@ -12,7 +12,7 @@
   1546
  ],
  "unidades": "Píxeles de la imagen analizada. La imagen no está georreferenciada: no hay hectáreas ni km.",
- "tiempo_total_s": 1.352,
+ "tiempo_total_s": 1.361,
  "avisos": [
   "logo de Copernicus detectado en ['tc']; se enmascara la esquina"
  ],
@@ -21,7 +21,7 @@
    "nombre": "Zona quemada",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 1.156,
+   "tiempo_s": 1.213,
    "metricas": {
     "area_px": 419095,
     "pct_imagen": 10.843,
@@ -34,12 +34,12 @@
    "nombre": "Perímetro del incendio",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.059,
+   "tiempo_s": 0.003,
    "metricas": {
-    "area_px": 445382,
-    "pct_imagen": 11.523,
+    "area_px": 419095,
+    "pct_imagen": 10.843,
     "regiones": 4,
-    "perimetro_px": 13031.7
+    "perimetro_px": 21550.2
    },
    "mascara": "masks/perimeter.png"
   },
@@ -47,7 +47,7 @@
    "nombre": "Fuego activo",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.107,
+   "tiempo_s": 0.112,
    "metricas": {
     "area_px": 977,
     "pct_imagen": 0.025,
@@ -65,7 +65,7 @@
    "nombre": "Zona quemada que aún arde",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.018,
+   "tiempo_s": 0.019,
    "metricas": {
     "area_px": 18407,
     "pct_imagen": 0.476,
@@ -91,7 +91,7 @@
    "nombre": "Agua",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.001,
+   "tiempo_s": 0.002,
    "metricas": {
     "area_px": 19083,
     "pct_imagen": 0.494,

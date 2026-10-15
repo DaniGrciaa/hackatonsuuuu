@@ -12,14 +12,14 @@
   1546
  ],
  "unidades": "Píxeles de la imagen analizada. La imagen no está georreferenciada: no hay hectáreas ni km.",
- "tiempo_total_s": 1.306,
+ "tiempo_total_s": 1.328,
  "avisos": [],
  "capas": {
   "burn": {
    "nombre": "Zona quemada",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 1.119,
+   "tiempo_s": 1.19,
    "metricas": {
     "area_px": 286939,
     "pct_imagen": 7.424,
@@ -32,12 +32,12 @@
    "nombre": "Perímetro del incendio",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.057,
+   "tiempo_s": 0.002,
    "metricas": {
-    "area_px": 305301,
-    "pct_imagen": 7.899,
+    "area_px": 286939,
+    "pct_imagen": 7.424,
     "regiones": 17,
-    "perimetro_px": 9368.8
+    "perimetro_px": 13927.5
    },
    "mascara": "masks/perimeter.png"
   },
@@ -45,7 +45,7 @@
    "nombre": "Fuego activo",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.099,
+   "tiempo_s": 0.104,
    "metricas": {
     "area_px": 7160,
     "pct_imagen": 0.185,
@@ -63,7 +63,7 @@
    "nombre": "Zona quemada que aún arde",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.018,
+   "tiempo_s": 0.019,
    "metricas": {
     "area_px": 66846,
     "pct_imagen": 1.73,
@@ -115,7 +115,7 @@
    "nombre": "Suelo claro o campos secos",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.004,
+   "tiempo_s": 0.005,
    "metricas": {
     "area_px": 810787,
     "pct_imagen": 20.978,
@@ -141,7 +141,7 @@
    "nombre": "Sin datos",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.001,
+   "tiempo_s": 0.002,
    "metricas": {
     "area_px": 0,
     "pct_imagen": 0.0,

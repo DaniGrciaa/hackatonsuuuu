@@ -14,7 +14,6 @@ from dataclasses import dataclass, field
 from typing import Callable
 
 import numpy as np
-from scipy.ndimage import binary_fill_holes
 
 
 @dataclass(frozen=True)
@@ -35,8 +34,9 @@ def _burn(ctx) -> np.ndarray:
 
 
 def _perimeter(ctx) -> np.ndarray:
-    # Lo que queda dentro del perímetro exterior: la cicatriz con sus islas sin quemar incluidas
-    return binary_fill_holes(ctx.burn)
+    # La cicatriz tal cual: el visor dibuja su borde exterior Y el de los huecos (islas sin quemar, embalses),
+    # igual que las imágenes de run.py
+    return ctx.burn.copy()
 
 
 def _fire(ctx) -> np.ndarray:
@@ -60,7 +60,7 @@ def _nodata(ctx) -> np.ndarray:
 LAYERS: list[Layer] = [
     Layer("burn", "Zona quemada", "Terreno que muestra la huella oscura y rojiza del fuego.",
           "#E8590C", "relleno", _burn, patron="diagonal", visible=True),
-    Layer("perimeter", "Perímetro del incendio", "Línea que rodea toda la zona afectada, incluidas las islas sin quemar.",
+    Layer("perimeter", "Perímetro del incendio", "Línea que rodea la zona afectada y también las islas sin quemar y los embalses que quedan dentro.",
           "#FFB000", "contorno", _perimeter, visible=True),
     Layer("fire", "Fuego activo", "Puntos muy calientes donde el fuego parece seguir encendido.",
           "#FF2E2E", "puntos", _fire, visible=True),
