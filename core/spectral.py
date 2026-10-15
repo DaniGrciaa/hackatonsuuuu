@@ -115,3 +115,92 @@ if __name__ == "__main__":
         for k, v in ind.items():
             print(f"  {k:8s} p1/p50/p99 = {np.percentile(v[sc['valid']], [1, 50, 99]).round(2)}")
         print("  debug ->", save_debug(sc, b, ind))
+
+
+# ----------------------------------------------------------------------------- máscaras de descarte (T6)
+from skimage.filters import threshold_otsu  # noqa: E402
+
+
+def _diag(shape) -> float:
+    return float(np.hypot(*shape))
+
+
+def _remove_small(m: np.ndarray, min_px: int) -> np.ndarray:
+    n, lab, st, _ = cv2.connectedComponentsWithStats(m.astype(np.uint8), 8)
+    keep = np.zeros(n, bool)
+    keep[1:] = st[1:, 4] >= min_px
+    return keep[lab]
+
+
+def _otsu_tail(x: np.ndarray, valid: np.ndarray, q: float) -> float:
+    """Otsu aplicado solo a la cola baja (percentil q) de los valores: separa 'muy oscuro' de 'oscuro'."""
+    v = x[valid]
+    v = v[v <= np.percentile(v, q)]
+    return float(threshold_otsu(v))
+
+
+def exclusion_masks(b: dict, ind: dict) -> dict:
+    """Máscaras booleanas HxW: water, cloud, bare, urban, smoke (todas adaptativas, por percentiles/Otsu)."""
+    valid = b["valid"]
+    shape = valid.shape
+    d = _diag(shape)
+    mx = 1 - ind["WATER"]                       # máximo de los 3 canales SWIR
+    bright, sat, nbr, red = ind["BRIGHT"], ind["SAT"], ind["NBR"], ind["RED_DOM"]
+    b12, b8a, b04 = b["B12"], b["B8A"], b["B04"]
+    k = max(3, int(d / 400) | 1)
+    k_open = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k))
+
+    # AGUA: histéresis. Semilla = núcleo muy negro (cola del 3 %); crece por lo oscuro (cola del 10 %).
+    # Un embalse tiene núcleo negro; la ceniza oscura y las sombras suelen no llegar a tanto.
+    loose = (mx < _otsu_tail(mx, valid, 10)) & valid
+    seed = (mx < _otsu_tail(mx, valid, 3)) & valid
+    seed = cv2.erode(seed.astype(np.uint8), np.ones((3, 3), np.uint8)).astype(bool)
+    n_l, lab, _, _ = cv2.connectedComponentsWithStats(loose.astype(np.uint8), 8)
+    has = np.zeros(n_l, bool)
+    has[np.unique(lab[seed])] = True
+    has[0] = False
+    water = _remove_small(has[lab], max(4, int(d / 700) ** 2))
+
+    # HUMO: turquesa = B8A y B04 claramente por encima de B12 (el rojo baja, azul y verde suben)
+    cyan = np.minimum(b8a, b04) - b12
+    t_s = float(np.percentile(cyan[valid], 90))
+    smoke = (cyan > max(t_s, 0.15)) & (sat > 0.15) & valid & ~water
+    smoke = cv2.morphologyEx(smoke.astype(np.uint8), cv2.MORPH_OPEN, k_open).astype(bool)
+    smoke = _remove_small(smoke, int(0.0002 * valid.size))
+
+    # TIERRA CLARA / CAMPOS SECOS: muy brillante en SWIR (lo quemado y el matorral son oscuros)
+    t_b = float(np.percentile(bright[valid], 75))
+    bare = (bright > max(t_b, float(threshold_otsu(bright[valid][::13])))) & valid & ~water & ~smoke
+    bare = cv2.morphologyEx(bare.astype(np.uint8), cv2.MORPH_OPEN, k_open).astype(bool)
+
+    # NUBE: blanco (poco saturado) y muy brillante; con True Color se exige también que sea claro y gris allí
+    cloud = (bright > np.percentile(bright[valid], 97)) & (sat < np.percentile(sat[valid], 15)) & valid
+    if "B03" in b:
+        grey_tc = (b["B03"] > np.percentile(b["B03"][valid], 90)) & (b["B02"] > np.percentile(b["B02"][valid], 85))
+        cloud &= grey_tc
+    cloud = _remove_small(cv2.morphologyEx(cloud.astype(np.uint8), cv2.MORPH_OPEN, k_open).astype(bool),
+                          int(0.0003 * valid.size))
+
+    # CIUDAD (EXPERIMENTAL, poco fiable: también marca parcelas): contraste fino denso + poca vegetación.
+    hf = np.abs(bright - cv2.GaussianBlur(bright, (0, 0), 1.5))
+    dens = cv2.blur((hf > np.percentile(hf[valid], 70)).astype(np.float32), (k * 7, k * 7))
+    urban = (dens > np.percentile(dens[valid], 93)) & valid & ~water & ~smoke
+    urban = cv2.morphologyEx(urban.astype(np.uint8), cv2.MORPH_CLOSE,
+                             cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k * 8 + 1, k * 8 + 1))).astype(bool)
+    urban = _remove_small(urban, int(0.002 * valid.size))
+
+    return {"water": water, "cloud": cloud, "bare": bare, "urban": urban, "smoke": smoke}
+
+
+def save_mask_debug(scene: dict, masks: dict, root: str = "debug") -> str:
+    out = Path(root) / scene["name"]
+    out.mkdir(parents=True, exist_ok=True)
+    for k, m in masks.items():
+        cv2.imwrite(str(out / f"mask_{k}.png"), m.astype(np.uint8) * 255)
+    # montaje: SWIR con cada máscara pintada de un color
+    base = scene["swir"][..., ::-1].copy()
+    colors = {"water": (255, 0, 0), "smoke": (255, 255, 0), "bare": (0, 255, 255), "urban": (255, 0, 255), "cloud": (255, 255, 255)}
+    for k, m in masks.items():
+        base[m] = (0.4 * base[m] + 0.6 * np.array(colors[k])).astype(np.uint8)
+    cv2.imwrite(str(out / "mask_overview.png"), base)
+    return str(out)
