@@ -22,8 +22,11 @@ import cv2
 import numpy as np
 
 HOT_PCT = 99.5      # percentil de B12 para ser candidato
-RED_RATIO = 0.30    # (R - max(G, B)) / R mínimo: naranja/rojo vivo, no pardo ni pálido (ver README: barrido)
-Z_CTX = 2.5         # cuántas desviaciones por encima del fondo local
+# Barrido 15-10 (ver README) con las marcas a mano de Jesús en las 3 escenas, la Wildfire y 4 escenas sin incendio:
+# 0,30/2,5 -> 0,40/3,0 encuentra el 100 % de las zonas de fuego anotadas en ambos casos (recall por píxel 0,39 vs 0,36),
+# pero en escenas sin incendio pasa de 0/30/34/235 a 0/1/1/9 píxeles falsos. Se elige 0,40/3,0.
+RED_RATIO = 0.40    # (R - max(G, B)) / R mínimo: naranja/rojo vivo, no pardo ni pálido
+Z_CTX = 3.0         # cuántas desviaciones por encima del fondo local
 WIN = 61            # ventana del fondo (px a resolución de trabajo)
 ACTIVE_FRAC = 0.010 # "superficie con actividad" = a menos de esta fracción de la diagonal de un foco (~30 px en 2500 px)
 NEAR_SCAR_PX = 15   # foco "en el frente" si está a menos de esto de la cicatriz
