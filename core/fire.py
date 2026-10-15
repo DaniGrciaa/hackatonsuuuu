@@ -25,6 +25,7 @@ HOT_PCT = 99.5      # percentil de B12 para ser candidato
 RED_RATIO = 0.30    # (R - max(G, B)) / R mínimo: naranja/rojo vivo, no pardo ni pálido (ver README: barrido)
 Z_CTX = 2.5         # cuántas desviaciones por encima del fondo local
 WIN = 61            # ventana del fondo (px a resolución de trabajo)
+ACTIVE_FRAC = 0.010 # "superficie con actividad" = a menos de esta fracción de la diagonal de un foco (~30 px en 2500 px)
 NEAR_SCAR_PX = 15   # foco "en el frente" si está a menos de esto de la cicatriz
 
 
@@ -61,6 +62,21 @@ def fire_conditions(b: dict) -> dict:
 
 def fire_mask(b: dict) -> np.ndarray:
     return fire_conditions(b)["mask"]
+
+
+def activity_radius_px(shape) -> int:
+    return max(3, int(ACTIVE_FRAC * float(np.hypot(*shape[:2]))))
+
+
+def activity_zone(burn: np.ndarray, fires: np.ndarray) -> np.ndarray:
+    """Superficie afectada CON actividad: lo quemado cerca de un foco, más los propios píxeles de fuego (el frente puede
+    quedar justo fuera de la cicatriz). El resto de la cicatriz es "sin actividad aparente". Es una definición nuestra
+    (radio ACTIVE_FRAC), no una medida. Única fuente para run.py y para la app."""
+    if not fires.any():
+        return np.zeros_like(burn, dtype=bool)
+    r = activity_radius_px(burn.shape)
+    k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * r + 1, 2 * r + 1))
+    return (burn & cv2.dilate(fires.astype(np.uint8), k).astype(bool)) | fires
 
 
 def detect_fires(b: dict, ind: dict, burn: np.ndarray, masks: dict) -> np.ndarray:

@@ -25,18 +25,6 @@
   2500
  ],
  "escala": 1.0,
-<<<<<<< HEAD
- "pixeles_quemados_trabajo": 310899,
- "pixeles_quemados_original_equiv": 310899,
- "porcentaje_quemado": 8.04,
- "num_componentes": 13,
- "num_huecos": 14,
- "perimetro_px_original": 8705.9,
- "porcentaje_agua": 1.06,
- "porcentaje_humo": 2.39,
- "pixeles_focos": 7692,
- "num_focos": 67,
-=======
  "pixeles_quemados_trabajo": 318730,
  "pixeles_quemados_original_equiv": 318730,
  "porcentaje_quemado": 8.25,
@@ -45,22 +33,16 @@
  "perimetro_px_original": 6100.6,
  "porcentaje_agua": 0.29,
  "porcentaje_humo": 20.08,
- "pixeles_focos": 7160,
- "num_focos": 61,
->>>>>>> 780e8800f29b01bfd5f85eabd21361031a3e781a
+ "pixeles_focos": 7692,
+ "num_focos": 67,
  "focos_por_ubicacion": {
   "frente de la cicatriz": 66,
   "junto al humo": 0,
   "aislado": 1
  },
-<<<<<<< HEAD
- "porcentaje_quemado_con_actividad": 9.39,
- "porcentaje_quemado_sin_actividad": 90.61,
-=======
- "porcentaje_quemado_con_actividad": 24.45,
- "porcentaje_quemado_sin_actividad": 75.55,
+ "porcentaje_quemado_con_actividad": 26.74,
+ "porcentaje_quemado_sin_actividad": 73.26,
  "radio_actividad_px": 29,
->>>>>>> 780e8800f29b01bfd5f85eabd21361031a3e781a
  "focos": [
   {
    "centro": [
@@ -727,13 +709,8 @@
     2393.8,
     1367.9
    ],
-<<<<<<< HEAD
    "area_px": 29,
-   "dist_cicatriz_px": 17.8,
-=======
-   "area_px": 8,
-   "dist_cicatriz_px": 1070.1,
->>>>>>> 780e8800f29b01bfd5f85eabd21361031a3e781a
+   "dist_cicatriz_px": 1068.7,
    "ubicacion": "aislado",
    "confianza": "baja"
   }
@@ -3453,13 +3430,5 @@
   }
  ],
  "avisos": [],
-<<<<<<< HEAD
-<<<<<<< HEAD
- "tiempo_s": 5.76
-=======
- "tiempo_s": 1.22
->>>>>>> 780e8800f29b01bfd5f85eabd21361031a3e781a
-=======
- "tiempo_s": 1.6
->>>>>>> f3546c5ae4cbcb00445743c19e80cfbfa0d6b266
+ "tiempo_s": 1.58
 }

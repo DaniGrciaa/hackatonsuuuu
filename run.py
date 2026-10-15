@@ -17,6 +17,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+from core.fire import activity_radius_px, activity_zone
 from core.ingestion import IMG_EXT, load_scene
 from core.segmentation import DEFAULT_VARIANT, VARIANTS, burn_details, perimeter
 from core.spectral import bands, exclusion_masks, indices
@@ -25,19 +26,6 @@ COL_PERIM = (0, 255, 255)   # amarillo (BGR): perímetro y relleno de lo quemado
 COL_ACTIVE = (0, 120, 255)  # naranja: superficie quemada CON actividad (junto a un foco)
 COL_HOLE = (255, 200, 0)    # azul claro para huecos (embalses, islas)
 COL_FIRE = (0, 0, 255)      # rojo para los focos
-ACTIVE_FRAC = 0.010         # "con actividad" = a menos de esta fracción de la diagonal de un foco (~30 px en 2500 px)
-
-
-def activity_zone(burn: np.ndarray, fires: np.ndarray) -> np.ndarray:
-    """Superficie con actividad: lo quemado cerca de un foco, más los propios píxeles de fuego
-    (el frente puede quedar justo fuera de la cicatriz). El resto de la cicatriz es 'sin actividad aparente'."""
-    if not fires.any():
-        return np.zeros_like(burn)
-    r = max(3, int(ACTIVE_FRAC * float(np.hypot(*burn.shape))))
-    near = cv2.dilate(fires.astype(np.uint8), cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * r + 1, 2 * r + 1))).astype(bool)
-    return (burn & near) | fires
-
-
 def find_scenes(root: str) -> list[Path]:
     p = Path(root)
     if any(f.suffix.lower() in IMG_EXT for f in p.iterdir()):
@@ -177,7 +165,7 @@ def process(scene_dir: Path, out_root: Path, m_per_px: float | None, variant: st
         "focos_por_ubicacion": {k: sum(f["ubicacion"] == k for f in foci) for k in ("frente de la cicatriz", "junto al humo", "aislado")},
         "porcentaje_quemado_con_actividad": round(100 * n_act / max(n_burn, 1), 2),
         "porcentaje_quemado_sin_actividad": round(100 * (n_burn - n_act) / max(n_burn, 1), 2) if n_burn else 0.0,
-        "radio_actividad_px": max(3, int(ACTIVE_FRAC * float(np.hypot(*burn.shape)))),
+        "radio_actividad_px": activity_radius_px(burn.shape),
         "focos": foci,
         "descartados": det["discarded"][:200], "umbrales": {k: round(v, 4) for k, v in det["thresholds"].items()},
         "poligonos": polys, "avisos": sc["warnings"] + ([fire_warn] if fire_warn else []),
