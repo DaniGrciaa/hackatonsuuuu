@@ -28,7 +28,8 @@ NEAR_FRAC = 0.03        # v2: "pegado al humo/fuego" = a menos de esta fracción
 # Evidencia mínima de quemado (física: en lo quemado B12 > B8A, o sea NBR < 0). Otsu SIEMPRE parte la escena
 # en dos, haya cicatriz o no; esto evita "encontrar" una cicatriz en una escena sin incendio.
 # Medido: cicatrices reales NBR mediano -0,30 / -0,52; falso positivo en escena sin fuego 0,00 -> corte en el medio.
-COMP_NBR_MAX = -0.15    # una mancha cuenta como quemada solo si su NBR mediano es menor que esto
+COMP_NBR_MAX = -0.15    # (NBR normalizado) una mancha cuenta como quemada solo si su NBR mediano es menor que esto
+COMP_NBR_RAW_MAX = 0.0  # (NBR con valores originales) y, además, B12 > B8A de mediana: lo físico, signo del NBR
 NBR_FLOOR = 0.0         # v4: el corte del NBR nunca por debajo de 0
 SEED_RED_MIN = 0.0      # las semillas rojizas exigen B12 por encima de B8A y B04, diga lo que diga Otsu
 GROW_FRAC = 0.02        # v3: distancia máxima de crecimiento desde lo rojizo (fracción de la diagonal)
@@ -139,10 +140,12 @@ def burn_details(b: dict, ind: dict, masks: dict, variant: str = DEFAULT_VARIANT
     if variant != "v0":
         for i in range(1, n):
             if keep[i]:
-                med = float(np.median(ind["NBR"][lab == i]))
-                if med > COMP_NBR_MAX:
+                comp = lab == i
+                med = float(np.median(ind["NBR"][comp]))
+                med_raw = float(np.median(ind["NBR_RAW"][comp]))
+                if med > COMP_NBR_MAX or med_raw > COMP_NBR_RAW_MAX:
                     keep[i] = False
-                    discarded.append({"reason": f"sin evidencia de quemado (NBR mediano {med:+.2f})", "area": int(st[i, 4]),
+                    discarded.append({"reason": f"sin evidencia de quemado (NBR mediano {med:+.2f}, NBR original {med_raw:+.2f})", "area": int(st[i, 4]),
                                       "centroid": [float(cen[i][0]), float(cen[i][1])]})
 
     if variant in ("v2", "v3", "v4") and keep.any():

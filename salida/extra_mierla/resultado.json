@@ -33,142 +33,92 @@
  "perimetro_px_original": 11673.3,
  "porcentaje_agua": 0.67,
  "porcentaje_humo": 0.55,
- "pixeles_focos": 1492,
- "num_focos": 69,
+ "pixeles_focos": 977,
+ "num_focos": 53,
  "focos_por_ubicacion": {
-  "frente de la cicatriz": 48,
-  "junto al humo": 7,
-  "aislado": 14
+  "frente de la cicatriz": 39,
+  "junto al humo": 6,
+  "aislado": 8
  },
- "porcentaje_quemado_con_actividad": 1.0,
- "porcentaje_quemado_sin_actividad": 99.0,
+ "porcentaje_quemado_con_actividad": 0.64,
+ "porcentaje_quemado_sin_actividad": 99.36,
  "focos": [
-  {
-   "centro": [
-    1277.0,
-    227.0
-   ],
-   "area_px": 1,
-   "dist_cicatriz_px": 88.3,
-   "ubicacion": "junto al humo",
-   "confianza": "media"
-  },
   {
    "centro": [
     1257.3,
     233.5
    ],
-   "area_px": 34,
+   "area_px": 33,
    "dist_cicatriz_px": 80.6,
    "ubicacion": "junto al humo",
    "confianza": "media"
   },
   {
    "centro": [
-    1302.0,
-    249.5
+    1156.1,
+    260.7
    ],
-   "area_px": 2,
-   "dist_cicatriz_px": 63.0,
-   "ubicacion": "aislado",
-   "confianza": "baja"
-  },
-  {
-   "centro": [
-    1157.0,
-    259.5
-   ],
-   "area_px": 230,
-   "dist_cicatriz_px": 78.9,
+   "area_px": 160,
+   "dist_cicatriz_px": 79.5,
    "ubicacion": "junto al humo",
    "confianza": "media"
   },
   {
    "centro": [
-    1351.0,
-    253.0
+    1150.9,
+    272.3
    ],
-   "area_px": 1,
-   "dist_cicatriz_px": 27.2,
-   "ubicacion": "aislado",
-   "confianza": "baja"
-  },
-  {
-   "centro": [
-    1350.7,
-    256.5
-   ],
-   "area_px": 6,
-   "dist_cicatriz_px": 22.6,
-   "ubicacion": "aislado",
-   "confianza": "baja"
-  },
-  {
-   "centro": [
-    1151.0,
-    272.9
-   ],
-   "area_px": 9,
-   "dist_cicatriz_px": 80.4,
+   "area_px": 7,
+   "dist_cicatriz_px": 81.2,
    "ubicacion": "junto al humo",
    "confianza": "media"
   },
   {
    "centro": [
-    1434.0,
-    275.0
+    1429.3,
+    282.0
    ],
-   "area_px": 1,
-   "dist_cicatriz_px": 12.0,
-   "ubicacion": "frente de la cicatriz",
-   "confianza": "alta"
-  },
-  {
-   "centro": [
-    1429.1,
-    282.8
-   ],
-   "area_px": 92,
+   "area_px": 77,
    "dist_cicatriz_px": 1.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1466.5,
-    276.5
+    1466.3,
+    276.3
    ],
-   "area_px": 4,
+   "area_px": 3,
    "dist_cicatriz_px": 27.6,
    "ubicacion": "aislado",
    "confianza": "baja"
   },
   {
    "centro": [
-    1466.0,
-    282.5
+    1344.9,
+    293.3
    ],
-   "area_px": 2,
-   "dist_cicatriz_px": 24.0,
-   "ubicacion": "aislado",
-   "confianza": "baja"
-  },
-  {
-   "centro": [
-    1344.5,
-    292.9
-   ],
-   "area_px": 25,
-   "dist_cicatriz_px": 6.4,
+   "area_px": 14,
+   "dist_cicatriz_px": 7.6,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1468.2,
-    293.9
+    1426.0,
+    292.0
    ],
-   "area_px": 9,
+   "area_px": 1,
+   "dist_cicatriz_px": 1.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1468.0,
+    294.0
+   ],
+   "area_px": 8,
    "dist_cicatriz_px": 21.2,
    "ubicacion": "aislado",
    "confianza": "baja"
@@ -185,11 +135,11 @@
   },
   {
    "centro": [
-    1143.7,
-    296.3
+    1144.0,
+    296.0
    ],
-   "area_px": 3,
-   "dist_cicatriz_px": 58.2,
+   "area_px": 1,
+   "dist_cicatriz_px": 59.2,
    "ubicacion": "junto al humo",
    "confianza": "media"
   },
@@ -205,41 +155,21 @@
   },
   {
    "centro": [
-    1378.0,
-    308.0
-   ],
-   "area_px": 1,
-   "dist_cicatriz_px": 0.0,
-   "ubicacion": "frente de la cicatriz",
-   "confianza": "alta"
-  },
-  {
-   "centro": [
     1444.0,
-    316.6
+    317.0
    ],
-   "area_px": 144,
+   "area_px": 126,
    "dist_cicatriz_px": 2.8,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1430.0,
-    313.0
-   ],
-   "area_px": 1,
-   "dist_cicatriz_px": 1.4,
-   "ubicacion": "frente de la cicatriz",
-   "confianza": "alta"
-  },
-  {
-   "centro": [
-    1464.9,
+    1464.8,
     325.6
    ],
-   "area_px": 13,
-   "dist_cicatriz_px": 18.8,
+   "area_px": 12,
+   "dist_cicatriz_px": 19.0,
    "ubicacion": "aislado",
    "confianza": "baja"
   },
@@ -275,71 +205,51 @@
   },
   {
    "centro": [
-    1461.5,
-    331.0
+    1456.8,
+    334.4
    ],
-   "area_px": 2,
-   "dist_cicatriz_px": 19.4,
+   "area_px": 9,
+   "dist_cicatriz_px": 19.0,
    "ubicacion": "aislado",
    "confianza": "baja"
   },
   {
    "centro": [
-    1457.0,
-    334.5
+    1188.5,
+    341.0
    ],
-   "area_px": 10,
-   "dist_cicatriz_px": 18.6,
-   "ubicacion": "aislado",
-   "confianza": "baja"
-  },
-  {
-   "centro": [
-    1408.3,
-    337.3
-   ],
-   "area_px": 3,
-   "dist_cicatriz_px": 0.0,
+   "area_px": 6,
+   "dist_cicatriz_px": 7.4,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1175.0,
-    355.2
+    1173.1,
+    356.6
    ],
-   "area_px": 342,
+   "area_px": 190,
+   "dist_cicatriz_px": 1.4,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1399.7,
+    362.0
+   ],
+   "area_px": 7,
    "dist_cicatriz_px": 1.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1165.0,
-    355.0
-   ],
-   "area_px": 1,
-   "dist_cicatriz_px": 15.4,
-   "ubicacion": "aislado",
-   "confianza": "baja"
-  },
-  {
-   "centro": [
-    1399.6,
-    362.2
-   ],
-   "area_px": 8,
-   "dist_cicatriz_px": 1.0,
-   "ubicacion": "frente de la cicatriz",
-   "confianza": "alta"
-  },
-  {
-   "centro": [
-    1403.2,
+    1403.3,
     371.3
    ],
-   "area_px": 29,
-   "dist_cicatriz_px": 2.8,
+   "area_px": 18,
+   "dist_cicatriz_px": 4.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
@@ -355,120 +265,70 @@
   },
   {
    "centro": [
-    1399.0,
-    377.0
+    1408.7,
+    383.7
    ],
-   "area_px": 1,
-   "dist_cicatriz_px": 1.0,
-   "ubicacion": "frente de la cicatriz",
-   "confianza": "alta"
-  },
-  {
-   "centro": [
-    1407.0,
-    379.0
-   ],
-   "area_px": 1,
-   "dist_cicatriz_px": 6.2,
-   "ubicacion": "frente de la cicatriz",
-   "confianza": "alta"
-  },
-  {
-   "centro": [
-    1421.2,
-    380.0
-   ],
-   "area_px": 4,
-   "dist_cicatriz_px": 12.8,
-   "ubicacion": "frente de la cicatriz",
-   "confianza": "alta"
-  },
-  {
-   "centro": [
-    1409.7,
-    382.3
-   ],
-   "area_px": 13,
+   "area_px": 3,
    "dist_cicatriz_px": 2.2,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1265.7,
-    389.7
+    1413.0,
+    391.0
    ],
-   "area_px": 3,
-   "dist_cicatriz_px": 0.0,
-   "ubicacion": "frente de la cicatriz",
-   "confianza": "alta"
-  },
-  {
-   "centro": [
-    1413.4,
-    391.1
-   ],
-   "area_px": 15,
+   "area_px": 5,
    "dist_cicatriz_px": 2.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1267.2,
-    391.8
+    1159.2,
+    401.9
    ],
-   "area_px": 4,
-   "dist_cicatriz_px": 0.0,
+   "area_px": 17,
+   "dist_cicatriz_px": 1.4,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1155.0,
-    400.5
+    1377.3,
+    400.3
    ],
-   "area_px": 87,
+   "area_px": 12,
    "dist_cicatriz_px": 1.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1377.7,
-    400.4
+    1149.5,
+    402.4
    ],
-   "area_px": 16,
-   "dist_cicatriz_px": 1.0,
+   "area_px": 11,
+   "dist_cicatriz_px": 9.2,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1123.2,
-    404.8
+    1123.0,
+    404.0
    ],
-   "area_px": 4,
-   "dist_cicatriz_px": 5.0,
+   "area_px": 1,
+   "dist_cicatriz_px": 5.2,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1376.7,
-    405.7
-   ],
-   "area_px": 3,
-   "dist_cicatriz_px": 2.8,
-   "ubicacion": "frente de la cicatriz",
-   "confianza": "alta"
-  },
-  {
-   "centro": [
-    1317.0,
+    1317.5,
     407.5
    ],
-   "area_px": 4,
+   "area_px": 2,
    "dist_cicatriz_px": 0.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
@@ -485,21 +345,11 @@
   },
   {
    "centro": [
-    1360.4,
-    412.4
+    1366.0,
+    410.0
    ],
-   "area_px": 18,
-   "dist_cicatriz_px": 1.0,
-   "ubicacion": "frente de la cicatriz",
-   "confianza": "alta"
-  },
-  {
-   "centro": [
-    1369.5,
-    411.0
-   ],
-   "area_px": 2,
-   "dist_cicatriz_px": 1.0,
+   "area_px": 1,
+   "dist_cicatriz_px": 1.4,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
@@ -508,27 +358,27 @@
     1119.0,
     413.5
    ],
-   "area_px": 4,
-   "dist_cicatriz_px": 1.4,
+   "area_px": 2,
+   "dist_cicatriz_px": 2.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1372.7,
-    412.3
+    1358.2,
+    412.9
    ],
-   "area_px": 3,
-   "dist_cicatriz_px": 2.8,
+   "area_px": 8,
+   "dist_cicatriz_px": 2.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1350.7,
-    416.2
+    1351.0,
+    415.8
    ],
-   "area_px": 18,
+   "area_px": 11,
    "dist_cicatriz_px": 7.8,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
@@ -536,32 +386,22 @@
   {
    "centro": [
     1120.0,
-    417.5
-   ],
-   "area_px": 4,
-   "dist_cicatriz_px": 0.0,
-   "ubicacion": "frente de la cicatriz",
-   "confianza": "alta"
-  },
-  {
-   "centro": [
-    1413.0,
     418.0
    ],
    "area_px": 3,
-   "dist_cicatriz_px": 27.4,
-   "ubicacion": "aislado",
-   "confianza": "baja"
-  },
-  {
-   "centro": [
-    1298.0,
-    426.5
-   ],
-   "area_px": 2,
    "dist_cicatriz_px": 0.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
+  },
+  {
+   "centro": [
+    1413.5,
+    418.0
+   ],
+   "area_px": 2,
+   "dist_cicatriz_px": 27.6,
+   "ubicacion": "aislado",
+   "confianza": "baja"
   },
   {
    "centro": [
@@ -575,10 +415,10 @@
   },
   {
    "centro": [
-    1115.3,
-    428.4
+    1114.5,
+    428.5
    ],
-   "area_px": 7,
+   "area_px": 4,
    "dist_cicatriz_px": 0.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
@@ -586,50 +426,60 @@
   {
    "centro": [
     1114.0,
-    431.8
+    431.0
    ],
-   "area_px": 4,
+   "area_px": 1,
    "dist_cicatriz_px": 1.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1095.0,
-    435.5
+    1095.3,
+    435.3
    ],
-   "area_px": 4,
+   "area_px": 3,
    "dist_cicatriz_px": 1.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1399.0,
-    445.0
+    1398.7,
+    445.3
    ],
-   "area_px": 7,
-   "dist_cicatriz_px": 17.4,
+   "area_px": 3,
+   "dist_cicatriz_px": 17.6,
    "ubicacion": "aislado",
    "confianza": "baja"
   },
   {
    "centro": [
-    1009.3,
-    463.9
+    1009.5,
+    464.2
    ],
-   "area_px": 131,
+   "area_px": 113,
    "dist_cicatriz_px": 0.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1022.5,
-    477.1
+    1021.5,
+    478.2
    ],
-   "area_px": 40,
+   "area_px": 21,
    "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1024.1,
+    474.2
+   ],
+   "area_px": 10,
+   "dist_cicatriz_px": 1.4,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
@@ -655,78 +505,68 @@
   },
   {
    "centro": [
-    1391.9,
-    498.3
+    1392.4,
+    498.2
    ],
-   "area_px": 9,
+   "area_px": 5,
    "dist_cicatriz_px": 2.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1385.2,
-    510.3
+    1387.3,
+    505.8
    ],
-   "area_px": 65,
-   "dist_cicatriz_px": 1.4,
+   "area_px": 12,
+   "dist_cicatriz_px": 2.2,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1012.0,
-    522.4
+    1383.2,
+    515.4
    ],
-   "area_px": 10,
-   "dist_cicatriz_px": 2.8,
-   "ubicacion": "frente de la cicatriz",
-   "confianza": "alta"
-  },
-  {
-   "centro": [
-    1386.0,
-    525.0
-   ],
-   "area_px": 1,
+   "area_px": 25,
    "dist_cicatriz_px": 2.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1012.2,
+    522.2
+   ],
+   "area_px": 4,
+   "dist_cicatriz_px": 3.2,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
     1388.0,
-    535.5
+    535.0
    ],
-   "area_px": 2,
+   "area_px": 1,
    "dist_cicatriz_px": 1.4,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1216.2,
-    878.3
+    1215.5,
+    879.0
    ],
-   "area_px": 6,
+   "area_px": 2,
    "dist_cicatriz_px": 0.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1231.0,
-    911.0
-   ],
-   "area_px": 1,
-   "dist_cicatriz_px": 0.0,
-   "ubicacion": "frente de la cicatriz",
-   "confianza": "alta"
-  },
-  {
-   "centro": [
-    1266.0,
-    932.0
+    1218.0,
+    878.0
    ],
    "area_px": 1,
    "dist_cicatriz_px": 0.0,
@@ -6188,5 +6028,9 @@
  "avisos": [
   "logo de Copernicus detectado en ['tc']; se enmascara la esquina"
  ],
+<<<<<<< HEAD
  "tiempo_s": 8.46
+=======
+ "tiempo_s": 1.22
+>>>>>>> c330661a52c9450ada88ce01578bada3281ea1a9
 }

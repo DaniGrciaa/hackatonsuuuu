@@ -3,13 +3,13 @@
 Idea (la de los algoritmos de satélite tipo MODIS/VIIRS, adaptada a la imagen SWIR de Copernicus,
 R=B12, G=B8A, B=B04): un píxel es foco si
   1. está entre los más calientes de la escena en B12 (percentil 99,5 del canal rojo de la SWIR, sin recortar),
-  2. es claramente rojo/naranja: (R - max(G, B)) / R >= 0,3 (descarta suelo claro, mina y nube, que son pálidos),
+  2. es claramente naranja/rojo: (R - max(G, B)) / R >= 0,40 (descarta suelo claro, mina y nube, que son pálidos,
+     y campos pardos, que tienen más verde: G~160 frente a 106-139 en los focos reales),
   3. destaca sobre su entorno: R - media_fondo > 3 * desviación_fondo en una ventana de 61 px, calculando el fondo
      SIN los píxeles calientes (si no, un frente largo se compara consigo mismo y no destaca).
 
-Medido (por focos, con 5 px de tolerancia; ver README):
-  Niebla vs Wildfire  P 0,71  R 0,54 | Extra vs Wildfire  P 0,57  R 0,92 |
-  práctica 26-07 vs regla física QuickFire (B11+B12>1)  P 0,76  R 0,32 | escena sin incendio: 0 px.
+Medido (por focos, con 5 px de tolerancia; ver README): Niebla vs Wildfire P 0,75 R 0,54 | Extra vs Wildfire P 0,64 R 0,88 | Extra vs marcas a mano P 1,00 R 0,82 |
+práctica 26-07 vs regla física QuickFire (B11+B12>1) P 0,82 R 0,29 | escenas sin incendio: 0, 1, 1 y 9 px.
 
     python -m core.fire data/niebla      # debug/<escena>/fire_*.png
 """
@@ -22,7 +22,7 @@ import cv2
 import numpy as np
 
 HOT_PCT = 99.5      # percentil de B12 para ser candidato
-RED_RATIO = 0.3     # (R - max(G, B)) / R mínimo: rojo/naranja, no pálido
+RED_RATIO = 0.40    # (R - max(G, B)) / R mínimo: naranja/rojo vivo, no pardo ni pálido (ver README: barrido)
 Z_CTX = 3.0         # cuántas desviaciones por encima del fondo local
 WIN = 61            # ventana del fondo (px a resolución de trabajo)
 NEAR_SCAR_PX = 15   # foco "en el frente" si está a menos de esto de la cicatriz

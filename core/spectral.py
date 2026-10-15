@@ -86,6 +86,10 @@ def indices(b: dict) -> dict:
         "BRIGHT": ((b12 + b8a + b04) / 3).astype(np.float32),
         "RED_DOM": (b12 - np.maximum(b8a, b04)).astype(np.float32),
         "SAT": ((mx - mn) / (mx + EPS)).astype(np.float32),
+        # NBR con los valores ORIGINALES de la SWIR (G=B8A, R=B12; misma ganancia en los dos canales). El NBR normalizado
+        # por percentiles de arriba pierde el signo físico: > 0 = más infrarrojo cercano que de onda corta (vegetación o
+        # suelo seco), < 0 = quemado. Se usa para decidir si una mancha tiene evidencia de quemado.
+        "NBR_RAW": _nd(b["_swir"][..., 1].astype(np.float32), b["_swir"][..., 0].astype(np.float32)),
         "_bands": b,   # referencia interna: permite burn_mask(indices, masks) sin pasar las bandas aparte
     }
 

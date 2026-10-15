@@ -77,7 +77,11 @@ Tarda **entre 0,2 y 2,6 s por escena** en un portátil.
 1. **Candidatos:** fuera el agua. Dentro del resto, lo oscuro (Otsu del brillo) con NBR bajo (Otsu del NBR, **nunca por debajo de 0**: es un criterio visual empirico que debe validarse con anotaciones).
 2. **Semillas:** de esos candidatos, lo claramente rojizo (Otsu de `RED_DOM`, nunca por debajo de 0).
 3. **Crecimiento:** desde las semillas se crece, como mucho un 2 % de la diagonal, por lo *muy* oscuro (segundo Otsu del brillo). Así entra la ceniza marrón oscura pegada a la cicatriz, pero no el bosque oscuro que no toca ninguna semilla.
+<<<<<<< HEAD
 4. **Evidencia de quemado:** una mancha solo cuenta si su NBR mediano es menor que −0,15. Es una regla empirica sobre los canales normalizados del JPEG, no una prueba fisica de quemado.
+=======
+4. **Evidencia de quemado:** una mancha solo cuenta si, con los valores originales de la SWIR, B12 supera a B8A de mediana (NBR original < 0) y además su NBR normalizado es < −0,15. Hace falta el NBR *original*: el normalizado por percentiles pierde el signo físico y dejaba pasar una zona de terreno seco como "cicatriz" en una escena de antes del incendio (marcaba un 21 %).
+>>>>>>> c330661a52c9450ada88ce01578bada3281ea1a9
 5. **Prior espacial:** se quedan las manchas grandes y las pegadas al humo o al fuego. El matorral seco suelto se descarta.
 6. **Huecos:** se rellenan los huecos pequeños (claros de ceniza) y se vuelve a restar el agua, así que los embalses de dentro no cuentan como quemado.
 7. **Perímetro:** contornos con huecos (`cv2.findContours`, `RETR_CCOMP`), simplificados.
@@ -87,19 +91,23 @@ Lo que se descarta (manchas pequeñas, sueltas o sin evidencia) va en `resultado
 ### 5. Focos de fuego activo (`core/fire.py`, nivel avanzado)
 Es la idea de los algoritmos de satélite de detección de incendios (MODIS/VIIRS), adaptada a la SWIR de Copernicus. Un píxel es foco si cumple las tres condiciones:
 1. Está entre el 0,5 % más brillante de la escena en B12 (canal rojo de la SWIR **sin recortar**, porque el fuego lo satura).
-2. Es claramente rojo o naranja: `(R − max(G, B)) / R ≥ 0,3`. Así se descartan el suelo claro, las minas y las nubes, que son pálidos.
+2. Es claramente naranja o rojo: `(R − max(G, B)) / R ≥ 0,40`. Así se descartan el suelo claro, las minas y las nubes (pálidos) y los campos pardos (más verde: G≈160 frente a 106–139 en los focos reales).
 3. Destaca sobre su entorno: supera la media del fondo en más de 3 desviaciones, en una ventana de 61 px. **El fondo se calcula sin los píxeles calientes**; si no, un frente largo se compara consigo mismo y no destaca. Con ese cambio, el recall en Niebla pasó del 3 % al 54 %.
 
-Cada foco se clasifica como "frente de la cicatriz" (confianza alta), "junto al humo" (media) o "aislado" (baja). El JSON separa el **área quemada con actividad** (a menos de 7 px de un foco) de la **quemada sin actividad**.
+Cada foco se clasifica por **ubicación**: "frente de la cicatriz" (confianza alta), "junto al humo" (media) o "aislado" (baja). Esa confianza dice dónde está, no cuánto se parece a un fuego real. El JSON separa el **área quemada con actividad** (a menos de 7 px de un foco) de la **quemada sin actividad**.
+
+**Lo que NO hacemos todavía:** no filtramos los focos con las máscaras de nube, ciudad o tierra clara (la tierra clara no sirve, porque el fuego también es brillante: el 57 % de los focos reales de la escena extra caen en ella), no clasificamos por intensidad ni por tipo, y la confianza no se calibra.
 
 Medido **por focos** (cada mancha es un objeto, con 5 px de tolerancia):
 
 | Referencia | Focos detectados / de referencia | Precisión | Recall |
 |---|---|---|---|
-| Niebla, Wildfire | 65 / 113 | 0,71 | 0,54 |
-| Extra, Wildfire | 69 / 59 | 0,57 | 0,92 |
-| Práctica 26-07, regla física de QuickFire (B11 + B12 > 1, bandas crudas) | 327 / 769 | 0,76 | 0,32 |
-| Escena sin incendio | 0 píxeles | — | — |
+| Niebla, Wildfire | 61 / 113 | 0,75 | 0,54 |
+| Extra, Wildfire | 53 / 59 | 0,64 | 0,88 |
+| Extra, marcas a mano de Jesús (solo zonas anotadas) | — | 1,00 | 0,82 |
+| Práctica 26-07, regla física de QuickFire (B11 + B12 > 1, bandas crudas) | 264 / 769 | 0,82 | 0,29 |
+
+**Escenas sin incendio** (`python tools_c/negativas.py`): 0, 1, 1 y 9 píxeles de fuego, y 0 % de cicatriz en las cuatro. Es el valor intermedio de un barrido de `RED_RATIO` (0,30 daba 0 / 16 / 16 / 108 píxeles y 0,45 daba 0 / 0 / 0 / 3, pero bajaba el recall frente a las marcas de Jesús a 0,68). **Se eligió mirando estas escenas y las de referencia: no hay ninguna reservada**, así que las cifras son optimistas.
 
 - La Wildfire es una referencia ruidosa: también pinta parcelas pálidas, asi que el acuerdo con ella no mide el recall real.
 - En Niebla se detecta el **foco aislado en los campos** (abajo a la derecha) y se marca con confianza baja.
@@ -118,7 +126,7 @@ Medido **por focos** (cada mancha es un objeto, con 5 px de tolerancia):
 
 - **El NBR a secas no siempre basta.** Sin foto de antes, todo terreno seco tiene NBR bajo, y en Niebla y Ávila-Madrid v0 marca más de un tercio de la escena. Pero depende de la escena: en la de práctica del 26-07 (ver más abajo) v0 marca un 11 % y, de hecho, sale mejor que v3 y v4 en IoU.
 - **El tono rojizo como corte duro pierde cicatrices oscuras.** En la escena extra, v2 se dejaba una segunda cicatriz marrón oscura (RED_DOM −0,08). La histéresis la recupera sin dejar entrar el bosque oscuro: medido en Niebla y Ávila-Madrid, lo que se colaba era más claro que la ceniza (brillo mediano 0,33–0,41 frente a 0,24–0,25).
-- **Otsu siempre parte la escena en dos, haya incendio o no.** En una escena de junio sin incendio (`Browser_images-9`), v2 marcaba un 8,5 % de matorral pardo. Las cicatrices reales tienen NBR mediano −0,30 / −0,52, y ese matorral 0,00, así que se corta en −0,15. Ahora esa escena da 0,0 %.
+- **Otsu siempre parte la escena en dos, haya incendio o no.** En una escena de junio sin incendio (`Browser_images-9`), v2 marcaba un 8,5 % de matorral pardo; con solo el NBR normalizado, otra escena del 24-06 (antes del incendio) seguía dando un 21 %. Separa el NBR *original*: en las cicatrices reales la mediana es −0,10 a −0,27 (B12 sobre B8A, rojizas) y en ese terreno seco es +0,13 (verdoso). Con esa regla las 4 escenas sin incendio dan 0,00 % y las reales no cambian.
 - **Solo SWIR:** el resultado es idéntico con o sin True Color (Niebla 7,79 % en los dos casos). Hoy la True Color solo se usa para la máscara de nubes y para dibujar.
 - **Calibración True Color ↔ SWIR:** B04 aparece en las dos imágenes (rojo de la True Color, azul de la SWIR). Una recta robusta los relaciona con correlación 0,93–0,95: azul SWIR ≈ 1,26·x − 101 (Ávila-Madrid), 1,48·x − 140 (Niebla) y 1,11·x − 81 (extra). Es un diagnostico de semejanza entre canales; no certifica por si solo la alineacion geometrica. La hipótesis de que esa recta también vale para el verde y el rojo de la SWIR **no se pudo comprobar**, porque son bandas que la True Color no tiene.
 
