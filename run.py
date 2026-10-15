@@ -17,6 +17,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+from core.escala import ha_per_px, km_per_px, scale_for
 from core.fire import activity_radius_px, activity_zone
 from core.ingestion import IMG_EXT, load_scene
 from core.segmentation import DEFAULT_VARIANT, VARIANTS, burn_details, perimeter
@@ -111,6 +112,9 @@ def _legend(im: np.ndarray, th: int, footer: str = ""):
 def process(scene_dir: Path, out_root: Path, m_per_px: float | None, variant: str) -> dict:
     t0 = time.time()
     sc = load_scene(scene_dir)
+    # Escala: --m-per-px manda; si no, <escena>/escala.json; si no hay ninguna, todo en píxeles
+    escala = ({"m_por_px_x": m_per_px, "m_por_px_y": m_per_px, "fuente": "--m-per-px"} if m_per_px
+              else scale_for(scene_dir))
     if not sc["valid"].any():
         raise ValueError("escena sin pixeles validos")
     b = bands(sc)
@@ -130,7 +134,9 @@ def process(scene_dir: Path, out_root: Path, m_per_px: float | None, variant: st
     n_burn = int(burn.sum())
     n_act = int((active & burn).sum())
     pct_act = round(100 * n_act / max(n_burn, 1), 1)
-    footer = (f"Afectada: {100 * n_burn / n_valid:.1f}% de la imagen  |  con actividad {pct_act}%  |  "
+    area_txt = f"{n_burn * ha_per_px(escala, sc['scale']):,.0f} ha".replace(",", ".") if escala \
+        else f"{100 * n_burn / n_valid:.1f}% de la imagen"
+    footer = (f"Afectada: {area_txt}  |  con actividad {pct_act}%  |  "
               f"sin actividad {100 - pct_act if n_burn else 0:.1f}%  |  {len(foci)} posibles focos")
 
     out = out_root / sc["name"]
@@ -187,10 +193,15 @@ def process(scene_dir: Path, out_root: Path, m_per_px: float | None, variant: st
     }
     if sc["tc"] is None:
         res["avisos"].append("sin True Color: solo SWIR")
-    if m_per_px:
-        res["m_por_px"] = m_per_px
-        res["hectareas"] = round(orig_px * m_per_px ** 2 / 1e4, 1)
-        res["perimetro_km"] = round(perim_px * m_per_px / 1000, 2)
+    if escala:
+        hpp, kpp = ha_per_px(escala, sc["scale"]), km_per_px(escala, sc["scale"])
+        res["escala"] = escala
+        res["hectareas"] = round(n_burn * hpp, 1)
+        res["hectareas_con_actividad"] = round(n_act * hpp, 1)
+        res["hectareas_posible_bajo_humo"] = round(int(under.sum()) * hpp, 1)
+        res["perimetro_km"] = round(perim_px * km_per_px(escala, 1.0), 2)   # perim_px ya está en píxeles originales
+    else:
+        res["avisos"].append("sin escala conocida: cifras en píxeles (añade escala.json o --m-per-px para hectáreas)")
     res["tiempo_s"] = round(time.time() - t0, 2)
     (out / "resultado.json").write_text(json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")
     return res
