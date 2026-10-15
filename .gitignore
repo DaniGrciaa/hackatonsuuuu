@@ -1,7 +1,5 @@
 .venv/
-debug/
-salida/
-data/
 __pycache__/
-.DS_Store
 data_test/
+debug/
+.DS_Store
