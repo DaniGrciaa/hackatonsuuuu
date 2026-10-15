@@ -33,6 +33,7 @@
  "perimetro_px_original": 11825.2,
  "porcentaje_agua": 0.5,
  "porcentaje_humo": 5.23,
+ "porcentaje_posible_bajo_humo": 1.09,
  "pixeles_focos": 977,
  "num_focos": 53,
  "focos_por_ubicacion": {
@@ -630,7 +631,8 @@
   "nbr": 0.0508,
   "red_dom": 0.1434,
   "bright_ash": 0.3276,
-  "grow_px": 58.0
+  "grow_px": 58.0,
+  "nir_smoke": 144.7188
  },
  "poligonos": [
   {
@@ -8955,5 +8957,5 @@
  "avisos": [
   "logo de Copernicus detectado en ['tc']; se enmascara la esquina"
  ],
- "tiempo_s": 1.67
+ "tiempo_s": 1.95
 }

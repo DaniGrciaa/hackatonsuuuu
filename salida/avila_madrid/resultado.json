@@ -32,6 +32,7 @@
  "perimetro_px_original": 47290.9,
  "porcentaje_agua": 0.38,
  "porcentaje_humo": 12.35,
+ "porcentaje_posible_bajo_humo": 0.83,
  "pixeles_focos": 574,
  "num_focos": 73,
  "focos_por_ubicacion": {
@@ -989,7 +990,8 @@
   "nbr": 0.2305,
   "red_dom": 0.0325,
   "bright_ash": 0.3672,
-  "grow_px": 61.0
+  "grow_px": 61.0,
+  "nir_smoke": 144.7031
  },
  "poligonos": [
   {
@@ -7780,5 +7782,5 @@
   }
  ],
  "avisos": [],
- "tiempo_s": 3.69
+ "tiempo_s": 3.59
 }
