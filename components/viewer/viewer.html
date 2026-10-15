@@ -168,6 +168,11 @@ footer { border-top: 1px solid var(--line); background: var(--slate-2); padding:
 footer b { color: var(--ink-2); font-weight: 500; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
+@media (max-width: 1360px) {
+  .brand .tag { display: none; }
+  .tool .t { display: none; }
+  .bar { gap: 8px 12px; }
+}
 @media (max-width: 760px) {
   main { grid-template-columns: 1fr; grid-template-rows: 58vh auto; }
   .panel { order: 2; border-right: 0; border-top: 1px solid var(--line); }
@@ -202,11 +207,11 @@ footer b { color: var(--ink-2); font-weight: 500; }
     </div>
     <div class="group">
       <button class="tool" id="lensBtn" aria-pressed="false" title="Lupa: muestra otra imagen bajo el cursor">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>Lupa</button>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg><span class="t">Lupa</span></button>
       <button class="tool" id="fitBtn" title="Encajar la imagen (también con doble clic)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>Encajar</button>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span class="t">Encajar</span></button>
       <button class="tool" id="shotBtn" title="Descargar una imagen PNG de la vista actual">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4v11m0 0-4-4m4 4 4-4"/><path d="M4 17v3h16v-3"/></svg>Captura PNG</button>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4v11m0 0-4-4m4 4 4-4"/><path d="M4 17v3h16v-3"/></svg><span class="t">Captura PNG</span></button>
     </div>
   </header>
 

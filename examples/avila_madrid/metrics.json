@@ -1,0 +1,154 @@
+{
+ "titulo": "Ávila y Madrid",
+ "orden": 2,
+ "fecha": "26 de julio de 2026",
+ "escena": "avila_madrid",
+ "tamano_analisis": [
+  2600,
+  1608
+ ],
+ "tamano_original": [
+  2600,
+  1608
+ ],
+ "unidades": "Píxeles de la imagen analizada. La imagen no está georreferenciada: no hay hectáreas ni km.",
+ "tiempo_total_s": 5.128,
+ "avisos": [],
+ "capas": {
+  "burn": {
+   "nombre": "Zona quemada",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 3.942,
+   "metricas": {
+    "area_px": 237515,
+    "pct_imagen": 5.681,
+    "regiones": 75,
+    "perimetro_px": 15156.9
+   },
+   "mascara": "masks/burn.png"
+  },
+  "perimeter": {
+   "nombre": "Perímetro del incendio",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.139,
+   "metricas": {
+    "area_px": 242451,
+    "pct_imagen": 5.799,
+    "regiones": 33,
+    "perimetro_px": 12026.5
+   },
+   "mascara": "masks/perimeter.png"
+  },
+  "fire": {
+   "nombre": "Fuego activo",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.844,
+   "metricas": {
+    "area_px": 574,
+    "pct_imagen": 0.014,
+    "regiones": 73,
+    "perimetro_px": 522.2
+   },
+   "mascara": "masks/fire.png",
+   "focos_por_ubicacion": {
+    "frente de la cicatriz": 56,
+    "junto al humo": 7,
+    "aislado": 10
+   }
+  },
+  "burn_active": {
+   "nombre": "Zona quemada que aún arde",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.037,
+   "metricas": {
+    "area_px": 7369,
+    "pct_imagen": 0.176,
+    "regiones": 23,
+    "perimetro_px": 1543.9
+   },
+   "mascara": "masks/burn_active.png"
+  },
+  "smoke": {
+   "nombre": "Humo",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.024,
+   "metricas": {
+    "area_px": 104319,
+    "pct_imagen": 2.495,
+    "regiones": 11,
+    "perimetro_px": 16358.4
+   },
+   "mascara": "masks/smoke.png"
+  },
+  "water": {
+   "nombre": "Agua",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.028,
+   "metricas": {
+    "area_px": 31897,
+    "pct_imagen": 0.763,
+    "regiones": 56,
+    "perimetro_px": 14540.1
+   },
+   "mascara": "masks/water.png"
+  },
+  "cloud": {
+   "nombre": "Nubes",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.022,
+   "metricas": {
+    "area_px": 0,
+    "pct_imagen": 0.0,
+    "regiones": 0,
+    "perimetro_px": 0.0
+   },
+   "mascara": "masks/cloud.png"
+  },
+  "bare": {
+   "nombre": "Suelo claro o campos secos",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.039,
+   "metricas": {
+    "area_px": 449591,
+    "pct_imagen": 10.754,
+    "regiones": 1720,
+    "perimetro_px": 121510.8
+   },
+   "mascara": "masks/bare.png"
+  },
+  "urban": {
+   "nombre": "Posible zona urbana (poco fiable)",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.025,
+   "metricas": {
+    "area_px": 360350,
+    "pct_imagen": 8.619,
+    "regiones": 4,
+    "perimetro_px": 13919.5
+   },
+   "mascara": "masks/urban.png"
+  },
+  "nodata": {
+   "nombre": "Sin datos",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.026,
+   "metricas": {
+    "area_px": 0,
+    "pct_imagen": 0.0,
+    "regiones": 0,
+    "perimetro_px": 0.0
+   },
+   "mascara": "masks/nodata.png"
+  }
+ }
+}

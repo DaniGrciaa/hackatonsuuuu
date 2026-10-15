@@ -74,8 +74,8 @@ def points(mask: np.ndarray) -> list[list[float]]:
 
 
 def build_payload(analysis: dict, title: str = "", max_side: int = MAX_SIDE) -> dict:
-    swir = analysis["bases"]["swir"]
-    ah, aw = swir.shape[:2]
+    # Tamaño de análisis (el de las máscaras); las bases de un ejemplo guardado pueden venir ya reducidas
+    ah, aw = analysis.get("scene", {}).get("size") or analysis["bases"]["swir"].shape[:2]
     vh, vw = viewer_size(ah, aw, max_side)
     bases = [{"id": k, "nombre": BASE_NAMES[k], "src": jpeg_b64(analysis["bases"][k], (vh, vw))}
              for k in ("tc", "swir", "wildfire") if analysis["bases"].get(k) is not None]
@@ -116,6 +116,15 @@ def to_html(payload: dict) -> str:
     return HTML_PATH.read_text(encoding="utf-8").replace("__PAYLOAD__", data, 1)
 
 
+def render_html(html: str, height: int = 820) -> None:
+    """Incrusta el visor. st.iframe sustituye a st.components.v1.html (obsoleto) en Streamlit reciente."""
+    import streamlit as st
+    if hasattr(st, "iframe"):
+        st.iframe(html, height=height)
+    else:  # Streamlit antiguo
+        import streamlit.components.v1 as components
+        components.html(html, height=height, scrolling=False)
+
+
 def render(payload: dict, height: int = 820) -> None:
-    import streamlit.components.v1 as components
-    components.html(to_html(payload), height=height, scrolling=False)
+    render_html(to_html(payload), height)

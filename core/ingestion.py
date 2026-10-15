@@ -29,6 +29,18 @@ def _read_rgb(path: str) -> np.ndarray:
     im = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
     if im is None:
         raise ValueError(f"No se puede leer la imagen: {path}")
+    return _to_rgb(im)
+
+
+def rgb_from_bytes(data: bytes, label: str = "imagen") -> np.ndarray:
+    """Decodifica un archivo de imagen en memoria (p. ej. subido en la app) a RGB uint8."""
+    im = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_UNCHANGED)
+    if im is None:
+        raise ValueError(f"No se puede leer la imagen: {label}")
+    return _to_rgb(im)
+
+
+def _to_rgb(im: np.ndarray) -> np.ndarray:
     if im.dtype == np.uint16:                     # GeoTIFF visual de 16 bits -> 8 bits
         im = (im / 257).round().astype(np.uint8)
     if im.ndim == 2:
