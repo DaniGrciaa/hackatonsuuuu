@@ -12,19 +12,19 @@
   1608
  ],
  "unidades": "Píxeles de la imagen analizada. La imagen no está georreferenciada: no hay hectáreas ni km.",
- "tiempo_total_s": 5.128,
+ "tiempo_total_s": 1.614,
  "avisos": [],
  "capas": {
   "burn": {
    "nombre": "Zona quemada",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 3.942,
+   "tiempo_s": 1.376,
    "metricas": {
-    "area_px": 237515,
-    "pct_imagen": 5.681,
-    "regiones": 75,
-    "perimetro_px": 15156.9
+    "area_px": 245885,
+    "pct_imagen": 5.881,
+    "regiones": 1,
+    "perimetro_px": 10999.3
    },
    "mascara": "masks/burn.png"
   },
@@ -32,12 +32,12 @@
    "nombre": "Perímetro del incendio",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.139,
+   "tiempo_s": 0.062,
    "metricas": {
-    "area_px": 242451,
-    "pct_imagen": 5.799,
-    "regiones": 33,
-    "perimetro_px": 12026.5
+    "area_px": 247790,
+    "pct_imagen": 5.927,
+    "regiones": 1,
+    "perimetro_px": 10168.5
    },
    "mascara": "masks/perimeter.png"
   },
@@ -45,30 +45,30 @@
    "nombre": "Fuego activo",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.844,
+   "tiempo_s": 0.138,
    "metricas": {
-    "area_px": 574,
-    "pct_imagen": 0.014,
-    "regiones": 73,
-    "perimetro_px": 522.2
+    "area_px": 657,
+    "pct_imagen": 0.016,
+    "regiones": 86,
+    "perimetro_px": 625.1
    },
    "mascara": "masks/fire.png",
    "focos_por_ubicacion": {
-    "frente de la cicatriz": 56,
-    "junto al humo": 7,
-    "aislado": 10
+    "frente de la cicatriz": 60,
+    "junto al humo": 19,
+    "aislado": 7
    }
   },
   "burn_active": {
    "nombre": "Zona quemada que aún arde",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.037,
+   "tiempo_s": 0.022,
    "metricas": {
-    "area_px": 7369,
-    "pct_imagen": 0.176,
-    "regiones": 23,
-    "perimetro_px": 1543.9
+    "area_px": 36511,
+    "pct_imagen": 0.873,
+    "regiones": 14,
+    "perimetro_px": 3626.0
    },
    "mascara": "masks/burn_active.png"
   },
@@ -76,12 +76,12 @@
    "nombre": "Humo",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.024,
+   "tiempo_s": 0.002,
    "metricas": {
-    "area_px": 104319,
-    "pct_imagen": 2.495,
-    "regiones": 11,
-    "perimetro_px": 16358.4
+    "area_px": 516249,
+    "pct_imagen": 12.348,
+    "regiones": 2,
+    "perimetro_px": 25514.4
    },
    "mascara": "masks/smoke.png"
   },
@@ -89,12 +89,12 @@
    "nombre": "Agua",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.028,
+   "tiempo_s": 0.002,
    "metricas": {
-    "area_px": 31897,
-    "pct_imagen": 0.763,
-    "regiones": 56,
-    "perimetro_px": 14540.1
+    "area_px": 15999,
+    "pct_imagen": 0.383,
+    "regiones": 53,
+    "perimetro_px": 4859.8
    },
    "mascara": "masks/water.png"
   },
@@ -102,7 +102,7 @@
    "nombre": "Nubes",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.022,
+   "tiempo_s": 0.002,
    "metricas": {
     "area_px": 0,
     "pct_imagen": 0.0,
@@ -115,12 +115,12 @@
    "nombre": "Suelo claro o campos secos",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.039,
+   "tiempo_s": 0.006,
    "metricas": {
-    "area_px": 449591,
-    "pct_imagen": 10.754,
-    "regiones": 1720,
-    "perimetro_px": 121510.8
+    "area_px": 446566,
+    "pct_imagen": 10.681,
+    "regiones": 1722,
+    "perimetro_px": 120782.3
    },
    "mascara": "masks/bare.png"
   },
@@ -128,12 +128,12 @@
    "nombre": "Posible zona urbana (poco fiable)",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.025,
+   "tiempo_s": 0.002,
    "metricas": {
-    "area_px": 360350,
-    "pct_imagen": 8.619,
+    "area_px": 358516,
+    "pct_imagen": 8.575,
     "regiones": 4,
-    "perimetro_px": 13919.5
+    "perimetro_px": 13953.3
    },
    "mascara": "masks/urban.png"
   },
@@ -141,7 +141,7 @@
    "nombre": "Sin datos",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.026,
+   "tiempo_s": 0.002,
    "metricas": {
     "area_px": 0,
     "pct_imagen": 0.0,

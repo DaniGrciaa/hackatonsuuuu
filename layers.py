@@ -13,7 +13,6 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Callable
 
-import cv2
 import numpy as np
 from scipy.ndimage import binary_fill_holes
 
@@ -45,9 +44,9 @@ def _fire(ctx) -> np.ndarray:
 
 
 def _burn_active(ctx) -> np.ndarray:
-    # Mismo criterio que run.py: parte de la cicatriz a menos de ~7 px de un foco
-    near = cv2.dilate(ctx.fires.astype(np.uint8), np.ones((15, 15), np.uint8)).astype(bool)
-    return ctx.burn & near
+    # Mismo criterio que run.py (core.fire.activity_zone): cicatriz a menos de ~1 % de la diagonal de un foco
+    from core.fire import activity_zone
+    return ctx.burn & activity_zone(ctx.burn, ctx.fires)
 
 
 def _exclusion(key: str) -> Callable[[object], np.ndarray]:

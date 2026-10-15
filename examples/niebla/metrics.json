@@ -12,19 +12,19 @@
   1546
  ],
  "unidades": "Píxeles de la imagen analizada. La imagen no está georreferenciada: no hay hectáreas ni km.",
- "tiempo_total_s": 4.69,
+ "tiempo_total_s": 1.335,
  "avisos": [],
  "capas": {
   "burn": {
    "nombre": "Zona quemada",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 3.709,
+   "tiempo_s": 1.141,
    "metricas": {
-    "area_px": 310899,
-    "pct_imagen": 8.044,
-    "regiones": 17,
-    "perimetro_px": 10512.0
+    "area_px": 318730,
+    "pct_imagen": 8.247,
+    "regiones": 2,
+    "perimetro_px": 6962.1
    },
    "mascara": "masks/burn.png"
   },
@@ -32,12 +32,12 @@
    "nombre": "Perímetro del incendio",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.123,
+   "tiempo_s": 0.059,
    "metricas": {
-    "area_px": 313528,
-    "pct_imagen": 8.112,
-    "regiones": 9,
-    "perimetro_px": 9608.3
+    "area_px": 319472,
+    "pct_imagen": 8.266,
+    "regiones": 2,
+    "perimetro_px": 6698.3
    },
    "mascara": "masks/perimeter.png"
   },
@@ -45,16 +45,16 @@
    "nombre": "Fuego activo",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.661,
+   "tiempo_s": 0.103,
    "metricas": {
-    "area_px": 7160,
-    "pct_imagen": 0.185,
-    "regiones": 61,
-    "perimetro_px": 2483.6
+    "area_px": 7692,
+    "pct_imagen": 0.199,
+    "regiones": 67,
+    "perimetro_px": 2510.8
    },
    "mascara": "masks/fire.png",
    "focos_por_ubicacion": {
-    "frente de la cicatriz": 60,
+    "frente de la cicatriz": 66,
     "junto al humo": 0,
     "aislado": 1
    }
@@ -63,12 +63,12 @@
    "nombre": "Zona quemada que aún arde",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.038,
+   "tiempo_s": 0.019,
    "metricas": {
-    "area_px": 27409,
-    "pct_imagen": 0.709,
-    "regiones": 15,
-    "perimetro_px": 3536.8
+    "area_px": 85213,
+    "pct_imagen": 2.205,
+    "regiones": 10,
+    "perimetro_px": 5093.8
    },
    "mascara": "masks/burn_active.png"
   },
@@ -76,12 +76,12 @@
    "nombre": "Humo",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.026,
+   "tiempo_s": 0.002,
    "metricas": {
-    "area_px": 92201,
-    "pct_imagen": 2.386,
-    "regiones": 23,
-    "perimetro_px": 13525.6
+    "area_px": 776066,
+    "pct_imagen": 20.079,
+    "regiones": 1,
+    "perimetro_px": 24394.4
    },
    "mascara": "masks/smoke.png"
   },
@@ -89,12 +89,12 @@
    "nombre": "Agua",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.024,
+   "tiempo_s": 0.001,
    "metricas": {
-    "area_px": 41159,
-    "pct_imagen": 1.065,
-    "regiones": 79,
-    "perimetro_px": 12460.1
+    "area_px": 11060,
+    "pct_imagen": 0.286,
+    "regiones": 39,
+    "perimetro_px": 3142.3
    },
    "mascara": "masks/water.png"
   },
@@ -102,12 +102,12 @@
    "nombre": "Nubes",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.024,
+   "tiempo_s": 0.001,
    "metricas": {
-    "area_px": 33132,
-    "pct_imagen": 0.857,
-    "regiones": 18,
-    "perimetro_px": 5273.7
+    "area_px": 31900,
+    "pct_imagen": 0.825,
+    "regiones": 17,
+    "perimetro_px": 5004.7
    },
    "mascara": "masks/cloud.png"
   },
@@ -115,12 +115,12 @@
    "nombre": "Suelo claro o campos secos",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.033,
+   "tiempo_s": 0.004,
    "metricas": {
-    "area_px": 813082,
-    "pct_imagen": 21.037,
+    "area_px": 810787,
+    "pct_imagen": 20.978,
     "regiones": 544,
-    "perimetro_px": 94256.4
+    "perimetro_px": 94158.2
    },
    "mascara": "masks/bare.png"
   },
@@ -128,12 +128,12 @@
    "nombre": "Posible zona urbana (poco fiable)",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.022,
+   "tiempo_s": 0.002,
    "metricas": {
-    "area_px": 247787,
-    "pct_imagen": 6.411,
+    "area_px": 248143,
+    "pct_imagen": 6.42,
     "regiones": 7,
-    "perimetro_px": 9555.6
+    "perimetro_px": 9575.5
    },
    "mascara": "masks/urban.png"
   },
@@ -141,7 +141,7 @@
    "nombre": "Sin datos",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.028,
+   "tiempo_s": 0.001,
    "metricas": {
     "area_px": 0,
     "pct_imagen": 0.0,

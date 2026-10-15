@@ -12,7 +12,7 @@
   1546
  ],
  "unidades": "Píxeles de la imagen analizada. La imagen no está georreferenciada: no hay hectáreas ni km.",
- "tiempo_total_s": 4.988,
+ "tiempo_total_s": 1.425,
  "avisos": [
   "logo de Copernicus detectado en ['tc']; se enmascara la esquina"
  ],
@@ -21,12 +21,12 @@
    "nombre": "Zona quemada",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 3.915,
+   "tiempo_s": 1.209,
    "metricas": {
-    "area_px": 461905,
-    "pct_imagen": 11.951,
-    "regiones": 55,
-    "perimetro_px": 14042.6
+    "area_px": 453370,
+    "pct_imagen": 11.73,
+    "regiones": 3,
+    "perimetro_px": 11228.3
    },
    "mascara": "masks/burn.png"
   },
@@ -34,12 +34,12 @@
    "nombre": "Perímetro del incendio",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.124,
+   "tiempo_s": 0.057,
    "metricas": {
-    "area_px": 464210,
-    "pct_imagen": 12.011,
-    "regiones": 28,
-    "perimetro_px": 12822.7
+    "area_px": 453793,
+    "pct_imagen": 11.741,
+    "regiones": 3,
+    "perimetro_px": 11058.6
    },
    "mascara": "masks/perimeter.png"
   },
@@ -47,30 +47,30 @@
    "nombre": "Fuego activo",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.679,
+   "tiempo_s": 0.125,
    "metricas": {
-    "area_px": 977,
-    "pct_imagen": 0.025,
-    "regiones": 53,
-    "perimetro_px": 752.8
+    "area_px": 1527,
+    "pct_imagen": 0.04,
+    "regiones": 75,
+    "perimetro_px": 1060.6
    },
    "mascara": "masks/fire.png",
    "focos_por_ubicacion": {
-    "frente de la cicatriz": 39,
-    "junto al humo": 6,
-    "aislado": 8
+    "frente de la cicatriz": 48,
+    "junto al humo": 27,
+    "aislado": 0
    }
   },
   "burn_active": {
    "nombre": "Zona quemada que aún arde",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.037,
+   "tiempo_s": 0.02,
    "metricas": {
-    "area_px": 2958,
-    "pct_imagen": 0.077,
-    "regiones": 17,
-    "perimetro_px": 1063.8
+    "area_px": 35560,
+    "pct_imagen": 0.92,
+    "regiones": 16,
+    "perimetro_px": 3194.7
    },
    "mascara": "masks/burn_active.png"
   },
@@ -78,12 +78,12 @@
    "nombre": "Humo",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.024,
+   "tiempo_s": 0.002,
    "metricas": {
-    "area_px": 21043,
-    "pct_imagen": 0.544,
-    "regiones": 9,
-    "perimetro_px": 3642.7
+    "area_px": 201186,
+    "pct_imagen": 5.205,
+    "regiones": 1,
+    "perimetro_px": 12544.8
    },
    "mascara": "masks/smoke.png"
   },
@@ -91,12 +91,12 @@
    "nombre": "Agua",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.027,
+   "tiempo_s": 0.001,
    "metricas": {
-    "area_px": 25628,
-    "pct_imagen": 0.663,
-    "regiones": 7,
-    "perimetro_px": 6912.7
+    "area_px": 19083,
+    "pct_imagen": 0.494,
+    "regiones": 15,
+    "perimetro_px": 3744.1
    },
    "mascara": "masks/water.png"
   },
@@ -104,12 +104,12 @@
    "nombre": "Nubes",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.023,
+   "tiempo_s": 0.001,
    "metricas": {
-    "area_px": 5391,
+    "area_px": 5358,
     "pct_imagen": 0.139,
     "regiones": 2,
-    "perimetro_px": 1197.6
+    "perimetro_px": 1188.0
    },
    "mascara": "masks/cloud.png"
   },
@@ -117,12 +117,12 @@
    "nombre": "Suelo claro o campos secos",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.038,
+   "tiempo_s": 0.006,
    "metricas": {
-    "area_px": 677713,
-    "pct_imagen": 17.535,
-    "regiones": 771,
-    "perimetro_px": 115409.1
+    "area_px": 673669,
+    "pct_imagen": 17.43,
+    "regiones": 774,
+    "perimetro_px": 115415.0
    },
    "mascara": "masks/bare.png"
   },
@@ -130,12 +130,12 @@
    "nombre": "Posible zona urbana (poco fiable)",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.058,
+   "tiempo_s": 0.002,
    "metricas": {
-    "area_px": 294775,
-    "pct_imagen": 7.627,
+    "area_px": 294381,
+    "pct_imagen": 7.617,
     "regiones": 3,
-    "perimetro_px": 8950.0
+    "perimetro_px": 8935.5
    },
    "mascara": "masks/urban.png"
   },
@@ -143,7 +143,7 @@
    "nombre": "Sin datos",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.063,
+   "tiempo_s": 0.002,
    "metricas": {
     "area_px": 20300,
     "pct_imagen": 0.525,
