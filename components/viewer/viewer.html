@@ -64,6 +64,12 @@ main { display: grid; grid-template-columns: 320px 1fr; min-height: 0; }
 .fig .num { font: 600 20px/1.1 var(--mono); color: var(--amber); text-align: right; font-variant-numeric: tabular-nums; }
 .fig .num.ember { color: #ff6a3d; }
 .fig .txt { color: var(--ink); font-size: 13px; }
+.evalbox { margin: 6px 14px 4px; font-size: 12px; color: var(--ink-2); }
+.evalbox summary { cursor: pointer; color: var(--ink-2); font: 11px/1.6 var(--mono); letter-spacing: .04em; }
+.evalbox table { width: 100%; border-collapse: collapse; margin-top: 6px; font: 12px/1.5 var(--mono); }
+.evalbox td { padding: 1px 4px; } .evalbox td:last-child { text-align: right; color: var(--ink, #eee); }
+.evalbox .h td, .evalbox .h td:last-child { padding-top: 6px; color: var(--ink-2); font-size: 11px; text-align: left; }
+.evalbox .src { margin-top: 6px; font-size: 11px; line-height: 1.4; }
 .note { margin: 8px 14px 4px; padding: 8px 10px; border-left: 2px solid var(--amber-dim); color: var(--ink-2); font-size: 12px; background: rgba(255,176,0,.04); }
 
 /* capas */
@@ -220,6 +226,7 @@ footer b { color: var(--ink-2); font-weight: 500; }
       <h2>Lo que se ve</h2>
       <div class="figures" id="figures"></div>
       <div class="note" id="geoNote"></div>
+      <details class="evalbox" id="evalBox"><summary>Calidad medida (criterio 2.1)</summary><div id="evalBody"></div></details>
       <h2><span>Capas</span><span id="layerCount"></span></h2>
       <ul class="layers" id="layers"></ul>
     </aside>
@@ -569,6 +576,23 @@ function figures() {
   const [aw, ah] = P.tamano_analisis || [W, H];
   $("geoNote").textContent = `Cifras en píxeles de la imagen analizada (${nf(aw)} × ${nf(ah)} px). La imagen no lleva georreferenciación, así que no se dan hectáreas ni kilómetros.`;
   $("footNote").textContent = (P.avisos || []).length ? "Avisos: " + P.avisos.join(" · ") : "";
+  evalBox();
+}
+
+// ---------------------------------------------------------------- métricas frente a referencia (criterio 2.1)
+function evalBox() {
+  const E = P.evaluacion, body = $("evalBody");
+  const pc = (v) => v === null || v === undefined ? "—" : nf(100 * v, 1) + " %";
+  if (!E) {
+    body.innerHTML = `<div class="src">Esta imagen no tiene una referencia anotada a mano, así que no se puede medir su calidad. Las cifras de arriba son el resultado, no su acierto.</div>`;
+    return;
+  }
+  const a = E.afectada, f = E.focos;
+  const rows = [["h", "Zona afectada (por píxel)"], ["IoU", pc(a.iou)], ["Dice", pc(a.dice)], ["Precisión", pc(a.precision)], ["Recall", pc(a.recall)],
+    ["h", `Focos (por foco, ±${f.tolerancia_px} px)`], ["Precisión", pc(f.precision)], ["Recall", pc(f.recall)], ["F1", pc(f.f1)],
+    ["Anotados / detectados", `${nf(f.anotados)} / ${nf(f.detectados)}`]];
+  body.innerHTML = "<table>" + rows.map(([k, v]) => k === "h" ? `<tr class="h"><td colspan="2">${v}</td></tr>` : `<tr><td>${k}</td><td>${v}</td></tr>`).join("") + "</table>" +
+    `<div class="src">Frente a ${E.referencia}. Solo se mide lo anotado: ${nf(E.cobertura_pct, 1)} % de la imagen, sobre todo zonas claras; no mide bien el borde. Estas escenas se usaron para desarrollar: no es una prueba independiente.</div>`;
 }
 
 // ---------------------------------------------------------------- zoom y arrastre

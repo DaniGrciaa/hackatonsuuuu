@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 
 from core.ingestion import load_scene
+from metricas_referencia import evaluate
 from pipeline import run_all_layers
 from results_io import date_from_names, save_analysis
 from run import find_scenes
@@ -32,6 +33,11 @@ def precompute(scene_dir: Path) -> Path:
     res = run_all_layers(sc["tc"], sc["swir"], sc["wildfire"], name=sc["name"])
     meta = {"titulo": sc["name"].replace("_", " ").capitalize(), "orden": 99, **INFO.get(sc["name"], {}),
             "fecha": date_from_names(Path(f).name for f in sc["files"].values())}
+    L = res["layers"]
+    if all(L.get(k, {}).get("mask") is not None for k in ("burn", "fire", "nodata")):
+        ev = evaluate(L["burn"]["mask"], L["fire"]["mask"], ~L["nodata"]["mask"], Path(sc["files"].get("tc", "")).name)
+        if ev is not None:
+            meta["evaluacion"] = ev
     out = save_analysis(res, OUT / sc["name"], meta)
     for lid, r in res["layers"].items():
         print(f"  {lid:12s} {r['status']:13s} {r['time_s']:6.2f} s  {r['error'] or ''}")

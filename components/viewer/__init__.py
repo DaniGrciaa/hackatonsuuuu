@@ -108,6 +108,7 @@ def build_payload(analysis: dict, title: str = "", max_side: int = MAX_SIDE) -> 
         "bases": bases,
         "capas": capas,
         "avisos": analysis.get("scene", {}).get("warnings", []),
+        "evaluacion": (analysis.get("meta") or {}).get("evaluacion"),
     }
 
 

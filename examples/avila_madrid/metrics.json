@@ -2,6 +2,24 @@
  "titulo": "Ávila y Madrid",
  "orden": 2,
  "fecha": "26 de julio de 2026",
+ "evaluacion": {
+  "referencia": "anotación manual parcial (Jesús)",
+  "cobertura_pct": 2.98,
+  "afectada": {
+   "iou": 0.9690025103407361,
+   "dice": 0.984257262498919,
+   "precision": 0.9718853818310038,
+   "recall": 0.996948186997016
+  },
+  "focos": {
+   "precision": 1.0,
+   "recall": 1.0,
+   "f1": 1.0,
+   "detectados": 11,
+   "anotados": 3,
+   "tolerancia_px": 5
+  }
+ },
  "escena": "avila_madrid",
  "tamano_analisis": [
   2600,
@@ -12,14 +30,14 @@
   1608
  ],
  "unidades": "Píxeles de la imagen analizada. La imagen no está georreferenciada: no hay hectáreas ni km.",
- "tiempo_total_s": 1.533,
+ "tiempo_total_s": 1.585,
  "avisos": [],
  "capas": {
   "burn": {
    "nombre": "Zona quemada",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 1.366,
+   "tiempo_s": 1.422,
    "metricas": {
     "area_px": 218781,
     "pct_imagen": 5.233,
@@ -45,7 +63,7 @@
    "nombre": "Fuego activo",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.127,
+   "tiempo_s": 0.122,
    "metricas": {
     "area_px": 574,
     "pct_imagen": 0.014,
@@ -76,7 +94,7 @@
    "nombre": "Humo",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.002,
+   "tiempo_s": 0.003,
    "metricas": {
     "area_px": 516249,
     "pct_imagen": 12.348,
