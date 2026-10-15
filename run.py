@@ -25,6 +25,7 @@ from core.spectral import bands, exclusion_masks, indices
 COL_PERIM = (0, 255, 255)   # amarillo (BGR): perímetro y relleno de lo quemado SIN actividad
 COL_ACTIVE = (0, 120, 255)  # naranja: superficie quemada CON actividad (junto a un foco)
 COL_HOLE = (255, 200, 0)    # azul claro para huecos (embalses, islas)
+COL_SMOKE_BURN = (255, 120, 200)  # violeta: POSIBLE zona quemada bajo el humo (capa aparte, menos fiable)
 COL_FIRE = (0, 0, 255)      # rojo para los focos
 def find_scenes(root: str) -> list[Path]:
     p = Path(root)
@@ -49,7 +50,8 @@ def detect_fires(b: dict, ind: dict, burn: np.ndarray, masks: dict):
 
 
 def draw_overlay(base_rgb: np.ndarray, burn: np.ndarray, fires: np.ndarray, active: np.ndarray,
-                 foci: list | None = None, scale: float = 1.0, footer: str = "") -> np.ndarray:
+                 foci: list | None = None, scale: float = 1.0, footer: str = "",
+                 under_smoke: np.ndarray | None = None) -> np.ndarray:
     im = base_rgb[..., ::-1].copy()
     th = max(2, im.shape[1] // 800)
     tint = im.copy()
@@ -58,6 +60,15 @@ def draw_overlay(base_rgb: np.ndarray, burn: np.ndarray, fires: np.ndarray, acti
     tint[active] = (0.2 * tint[active] + 0.8 * np.array(COL_ACTIVE)).astype(np.uint8)
     tint[fires] = COL_FIRE
     im = cv2.addWeighted(tint, 0.7, im, 0.3, 0)
+    if under_smoke is not None and under_smoke.any():
+        # trama de rayas (no relleno liso) y borde discontinuo: se ve que es otra cosa, menos segura
+        yy, xx = np.mgrid[0:im.shape[0], 0:im.shape[1]]
+        hatch = under_smoke & (((xx + yy) // max(3, th * 2)) % 3 == 0)
+        im[hatch] = (0.25 * im[hatch] + 0.75 * np.array(COL_SMOKE_BURN)).astype(np.uint8)
+        cs, _ = cv2.findContours(under_smoke.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        for c in cs:
+            for j in range(0, len(c), 8):
+                cv2.polylines(im, [c[j:j + 4]], False, COL_SMOKE_BURN, max(1, th - 1))
     cnts, hier = cv2.findContours(burn.astype(np.uint8), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
     for i, c in enumerate(cnts):
         cv2.drawContours(im, [c], -1, COL_HOLE if hier[0][i][3] != -1 else COL_PERIM, th)
@@ -78,7 +89,8 @@ def _legend(im: np.ndarray, th: int, footer: str = ""):
              ("fill", COL_PERIM, "Afectada SIN actividad aparente"),
              ("fill", COL_ACTIVE, "Afectada CON posible fuego activo cerca"),
              ("circle", COL_FIRE, "Posible foco activo"),
-             ("line", COL_HOLE, "Hueco: agua o isla no quemada")]
+             ("line", COL_HOLE, "Hueco: agua o isla no quemada"),
+             ("fill", COL_SMOKE_BURN, "Posible afectada bajo el humo (menos fiable)")]
     cv2.rectangle(im, (x0 - 10, y0 - 10), (x0 + int(640 * s), y0 + len(items) * dy), (0, 0, 0), -1)
     for k, (kind, col, txt) in enumerate(items):
         y = y0 + k * dy + dy // 2
@@ -106,6 +118,7 @@ def process(scene_dir: Path, out_root: Path, m_per_px: float | None, variant: st
     masks = exclusion_masks(b, ind)
     det = burn_details(b, ind, masks, variant)
     burn = det["mask"]
+    under = det.get("under_smoke", np.zeros_like(burn))
     fires, fire_warn = detect_fires(b, ind, burn, masks)
     polys = perimeter(burn, sc["scale"])
     foci = []
@@ -122,11 +135,12 @@ def process(scene_dir: Path, out_root: Path, m_per_px: float | None, variant: st
 
     out = out_root / sc["name"]
     (out / "mascaras_descarte").mkdir(parents=True, exist_ok=True)
-    cv2.imwrite(str(out / "perimetro_swir.png"), draw_overlay(sc["swir"], burn, fires, active, foci, sc["scale"], footer))
+    cv2.imwrite(str(out / "perimetro_swir.png"), draw_overlay(sc["swir"], burn, fires, active, foci, sc["scale"], footer, under))
     if sc["tc"] is not None:
-        cv2.imwrite(str(out / "perimetro_tc.png"), draw_overlay(sc["tc"], burn, fires, active, foci, sc["scale"], footer))
+        cv2.imwrite(str(out / "perimetro_tc.png"), draw_overlay(sc["tc"], burn, fires, active, foci, sc["scale"], footer, under))
     cv2.imwrite(str(out / "mascara_quemado.png"), burn.astype(np.uint8) * 255)
     cv2.imwrite(str(out / "mascara_actividad.png"), active.astype(np.uint8) * 255)   # 1 canal, 0/255, resolución de trabajo
+    cv2.imwrite(str(out / "mascara_posible_bajo_humo.png"), under.astype(np.uint8) * 255)
     # Canonical evaluation masks use original image coordinates. Existing
     # masks and overlays retain the working resolution for compatibility.
     height, width = sc["orig_size"]
@@ -160,6 +174,7 @@ def process(scene_dir: Path, out_root: Path, m_per_px: float | None, variant: st
         "perimetro_px_original": round(perim_px, 1),
         "porcentaje_agua": round(100 * masks["water"].sum() / n_valid, 2),
         "porcentaje_humo": round(100 * masks["smoke"].sum() / n_valid, 2),
+        "porcentaje_posible_bajo_humo": round(100 * under.sum() / n_valid, 2),   # aparte: NO incluido en porcentaje_quemado
         "pixeles_focos": int(fires.sum()),
         "num_focos": len(foci),
         "focos_por_ubicacion": {k: sum(f["ubicacion"] == k for f in foci) for k in ("frente de la cicatriz", "junto al humo", "aislado")},

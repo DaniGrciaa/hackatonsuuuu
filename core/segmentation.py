@@ -32,6 +32,8 @@ COMP_NBR_MAX = -0.15    # (NBR normalizado) una mancha cuenta como quemada solo 
 COMP_NBR_RAW_MAX = -0.05  # (NBR original) B12 CLARAMENTE sobre B8A: cicatrices reales -0,10 a -0,30; nubes/sombras grises ~-0,02
 NBR_FLOOR = 0.0         # v4: el corte del NBR nunca por debajo de 0
 SEED_RED_MIN = 0.0      # las semillas rojizas exigen B12 por encima de B8A y B04, diga lo que diga Otsu
+SMOKE_FRONT_FRAC = 0.006 # grosor de la barrera del frente de fuego (fracción de la diagonal)
+SMOKE_BURN = True       # buscar cicatriz bajo el humo por el infrarrojo cercano (burn_under_smoke)
 GREEN_NBR_RAW = 0.10    # isla verde dentro de la cicatriz: B8A claramente sobre B12 (barrido 0,05/0,10/0,15 en el README)
 GREEN_MIN_FRAC = 1.3e-5 # tamaño mínimo de isla (~50 px en 2500x1546)
 GROW_FRAC = 0.02        # v3: distancia máxima de crecimiento desde lo rojizo (fracción de la diagonal)
@@ -183,7 +185,42 @@ def burn_details(b: dict, ind: dict, masks: dict, variant: str = DEFAULT_VARIANT
     if variant != "v0":
         m, steps["green_islands"] = remove_green_islands(m, ind, masks)
     m &= ~masks["water"] & valid
-    return {"mask": m, "variant": variant, "steps": steps, "discarded": discarded, "thresholds": th}
+    # Capa APARTE y menos fiable: posible cicatriz bajo el humo. No se suma a "mask" (ver burn_under_smoke).
+    under = np.zeros_like(m)
+    if variant != "v0" and SMOKE_BURN:
+        _, under, th["nir_smoke"] = burn_under_smoke(m, b, masks, d)
+        under &= ~m & valid & ~masks["water"]
+    return {"mask": m, "under_smoke": under, "variant": variant, "steps": steps, "discarded": discarded, "thresholds": th}
+
+
+def burn_under_smoke(m: np.ndarray, b: dict, masks: dict, d: float):
+    """POSIBLE cicatriz BAJO EL HUMO (capa aparte, menos fiable). El humo vuelve turquesa la SWIR y borra el tono rojizo,
+    pero el infrarrojo cercano (B8A) lo atraviesa: lo quemado tiene B8A muy bajo y la vegetación sana alto
+    (medido con dNBR en la escena de práctica, bajo el humo: mediana 92 frente a 168).
+    Dentro del humo (sin agua), corte de Otsu de B8A original; solo lo que toca la cicatriz sin cruzar el frente de fuego.
+    Medido en la práctica: sumarlo subiría el IoU de 0,57 a 0,61 y el recall de 0,69 a 0,80, pero en Niebla añadiría
+    ~3 % de la imagen de bosque sano bajo el humo por delante del frente (mismo color). Por eso va aparte."""
+    smoke = masks["smoke"] & b["valid"] & ~masks["water"]
+    zero = np.zeros_like(m)
+    if smoke.sum() < 0.0005 * smoke.size:
+        return m, zero, float("nan")
+    nir = b["_swir"][..., 1].astype(np.float32)
+    t = _otsu(nir[smoke])
+    cand = smoke & (nir < t)
+    cand = cv2.morphologyEx(cand.astype(np.uint8), cv2.MORPH_OPEN, _ellipse(max(3, int(d / 900)))).astype(bool)
+    # El frente de fuego hace de BARRERA: la cicatriz está detrás del frente, nunca delante (allí hay bosque sin
+    # quemar bajo el humo, con el mismo color). Solo se añade lo que conecta con la cicatriz sin cruzar la línea de focos.
+    from core.fire import fire_mask
+    fire = fire_mask(b)
+    barrier = cv2.dilate(fire.astype(np.uint8), _ellipse(max(5, int(SMOKE_FRONT_FRAC * d)) * 2 + 1)).astype(bool) \
+        if fire.any() else np.zeros_like(m)
+    cand &= ~barrier
+    n, lab, _, _ = cv2.connectedComponentsWithStats(cand.astype(np.uint8), 8)
+    touch = np.zeros(n, bool)
+    touch[np.unique(lab[cv2.dilate(m.astype(np.uint8), _ellipse(5)).astype(bool) & cand])] = True
+    touch[0] = False
+    add = touch[lab] & ~m
+    return m | add, add, t
 
 
 def remove_green_islands(m: np.ndarray, ind: dict, masks: dict) -> tuple[np.ndarray, np.ndarray]:
