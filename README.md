@@ -16,7 +16,7 @@ Sin redes neuronales, sin GPU y sin descargas.
 ## Uso
 
 ```bash
-python run.py <carpeta> --out salida/ [--m-per-px 10] [--variant v3]
+python run.py <carpeta> --out salida/ [--m-per-px 10] [--variant v4]
 ```
 
 - Si `<carpeta>` contiene imágenes, se trata como una escena. Si contiene subcarpetas, **cada subcarpeta es una escena**.
@@ -64,8 +64,8 @@ Tarda **entre 0,2 y 2,6 s por escena** en un portátil.
 | Nube | Muy brillante y poco saturada; si hay True Color, también clara allí | Sin escena nubosa para comprobarla bien |
 | Ciudad | Contraste fino denso | **Experimental:** también marca parcelas. No se usa para restar área |
 
-### 4. Cicatriz (`core/segmentation.py`), variante por defecto **v3**
-1. **Candidatos:** fuera el agua. Dentro del resto, lo oscuro (Otsu del brillo) con NBR bajo (Otsu del NBR).
+### 4. Cicatriz (`core/segmentation.py`), variante por defecto **v4**
+1. **Candidatos:** fuera el agua. Dentro del resto, lo oscuro (Otsu del brillo) con NBR bajo (Otsu del NBR, **nunca por debajo de 0**: si B12 ya supera a B8A, físicamente es quemado aunque Otsu diga otra cosa).
 2. **Semillas:** de esos candidatos, lo claramente rojizo (Otsu de `RED_DOM`, nunca por debajo de 0).
 3. **Crecimiento:** desde las semillas se crece, como mucho un 2 % de la diagonal, por lo *muy* oscuro (segundo Otsu del brillo). Así entra la ceniza marrón oscura pegada a la cicatriz, pero no el bosque oscuro que no toca ninguna semilla.
 4. **Evidencia de quemado:** una mancha solo cuenta si su NBR mediano es menor que −0,15. Es la física del fenómeno: en lo quemado, el SWIR (B12) supera al infrarrojo cercano (B8A).
@@ -82,9 +82,10 @@ Lo que se descarta (manchas pequeñas, sueltas o sin evidencia) va en `resultado
 | v0: NBR + brillo con Otsu | 37,8 % | 35,4 % | 45,4 % | — |
 | v1: + tono rojizo | 4,3 % | 6,7 % | 16,2 % | — |
 | v2: + prior espacial | 4,1 % | 6,3 % | 8,5 % | 9,1 % (pierde una cicatriz) |
-| **v3: histéresis + evidencia** | **5,7 %** | **7,8 %** | **0,0 %** | **12,0 %** |
+| v3: histéresis + evidencia | 5,7 % | 7,8 % | 0,0 % | 12,0 % |
+| **v4: v3 + NBR nunca por debajo de 0** | **5,7 %** | **7,8 %** | **0,0 %** | **12,0 %** |
 
-- **El NBR a secas no siempre basta.** Sin foto de antes, todo terreno seco tiene NBR bajo, y en Niebla y Ávila-Madrid v0 marca más de un tercio de la escena. Pero depende de la escena: en la de práctica del 26-07 (ver más abajo) v0 marca un 11 % y, de hecho, sale mejor que v3 en IoU.
+- **El NBR a secas no siempre basta.** Sin foto de antes, todo terreno seco tiene NBR bajo, y en Niebla y Ávila-Madrid v0 marca más de un tercio de la escena. Pero depende de la escena: en la de práctica del 26-07 (ver más abajo) v0 marca un 11 % y, de hecho, sale mejor que v3 y v4 en IoU.
 - **El tono rojizo como corte duro pierde cicatrices oscuras.** En la escena extra, v2 se dejaba una segunda cicatriz marrón oscura (RED_DOM −0,08). La histéresis la recupera sin dejar entrar el bosque oscuro: medido en Niebla y Ávila-Madrid, lo que se colaba era más claro que la ceniza (brillo mediano 0,33–0,41 frente a 0,24–0,25).
 - **Otsu siempre parte la escena en dos, haya incendio o no.** En una escena de junio sin incendio (`Browser_images-9`), v2 marcaba un 8,5 % de matorral pardo. Las cicatrices reales tienen NBR mediano −0,30 / −0,52, y ese matorral 0,00, así que se corta en −0,15. Ahora esa escena da 0,0 %.
 - **Solo SWIR:** el resultado es idéntico con o sin True Color (Niebla 7,79 % en los dos casos). Hoy la True Color solo se usa para la máscara de nubes y para dibujar.
@@ -102,15 +103,20 @@ se calcula una cicatriz de referencia con **dNBR** (NBR del 24-06 menos NBR del 
 | v0 | 11,3 | 0,59 / 0,71 / 0,77 | 0,54 / 0,93 / 0,56 |
 | v1 | 5,9 | 0,46 / 0,87 / 0,49 | 0,30 / 0,97 / 0,30 |
 | v2 | 4,9 | 0,38 / 0,86 / 0,41 | 0,25 / 0,96 / 0,25 |
-| **v3 (por defecto)** | 8,3 | 0,53 / 0,78 / 0,63 | 0,40 / 0,93 / 0,42 |
+| v3 | 8,3 | 0,53 / 0,78 / 0,63 | 0,40 / 0,93 / 0,42 |
+| **v4 (por defecto)** | 9,3 | 0,55 / 0,75 / 0,67 | 0,44 / 0,92 / 0,46 |
 
 Lectura honesta:
 - **Lo que marcamos casi siempre es quemado:** la precisión contra la referencia generosa es 0,93.
-- **Nos dejamos mucha cicatriz:** el recall con v3 es 0,63 (0,42 contra la referencia generosa). El mapa de errores
-  (`debug/dnbr_0726/errores_v3.png`) lo atribuye sobre todo a las zonas bajo humo (sur y entre los embalses), donde
-  la cicatriz no se ve rojiza y los filtros la descartan.
-- **Los filtros que añadimos para quitar falsos positivos en otras escenas cuestan recall aquí:** v0 sale mejor que v3 en IoU
-  (0,59 frente a 0,53). Es un compromiso real, todavía sin resolver.
+- **Nos dejamos mucha cicatriz:** el recall con v4 es 0,67 (0,46 contra la referencia generosa). Las omisiones se ven en
+  el sur y entre los embalses (`debug/dnbr_0726/errores_v4.png`), pero **no son sobre todo por el humo** (solo un 3,6 %
+  cae en humo denso). La causa es que, con una cicatriz tan grande, los Otsu parten la propia cicatriz en dos (severa y
+  moderada) y dejan fuera la moderada. La v4 corrige eso en el NBR (+0,02 de IoU, +0,04 de recall, sin cambiar nada en las
+  otras escenas). En el brillo no hay un límite físico equivalente: un intento (crecer por lo tan oscuro como las semillas)
+  subía el IoU a 0,57, pero borraba entera la cicatriz de Ávila-Madrid, así que se descartó. Ampliar el radio de
+  crecimiento no cambia nada.
+- **Los filtros que añadimos para quitar falsos positivos en otras escenas cuestan recall aquí:** v0 sale mejor que v4 en IoU
+  (0,59 frente a 0,55). Es un compromiso real, todavía sin resolver.
 - **Esta no es una prueba independiente:** es el mismo incendio que la escena Ávila-Madrid con la que desarrollamos.
 - dNBR es una referencia, no la verdad: puede incluir campos cosechados y cambios de estación entre las dos fechas.
 
@@ -119,7 +125,10 @@ Lectura honesta:
 - **No hay verdad humana.** Los porcentajes son plausibles a ojo, no medidos con IoU.
 - **La escena extra ya no es ciega.** Se vio su fallo con v2 y se corrigió con una regla general, ajustada solo con Niebla, Ávila-Madrid y la escena sin incendio.
 - **Humo denso:** la cicatriz bajo humo espeso puede quedar fuera (por ejemplo, la zona gris oscura al norte de la escena extra).
-- **Bordes:** en Niebla, v3 se desborda un poco al sur del anillo de fuego.
+- **Bordes:** en Niebla, la cicatriz se desborda un poco al sur del anillo de fuego.
+- **Fragilidad conocida:** la prueba de evidencia mira el NBR mediano de toda la mancha. Si una cicatriz real se uniera con
+  mucha zona no quemada, la mancha entera podría descartarse. Se probó a medirla solo sobre las semillas, pero eso dejaba
+  pasar matorral en la escena sin incendio (0,6 %), así que se mantuvo como está.
 - **Ciudad:** la máscara no es fiable. Lo que mantiene Madrid fuera es el prior espacial y la evidencia de NBR.
 - **Cambio de producto:** los umbrales `COMP_NBR_MAX = −0,15` y `SEED_RED_MIN = 0` son fijos sobre índices normalizados. Están justificados físicamente y medidos en 4 escenas, pero conviene revisarlos si el producto SWIR usa otra combinación de bandas.
 

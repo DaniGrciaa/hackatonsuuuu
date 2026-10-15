@@ -7,6 +7,8 @@ Variantes (cada una añade un filtro a la anterior, para poder medirlas por sepa
   v3  histéresis: lo rojizo (v1) es semilla y crece, como mucho una distancia limitada, por lo oscuro
       con NBR bajo (v0). Recupera cicatrices marrón oscuro pegadas a lo rojizo; el matorral suelto
       sin semilla no entra. Después, el mismo prior espacial que v2.
+  v4  v3 + el umbral del NBR nunca más estricto que 0 (física: B12 > B8A ya es quemado). Si la cicatriz es
+      muy grande, Otsu parte la propia cicatriz en severa/moderada y deja fuera la moderada.
 
     python core/segmentation.py data/niebla     # PNG en debug/<escena>/seg_*.png
 """
@@ -19,14 +21,15 @@ import cv2
 import numpy as np
 from skimage.filters import threshold_otsu
 
-VARIANTS = ("v0", "v1", "v2", "v3")
-DEFAULT_VARIANT = "v3"
+VARIANTS = ("v0", "v1", "v2", "v3", "v4")
+DEFAULT_VARIANT = "v4"
 KEEP_FRAC = 0.25        # v2: se conservan manchas con al menos esta fracción del área de la mayor
 NEAR_FRAC = 0.03        # v2: "pegado al humo/fuego" = a menos de esta fracción de la diagonal
 # Evidencia mínima de quemado (física: en lo quemado B12 > B8A, o sea NBR < 0). Otsu SIEMPRE parte la escena
 # en dos, haya cicatriz o no; esto evita "encontrar" una cicatriz en una escena sin incendio.
 # Medido: cicatrices reales NBR mediano -0,30 / -0,52; falso positivo en escena sin fuego 0,00 -> corte en el medio.
 COMP_NBR_MAX = -0.15    # una mancha cuenta como quemada solo si su NBR mediano es menor que esto
+NBR_FLOOR = 0.0         # v4: el corte del NBR nunca por debajo de 0
 SEED_RED_MIN = 0.0      # las semillas rojizas exigen B12 por encima de B8A y B04, diga lo que diga Otsu
 GROW_FRAC = 0.02        # v3: distancia máxima de crecimiento desde lo rojizo (fracción de la diagonal)
 
@@ -89,10 +92,12 @@ def burn_details(b: dict, ind: dict, masks: dict, variant: str = DEFAULT_VARIANT
     th["bright"] = _otsu(ind["BRIGHT"][cand])
     dark = cand & (ind["BRIGHT"] < th["bright"])
     th["nbr"] = _otsu(ind["NBR"][dark])
+    if variant == "v4":
+        th["nbr"] = max(th["nbr"], NBR_FLOOR)
     m = dark & (ind["NBR"] < th["nbr"])
     steps["dark"], steps["v0_raw"] = dark, m.copy()
 
-    if variant in ("v1", "v2", "v3"):
+    if variant in ("v1", "v2", "v3", "v4"):
         th["red_dom"] = max(_otsu(ind["RED_DOM"][m]), SEED_RED_MIN)
         m &= ind["RED_DOM"] > th["red_dom"]
         m &= ~masks["bare"] & ~masks["cloud"]
@@ -101,7 +106,7 @@ def burn_details(b: dict, ind: dict, masks: dict, variant: str = DEFAULT_VARIANT
     m = cv2.morphologyEx(m.astype(np.uint8), cv2.MORPH_OPEN, _ellipse(k_open))
     m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, _ellipse(k_close)).astype(bool)
 
-    if variant == "v3":
+    if variant in ("v3", "v4"):
         # Semillas = manchas rojizas con entidad; zona = oscuro + NBR bajo (sin tierra clara ni nube)
         seeds = _remove_small(m, min_area // 4)
         zone = steps["v0_raw"] & ~masks["bare"] & ~masks["cloud"]
@@ -133,7 +138,7 @@ def burn_details(b: dict, ind: dict, masks: dict, variant: str = DEFAULT_VARIANT
                     discarded.append({"reason": f"sin evidencia de quemado (NBR mediano {med:+.2f})", "area": int(st[i, 4]),
                                       "centroid": [float(cen[i][0]), float(cen[i][1])]})
 
-    if variant in ("v2", "v3") and keep.any():
+    if variant in ("v2", "v3", "v4") and keep.any():
         areas = np.where(keep, st[:, cv2.CC_STAT_AREA], 0)
         big = areas.max()
         near = np.zeros(valid.shape, np.uint8)

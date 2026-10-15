@@ -16,7 +16,7 @@ import tifffile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from core.ingestion import load_scene                       # noqa: E402
-from core.segmentation import VARIANTS, burn_details        # noqa: E402
+from core.segmentation import DEFAULT_VARIANT, VARIANTS, burn_details        # noqa: E402
 from core.spectral import bands, exclusion_masks, indices   # noqa: E402
 
 DEF = Path.home() / "Documents/hackathon/datos_16bit"
@@ -78,12 +78,12 @@ if __name__ == "__main__":
         print(f"{v:8s} {m.mean() * 100:6.1f} | {row}")
 
     # Mapa de errores de la variante por defecto contra la referencia principal
-    m, ref = res["v3"] & ok, R["refs"][THRESH[0]] & ok
+    m, ref = res[DEFAULT_VARIANT] & ok, R["refs"][THRESH[0]] & ok
     img = sc["swir"][..., ::-1].copy()
     img = (img * 0.6).astype(np.uint8)
     img[m & ref] = (0, 200, 0)         # verde: acierto
     img[m & ~ref] = (0, 0, 255)        # rojo: falso positivo (marco cicatriz, la referencia no)
     img[~m & ref] = (255, 120, 0)      # azul: omisión (la referencia dice quemado, yo no)
     out = Path("debug/dnbr_0726"); out.mkdir(parents=True, exist_ok=True)
-    cv2.imwrite(str(out / "errores_v3.png"), img)
-    print(f"\nMapa de errores -> {out / 'errores_v3.png'}  (verde acierto, rojo falso positivo, azul omisión)")
+    cv2.imwrite(str(out / f"errores_{DEFAULT_VARIANT}.png"), img)
+    print(f"\nMapa de errores -> {out / f'errores_{DEFAULT_VARIANT}.png'}  (verde acierto, rojo falso positivo, azul omisión)")
