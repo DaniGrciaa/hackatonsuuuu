@@ -1,6 +1,20 @@
 {
  "escena": "avila_madrid",
  "variante": "v4",
+ "archivos_entrada": {
+  "swir": "2026-07-26-00_00_2026-07-26-23_59_Sentinel-2_L2A_SWIR.jpg",
+  "tc": "2026-07-26-00_00_2026-07-26-23_59_Sentinel-2_L2A_True_color.jpg"
+ },
+ "mascaras_evaluacion": {
+  "affected": "affected.png",
+  "active": "active.png",
+  "valid": "valid.png"
+ },
+ "coordenadas_mascaras": "original",
+ "coordenadas_overlays": "trabajo",
+ "orden_dimensiones": "alto, ancho",
+ "estado_afectado": "disponible",
+ "estado_activo": "disponible",
  "tamano_trabajo": [
   1608,
   2600
@@ -7411,5 +7425,5 @@
   }
  ],
  "avisos": [],
- "tiempo_s": 2.76
+ "tiempo_s": 19.79
 }

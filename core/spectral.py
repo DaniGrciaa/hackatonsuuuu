@@ -24,14 +24,18 @@ def pnorm(x: np.ndarray, valid: np.ndarray | None = None, lo: float = P_LO, hi: 
     return np.clip((x - a) / max(b - a, EPS), 0, 1).astype(np.float32)
 
 
-def calibrate(tc: np.ndarray, swir: np.ndarray, valid: np.ndarray) -> dict:
+def calibrate(tc: np.ndarray, swir: np.ndarray, valid: np.ndarray) -> dict | None:
     """Recta robusta azul_SWIR ≈ a * rojo_TC + b (ambos son B04), sobre píxeles válidos.
     Sirve para comprobar que las dos fotos están alineadas y para pasar una a la escala de la otra."""
+    if valid.sum() < 3:
+        return None
     step = max(1, int(valid.sum() // 200_000))
     x = tc[..., 0][valid][::step].astype(np.float32)
     y = swir[..., 2][valid][::step].astype(np.float32)
     lo, hi = np.percentile(x, [2, 98])
     m = (x > lo) & (x < hi)
+    if m.sum() < 3 or np.ptp(x[m]) == 0 or np.ptp(y[m]) == 0:
+        return None
     a, b = np.polyfit(x[m], y[m], 1)
     return {"a": float(a), "b": float(b), "corr": float(np.corrcoef(x, y)[0, 1])}
 
@@ -53,7 +57,11 @@ def bands(scene: dict) -> dict:
         out["B04_tc"] = pnorm(tc[..., 0].astype(np.float32), valid)
         out["B03"] = pnorm(tc[..., 1].astype(np.float32), valid)
         out["B02"] = pnorm(tc[..., 2].astype(np.float32), valid)
-        out["calib"] = calibrate(tc, swir, valid)
+        calibration = calibrate(tc, swir, valid)
+        if calibration is not None:
+            out["calib"] = calibration
+        else:
+            scene["warnings"].append("calibracion visual no disponible: contraste o muestras insuficientes")
     return out
 
 
@@ -141,6 +149,8 @@ def _remove_small(m: np.ndarray, min_px: int) -> np.ndarray:
 def _otsu_tail(x: np.ndarray, valid: np.ndarray, q: float) -> float:
     """Otsu aplicado solo a la cola baja (percentil q) de los valores: separa 'muy oscuro' de 'oscuro'."""
     v = x[valid]
+    if v.size == 0:
+        return 0.0
     v = v[v <= np.percentile(v, q)]
     return float(threshold_otsu(v))
 
@@ -149,6 +159,8 @@ def exclusion_masks(b: dict, ind: dict) -> dict:
     """Máscaras booleanas HxW: water, cloud, bare, urban, smoke (todas adaptativas, por percentiles/Otsu)."""
     valid = b["valid"]
     shape = valid.shape
+    if not valid.any():
+        return {key: np.zeros(shape, bool) for key in ("water", "cloud", "bare", "urban", "smoke")}
     d = _diag(shape)
     mx = 1 - ind["WATER"]                       # máximo de los 3 canales SWIR
     bright, sat, nbr, red = ind["BRIGHT"], ind["SAT"], ind["NBR"], ind["RED_DOM"]

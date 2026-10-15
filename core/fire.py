@@ -38,16 +38,21 @@ def _swir_raw(b: dict) -> np.ndarray:
 def fire_mask(b: dict) -> np.ndarray:
     sw = _swir_raw(b)
     valid = b["valid"]
+    if not valid.any():
+        return np.zeros(valid.shape, bool)
     R, G, B = sw[..., 0], sw[..., 1], sw[..., 2]
     red = (R - np.maximum(G, B)) / (R + 1e-6)
     hot = (R >= np.percentile(R[valid], HOT_PCT)) & valid
     cand = hot & (red >= RED_RATIO)
+    if not cand.any():
+        return np.zeros(valid.shape, bool)
     bg = (valid & ~cv2.dilate(hot.astype(np.uint8), np.ones((5, 5), np.uint8)).astype(bool)).astype(np.float32)
     k = (WIN, WIN)
-    n = cv2.blur(bg, k) + 1e-6
+    support = cv2.blur(bg, k)
+    n = support + 1e-6
     mu = cv2.blur(R * bg, k) / n
     sd = np.sqrt(np.clip(cv2.blur(R * R * bg, k) / n - mu * mu, 0, None))
-    return cand & ((R - mu) > Z_CTX * np.maximum(sd, 1.0))
+    return cand & (support > 0) & ((R - mu) > Z_CTX * np.maximum(sd, 1.0))
 
 
 def detect_fires(b: dict, ind: dict, burn: np.ndarray, masks: dict) -> np.ndarray:

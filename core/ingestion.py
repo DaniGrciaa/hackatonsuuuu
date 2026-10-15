@@ -166,6 +166,7 @@ def load_scene(src, name: str | None = None, max_side: int = MAX_SIDE) -> dict:
         valid[ys, xs] = False
         warnings.append(f"logo de Copernicus detectado en {logos}; se enmascara la esquina")
 
+    valid_original = valid.copy()
     scale = min(1.0, max_side / max(orig_size))
     if scale < 1.0:
         size = (int(round(orig_size[0] * scale)), int(round(orig_size[1] * scale)))
@@ -182,7 +183,8 @@ def load_scene(src, name: str | None = None, max_side: int = MAX_SIDE) -> dict:
     return {
         "tc": imgs.get("tc"), "swir": imgs["swir"], "wildfire": imgs.get("wildfire"),
         "name": name, "size": size, "orig_size": orig_size, "scale": scale,
-        "valid": valid, "files": files, "warnings": warnings, "logo_in": logos,
+        "valid": valid, "valid_original": valid_original,
+        "files": files, "warnings": warnings, "logo_in": logos,
     }
 
 

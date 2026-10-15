@@ -41,6 +41,8 @@ def _ellipse(k: int) -> np.ndarray:
 
 def _otsu(x: np.ndarray) -> float:
     x = x[np.isfinite(x)]
+    if x.size == 0:
+        return 0.0
     return float(threshold_otsu(x[:: max(1, x.size // 500_000)]))
 
 
@@ -75,8 +77,13 @@ def geodesic_grow(seeds: np.ndarray, zone: np.ndarray, n_px: int) -> np.ndarray:
 
 def fire_like(ind: dict, b: dict) -> np.ndarray:
     """Candidatos a fuego activo en la SWIR: B12 casi saturado y claramente por encima del resto (naranja/rojo vivo)."""
-    b12 = b["B12"]
-    return (b12 > np.percentile(b12[b["valid"]], 99.5)) & (ind["RED_DOM"] > 0.25) & b["valid"]
+    valid = b["valid"]
+    if not valid.any():
+        return np.zeros(valid.shape, bool)
+    # Use the JPEG red channel before percentile clipping; the normalized
+    # channel has a plateau at 1 that cannot exceed its own 99.5 percentile.
+    red = b["_swir"][..., 0]
+    return (red >= np.percentile(red[valid], 99.5)) & (ind["RED_DOM"] > 0.25) & valid
 
 
 def burn_details(b: dict, ind: dict, masks: dict, variant: str = DEFAULT_VARIANT) -> dict:

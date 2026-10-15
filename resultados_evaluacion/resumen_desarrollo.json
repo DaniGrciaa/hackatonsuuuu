@@ -1,0 +1,68 @@
+{
+  "fecha_utc": "2026-10-15T13:05:09.834293+00:00",
+  "alcance": "referencias parciales; coverage_pct es cobertura anotada, no confianza",
+  "escenas": [
+    {
+      "escena": "extra_mierla",
+      "grupo": "adquisicion_2026_07_21",
+      "split": "desarrollo",
+      "estado": "evaluado",
+      "alcance": "solo regiones humanas anotadas",
+      "variante": "v4",
+      "tamano_original": [
+        1546,
+        2500
+      ],
+      "afectado": {
+        "tp": 56005,
+        "fp": 0,
+        "fn": 324,
+        "tn": 319026,
+        "precision": 1.0,
+        "recall": 0.9942480782545403,
+        "f1": 0.997115744120213,
+        "iou": 0.9942480782545403,
+        "valid_pixels": 375355,
+        "coverage_pct": 9.711642949547219
+      },
+      "activo": {
+        "tp": 138,
+        "fp": 0,
+        "fn": 307,
+        "tn": 374910,
+        "precision": 1.0,
+        "recall": 0.3101123595505618,
+        "f1": 0.4734133790737564,
+        "iou": 0.3101123595505618,
+        "valid_pixels": 375355,
+        "coverage_pct": 9.711642949547219
+      },
+      "sha256": {
+        "afectado": {
+          "prediccion": "490c56f0fb74105f890f3ff58145eb9af911d553ee1ab47b2369b432a4d8d714",
+          "referencia": "d6fcc5d98eccf0ddfab8b605e7f15d4950610463dd8b146ad07dbb17014ef149"
+        },
+        "activo": {
+          "prediccion": "c2f308286b5bf800521032d9a420af4753ffde81da54a83883b240ac2edb62b1",
+          "referencia": "6d81ee64e845c519c53ee95d4f1240fc859c45420f1cb65a8fb76e771cbdf06e"
+        },
+        "valid_referencia": "ea116c8a3ad947cc8f2b25f1353a236aedb5d7ee254178de8d21410eee9464b9",
+        "valid_imagen": "42b9c230101d074c199d4097a8d06df2eaf7bd85abf153b8a16fef7da2be48ae"
+      },
+      "estado_afectado": "disponible",
+      "estado_activo": "disponible"
+    },
+    {
+      "escena": "avila_madrid",
+      "grupo": "adquisicion_2026_07_26",
+      "split": "desarrollo",
+      "estado": "sin_referencia"
+    },
+    {
+      "escena": "niebla",
+      "grupo": "adquisicion_2026_08_08",
+      "split": "desarrollo",
+      "estado": "sin_referencia"
+    }
+  ]
+}

@@ -17,7 +17,6 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from core.fire import fire_details
 from core.ingestion import IMG_EXT, load_scene
 from core.segmentation import DEFAULT_VARIANT, VARIANTS, burn_details, perimeter
 from core.spectral import bands, exclusion_masks, indices
@@ -40,7 +39,9 @@ def detect_fires(b: dict, ind: dict, burn: np.ndarray, masks: dict):
     try:
         from core import fire  # noqa: PLC0415
         out = np.asarray(fire.detect_fires(b, ind, burn, masks))
-        return out.astype(bool), None
+        if out.ndim != 2 or out.shape != burn.shape or out.dtype != np.bool_:
+            raise ValueError("detect_fires debe devolver bool HxW a resolucion de trabajo")
+        return out, None
     except ImportError:
         return np.zeros(burn.shape, bool), "core/fire.py no existe todavía: capa de focos vacía"
     except Exception as e:  # el fallo de A no debe tumbar mi salida
@@ -73,7 +74,7 @@ def _legend(im: np.ndarray, th: int):
     s = im.shape[1] / 2500
     x0, y0, dy = int(20 * s), int(20 * s), int(42 * s)
     cv2.rectangle(im, (x0 - 10, y0 - 10), (x0 + int(470 * s), y0 + 3 * dy), (0, 0, 0), -1)
-    items = [(COL_PERIM, "Perimetro area quemada"), (COL_HOLE, "Hueco: agua o isla no quemada"), (COL_FIRE, "Foco de fuego activo")]
+    items = [(COL_PERIM, "Perimetro area quemada"), (COL_HOLE, "Hueco: agua o isla no quemada"), (COL_FIRE, "Posible foco activo")]
     for k, (col, txt) in enumerate(items):
         y = y0 + k * dy + dy // 2
         cv2.line(im, (x0, y), (x0 + int(50 * s), y), col, th + 2)
@@ -83,6 +84,8 @@ def _legend(im: np.ndarray, th: int):
 def process(scene_dir: Path, out_root: Path, m_per_px: float | None, variant: str) -> dict:
     t0 = time.time()
     sc = load_scene(scene_dir)
+    if not sc["valid"].any():
+        raise ValueError("escena sin pixeles validos")
     b = bands(sc)
     ind = indices(b)
     masks = exclusion_masks(b, ind)
@@ -90,7 +93,10 @@ def process(scene_dir: Path, out_root: Path, m_per_px: float | None, variant: st
     burn = det["mask"]
     fires, fire_warn = detect_fires(b, ind, burn, masks)
     polys = perimeter(burn, sc["scale"])
-    foci = fire_details(fires, burn, masks, sc["scale"])
+    foci = []
+    if fire_warn is None:
+        from core.fire import fire_details
+        foci = fire_details(fires, burn, masks, sc["scale"])
     active = burn & cv2.dilate(fires.astype(np.uint8), np.ones((15, 15), np.uint8)).astype(bool)
 
     out = out_root / sc["name"]
@@ -99,6 +105,16 @@ def process(scene_dir: Path, out_root: Path, m_per_px: float | None, variant: st
     if sc["tc"] is not None:
         cv2.imwrite(str(out / "perimetro_tc.png"), draw_overlay(sc["tc"], burn, fires, masks["water"], foci, sc["scale"]))
     cv2.imwrite(str(out / "mascara_quemado.png"), burn.astype(np.uint8) * 255)
+    # Canonical evaluation masks use original image coordinates. Existing
+    # masks and overlays retain the working resolution for compatibility.
+    height, width = sc["orig_size"]
+    valid_original = sc["valid_original"]
+    def original_mask(mask):
+        if mask.shape != sc["orig_size"]:
+            mask = cv2.resize(mask.astype(np.uint8), (width, height), interpolation=cv2.INTER_NEAREST).astype(bool)
+        return mask & valid_original
+    for name, mask in (("affected", burn), ("active", fires), ("valid", valid_original)):
+        cv2.imwrite(str(out / f"{name}.png"), original_mask(mask).astype(np.uint8) * 255)
     rgba = np.zeros((*burn.shape, 4), np.uint8)
     rgba[fires] = (0, 0, 255, 255)
     cv2.imwrite(str(out / "capa_focos.png"), rgba)
@@ -111,6 +127,12 @@ def process(scene_dir: Path, out_root: Path, m_per_px: float | None, variant: st
     orig_px = n_burn / sc["scale"] ** 2           # píxeles equivalentes en la imagen original
     res = {
         "escena": sc["name"], "variante": variant,
+        "archivos_entrada": {key: Path(value).name for key, value in sc["files"].items()},
+        "mascaras_evaluacion": {key: f"{key}.png" for key in ("affected", "active", "valid")},
+        "coordenadas_mascaras": "original", "coordenadas_overlays": "trabajo",
+        "orden_dimensiones": "alto, ancho",
+        "estado_afectado": "disponible",
+        "estado_activo": "disponible" if fire_warn is None else "no_disponible",
         "tamano_trabajo": list(sc["size"]), "tamano_original": list(sc["orig_size"]), "escala": round(sc["scale"], 4),
         "pixeles_quemados_trabajo": n_burn, "pixeles_quemados_original_equiv": int(round(orig_px)),
         "porcentaje_quemado": round(100 * n_burn / n_valid, 2),
@@ -134,7 +156,7 @@ def process(scene_dir: Path, out_root: Path, m_per_px: float | None, variant: st
         res["hectareas"] = round(orig_px * m_per_px ** 2 / 1e4, 1)
         res["perimetro_km"] = round(perim_px * m_per_px / 1000, 2)
     res["tiempo_s"] = round(time.time() - t0, 2)
-    (out / "resultado.json").write_text(json.dumps(res, ensure_ascii=False, indent=1))
+    (out / "resultado.json").write_text(json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")
     return res
 
 
@@ -148,6 +170,7 @@ def main():
     scenes = find_scenes(a.carpeta)
     if not scenes:
         raise SystemExit(f"No se encontraron escenas en {a.carpeta}")
+    failures = []
     for s in scenes:
         try:
             r = process(s, Path(a.out), a.m_per_px, a.variant)
@@ -157,6 +180,9 @@ def main():
                 print("   aviso:", w)
         except Exception as e:  # una escena rota no debe parar el resto
             print(f"{s.name}: ERROR {e!r}")
+            failures.append(s.name)
+    if failures:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

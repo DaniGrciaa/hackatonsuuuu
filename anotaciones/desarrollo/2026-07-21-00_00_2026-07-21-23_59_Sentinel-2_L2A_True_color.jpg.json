@@ -581,7 +581,7 @@
       "mask": null
     }
   ],
-  "imagePath": "..\\..\\..\\..\\ARGOS\\DATOS\\2107\\2026-07-21-00_00_2026-07-21-23_59_Sentinel-2_L2A_True_color.jpg.jpeg",
+  "imagePath": "../../data/extra_mierla/2026-07-21-00_00_2026-07-21-23_59_Sentinel-2_L2A_True_color.jpg",
   "imageData": null,
   "imageHeight": 1546,
   "imageWidth": 2500

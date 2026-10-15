@@ -1,5 +1,14 @@
 # Detección de área quemada en Sentinel-2 (III Malackathon, reto Indra Space)
 
+## Integracion lista para persona 3
+
+Ver **SEGUIR_PERSONA3.md**. Ejecutar `.\.venv_persona3\Scripts\python.exe preparar_persona3.py` desde la raiz.
+
+Se exportan `affected.png`, `active.png` y `valid.png` a resolucion original, monocanal 0/255, separados de los overlays de trabajo. `resultado.json` declara las coordenadas, archivos de entrada y disponibilidad de cada detector. `evaluar_proyecto.py` puntua solo escenas anotadas y registra las demas como `sin_referencia`.
+
+La entrada y deteccion son exclusivamente JPEG. Los nombres internos espectrales no implican recuperacion fisica de bandas. Los experimentos TIFF/dNBR de `tools_c` quedan separados de la rutina JPG. Niebla, Avila y la escena extra ya se usaron durante desarrollo: no constituyen un test independiente.
+
+
 Delimita la cicatriz del incendio y su perímetro, y detecta los focos de fuego activo, a partir de imágenes
 Sentinel-2 de un solo instante (sin foto de antes). Genera la salida visual y las estadísticas.
 El banco de pruebas (B) y la app (D) van en sus propios módulos.
@@ -28,7 +37,7 @@ Salida por escena en `salida/<escena>/`:
 
 | Archivo | Contenido |
 |---|---|
-| `perimetro_swir.png`, `perimetro_tc.png` | Imagen original con el área quemada sombreada, el perímetro en amarillo, los huecos (embalses) en azul y los focos en rojo |
+| `perimetro_swir.png`, `perimetro_tc.png` | Imagen a resolucion de trabajo con el area quemada sombreada, el perímetro en amarillo, los huecos (embalses) en azul y los focos en rojo |
 | `mascara_quemado.png` | Máscara binaria (blanco = quemado) |
 | `capa_focos.png` | Capa RGBA transparente con los focos de A (vacía si `core/fire.py` no existe) |
 | `mascaras_descarte/*.png` | Agua, humo, tierra clara, nube y ciudad, por separado (para la vista explicable) |
@@ -47,13 +56,13 @@ Tarda **entre 0,2 y 2,6 s por escena** en un portátil.
 - **Tamaño de trabajo:** las imágenes con un lado mayor de 2600 px se reducen para ir rápido. Los polígonos se devuelven en píxeles de la imagen original.
 - **Zonas no válidas:** se excluyen el logo de Copernicus (se detecta solo, buscando letras blancas en la esquina) y las zonas sin datos (negro en todas las imágenes y pegado al borde).
 
-### 2. Bandas e índices (`core/spectral.py`)
-- La SWIR de Copernicus es R = B12, G = B8A y B = B04. La True Color es R = B04, G = B03 y B = B02.
-- **Cada banda se normaliza con los percentiles 1 y 99 de su propia escena**, porque el brillo cambia mucho de una escena a otra (la True Color de Niebla está muy velada). Ningún umbral está pensado para valores 0–255 de una escena concreta.
+### 2. Rasgos visuales de JPEG (`core/spectral.py`)
+- Los canales RGB son representaciones visuales. Las claves internas B12/B8A/B04 son nombres heredados: no recuperan reflectancias ni bandas originales.
+- **Cada canal de color se normaliza con los percentiles 1 y 99 de su propia escena**, porque el brillo cambia mucho de una escena a otra (la True Color de Niebla está muy velada). Ningún umbral está pensado para valores 0–255 de una escena concreta.
 - **Índices:**
-  - `NBR = (B8A − B12)/(B8A + B12)`: bajo en lo quemado.
+  - `NBR` es el nombre heredado de una diferencia normalizada entre canales de color, con escalado independiente. No es NBR radiometrico; se usa como rasgo empirico.
   - `RED_DOM = B12 − max(B8A, B04)`: mide cuánto domina el rojo (el marrón rojizo de la cicatriz).
-  - También brillo, saturación y NDVI.
+  - Tambien brillo, saturacion y otra diferencia de canales llamada internamente NDVI; no es NDVI radiometrico.
 
 ### 3. Máscaras de descarte
 | Máscara | Regla | Fiabilidad |
@@ -65,10 +74,10 @@ Tarda **entre 0,2 y 2,6 s por escena** en un portátil.
 | Ciudad | Contraste fino denso | **Experimental:** también marca parcelas. No se usa para restar área |
 
 ### 4. Cicatriz (`core/segmentation.py`), variante por defecto **v4**
-1. **Candidatos:** fuera el agua. Dentro del resto, lo oscuro (Otsu del brillo) con NBR bajo (Otsu del NBR, **nunca por debajo de 0**: si B12 ya supera a B8A, físicamente es quemado aunque Otsu diga otra cosa).
+1. **Candidatos:** fuera el agua. Dentro del resto, lo oscuro (Otsu del brillo) con NBR bajo (Otsu del NBR, **nunca por debajo de 0**: es un criterio visual empirico que debe validarse con anotaciones).
 2. **Semillas:** de esos candidatos, lo claramente rojizo (Otsu de `RED_DOM`, nunca por debajo de 0).
 3. **Crecimiento:** desde las semillas se crece, como mucho un 2 % de la diagonal, por lo *muy* oscuro (segundo Otsu del brillo). Así entra la ceniza marrón oscura pegada a la cicatriz, pero no el bosque oscuro que no toca ninguna semilla.
-4. **Evidencia de quemado:** una mancha solo cuenta si su NBR mediano es menor que −0,15. Es la física del fenómeno: en lo quemado, el SWIR (B12) supera al infrarrojo cercano (B8A).
+4. **Evidencia de quemado:** una mancha solo cuenta si su NBR mediano es menor que −0,15. Es una regla empirica sobre los canales normalizados del JPEG, no una prueba fisica de quemado.
 5. **Prior espacial:** se quedan las manchas grandes y las pegadas al humo o al fuego. El matorral seco suelto se descarta.
 6. **Huecos:** se rellenan los huecos pequeños (claros de ceniza) y se vuelve a restar el agua, así que los embalses de dentro no cuentan como quemado.
 7. **Perímetro:** contornos con huecos (`cv2.findContours`, `RETR_CCOMP`), simplificados.
@@ -92,7 +101,7 @@ Medido **por focos** (cada mancha es un objeto, con 5 px de tolerancia):
 | Práctica 26-07, regla física de QuickFire (B11 + B12 > 1, bandas crudas) | 327 / 769 | 0,76 | 0,32 |
 | Escena sin incendio | 0 píxeles | — | — |
 
-- La Wildfire es una referencia ruidosa: también pinta parcelas pálidas, así que el recall contra ella sale más bajo de lo real.
+- La Wildfire es una referencia ruidosa: también pinta parcelas pálidas, asi que el acuerdo con ella no mide el recall real.
 - En Niebla se detecta el **foco aislado en los campos** (abajo a la derecha) y se marca con confianza baja.
 - **Se pierde mucho en la escena de práctica:** la mitad de sus focos físicos no son "rojos" en la SWIR, porque el humo sube el canal B04. Se probó a comparar solo B12 con B8A, que el humo no toca: ganaba de 3 a 5 puntos de recall, pero bajaba la precisión y daba píxeles falsos en la escena sin incendio. Se descartó.
 - Hay algún foco en mitad de la cicatriz (posibles rescoldos) que no podemos confirmar.
@@ -111,7 +120,7 @@ Medido **por focos** (cada mancha es un objeto, con 5 px de tolerancia):
 - **El tono rojizo como corte duro pierde cicatrices oscuras.** En la escena extra, v2 se dejaba una segunda cicatriz marrón oscura (RED_DOM −0,08). La histéresis la recupera sin dejar entrar el bosque oscuro: medido en Niebla y Ávila-Madrid, lo que se colaba era más claro que la ceniza (brillo mediano 0,33–0,41 frente a 0,24–0,25).
 - **Otsu siempre parte la escena en dos, haya incendio o no.** En una escena de junio sin incendio (`Browser_images-9`), v2 marcaba un 8,5 % de matorral pardo. Las cicatrices reales tienen NBR mediano −0,30 / −0,52, y ese matorral 0,00, así que se corta en −0,15. Ahora esa escena da 0,0 %.
 - **Solo SWIR:** el resultado es idéntico con o sin True Color (Niebla 7,79 % en los dos casos). Hoy la True Color solo se usa para la máscara de nubes y para dibujar.
-- **Calibración True Color ↔ SWIR:** B04 aparece en las dos imágenes (rojo de la True Color, azul de la SWIR). Una recta robusta los relaciona con correlación 0,93–0,95: azul SWIR ≈ 1,26·x − 101 (Ávila-Madrid), 1,48·x − 140 (Niebla) y 1,11·x − 81 (extra). Confirma que las imágenes están alineadas. La hipótesis de que esa recta también vale para el verde y el rojo de la SWIR **no se pudo comprobar**, porque son bandas que la True Color no tiene.
+- **Calibración True Color ↔ SWIR:** B04 aparece en las dos imágenes (rojo de la True Color, azul de la SWIR). Una recta robusta los relaciona con correlación 0,93–0,95: azul SWIR ≈ 1,26·x − 101 (Ávila-Madrid), 1,48·x − 140 (Niebla) y 1,11·x − 81 (extra). Es un diagnostico de semejanza entre canales; no certifica por si solo la alineacion geometrica. La hipótesis de que esa recta también vale para el verde y el rojo de la SWIR **no se pudo comprobar**, porque son bandas que la True Color no tiene.
 
 ## Medida contra una referencia (IoU)
 
@@ -144,7 +153,7 @@ Lectura honesta:
 
 ## Limitaciones conocidas (honestas)
 
-- **No hay verdad humana.** Los porcentajes son plausibles a ojo, no medidos con IoU.
+- **Hay referencias humanas parciales del 21 de julio.** Sus metricas solo cubren regiones anotadas y no certifican todo el perimetro. Las otras escenas estan pendientes de anotacion.
 - **La escena extra ya no es ciega.** Se vio su fallo con v2 y se corrigió con una regla general, ajustada solo con Niebla, Ávila-Madrid y la escena sin incendio.
 - **Humo denso:** la cicatriz bajo humo espeso puede quedar fuera (por ejemplo, la zona gris oscura al norte de la escena extra).
 - **Bordes:** en Niebla, la cicatriz se desborda un poco al sur del anillo de fuego.
@@ -152,7 +161,7 @@ Lectura honesta:
   mucha zona no quemada, la mancha entera podría descartarse. Se probó a medirla solo sobre las semillas, pero eso dejaba
   pasar matorral en la escena sin incendio (0,6 %), así que se mantuvo como está.
 - **Ciudad:** la máscara no es fiable. Lo que mantiene Madrid fuera es el prior espacial y la evidencia de NBR.
-- **Cambio de producto:** los umbrales `COMP_NBR_MAX = −0,15` y `SEED_RED_MIN = 0` son fijos sobre índices normalizados. Están justificados físicamente y medidos en 4 escenas, pero conviene revisarlos si el producto SWIR usa otra combinación de bandas.
+- **Cambio de producto:** los umbrales `COMP_NBR_MAX = −0,15` y `SEED_RED_MIN = 0` son fijos sobre índices normalizados. Son heuristicas visuales examinadas en 4 escenas, pero conviene revisarlos si el producto SWIR usa otra combinación de bandas.
 
 ## Créditos y referencias
 
