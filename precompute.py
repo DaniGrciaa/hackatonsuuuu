@@ -13,6 +13,7 @@ from pathlib import Path
 
 from core.ingestion import load_scene
 from metricas_referencia import evaluate
+from core.escala import scale_for
 from pipeline import run_all_layers
 from results_io import date_from_names, save_analysis
 from run import find_scenes
@@ -33,6 +34,12 @@ def precompute(scene_dir: Path) -> Path:
     res = run_all_layers(sc["tc"], sc["swir"], sc["wildfire"], name=sc["name"])
     meta = {"titulo": sc["name"].replace("_", " ").capitalize(), "orden": 99, **INFO.get(sc["name"], {}),
             "fecha": date_from_names(Path(f).name for f in sc["files"].values())}
+    esc = scale_for(scene_dir)
+    if esc is not None:
+        # run_all_layers recibe la imagen ya reducida por load_scene (factor sc["scale"]): la escala se pasa a esa
+        # resolución, y se guarda también la de la imagen original para mostrarla
+        meta["escala"] = {"m_por_px_x": esc["m_por_px_x"] / sc["scale"], "m_por_px_y": esc["m_por_px_y"] / sc["scale"],
+                          "m_por_px_original": [esc["m_por_px_x"], esc["m_por_px_y"]], "fuente": esc["fuente"]}
     L = res["layers"]
     if all(L.get(k, {}).get("mask") is not None for k in ("burn", "fire", "nodata")):
         ev = evaluate(L["burn"]["mask"], L["fire"]["mask"], ~L["nodata"]["mask"], Path(sc["files"].get("tc", "")).name)

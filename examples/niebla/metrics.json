@@ -30,14 +30,14 @@
   1546
  ],
  "unidades": "Píxeles de la imagen analizada. La imagen no está georreferenciada: no hay hectáreas ni km.",
- "tiempo_total_s": 1.329,
+ "tiempo_total_s": 1.322,
  "avisos": [],
  "capas": {
   "burn": {
    "nombre": "Zona quemada",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 1.196,
+   "tiempo_s": 1.19,
    "metricas": {
     "area_px": 286939,
     "pct_imagen": 7.424,
@@ -50,12 +50,13 @@
    "nombre": "Perímetro del incendio",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.002,
+   "tiempo_s": 0.003,
    "metricas": {
     "area_px": 286939,
     "pct_imagen": 7.424,
     "regiones": 17,
-    "perimetro_px": 13927.5
+    "perimetro_px": 13927.5,
+    "perimetro_exterior_px": 8520.7
    },
    "mascara": "masks/perimeter.png"
   },
@@ -63,7 +64,7 @@
    "nombre": "Fuego activo",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.098,
+   "tiempo_s": 0.096,
    "metricas": {
     "area_px": 7160,
     "pct_imagen": 0.185,
@@ -133,7 +134,7 @@
    "nombre": "Nubes",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.001,
+   "tiempo_s": 0.002,
    "metricas": {
     "area_px": 31900,
     "pct_imagen": 0.825,

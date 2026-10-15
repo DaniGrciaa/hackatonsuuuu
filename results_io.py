@@ -47,13 +47,21 @@ def metrics_dict(analysis: dict, meta: dict | None = None) -> dict:
                 "mascara": f"masks/{lid}.png" if r.get("mask") is not None else None}
         if "focos_por_ubicacion" in r:
             item["focos_por_ubicacion"] = r["focos_por_ubicacion"]
+        esc = (meta or {}).get("escala")
+        if esc and r.get("metrics"):
+            k = sc["orig_size"][1] / sc["size"][1]                       # píxeles originales por píxel de análisis
+            mx, my = esc["m_por_px_x"] * k, esc["m_por_px_y"] * k
+            per = r["metrics"].get("perimetro_exterior_px", r["metrics"]["perimetro_px"])
+            item["metricas"] = {**r["metrics"], "area_ha": round(r["metrics"]["area_px"] * mx * my / 1e4, 1),
+                                "perimetro_km": round(per * (mx + my) / 2 / 1000, 2)}
         capas[lid] = item
     return {
         **(meta or {}),
         "escena": sc["name"],
         "tamano_analisis": [sc["size"][1], sc["size"][0]],
         "tamano_original": [sc["orig_size"][1], sc["orig_size"][0]],
-        "unidades": UNITS_NOTE,
+        "unidades": UNITS_NOTE if not (meta or {}).get("escala") else
+        "Píxeles de la imagen analizada; con escala conocida (ver 'escala') también area_ha y perimetro_km.",
         "tiempo_total_s": analysis.get("time_s"),
         "avisos": sc.get("warnings", []),
         "capas": capas,

@@ -109,7 +109,20 @@ def build_payload(analysis: dict, title: str = "", max_side: int = MAX_SIDE) -> 
         "capas": capas,
         "avisos": analysis.get("scene", {}).get("warnings", []),
         "evaluacion": (analysis.get("meta") or {}).get("evaluacion"),
+        "escala": _scale_payload(analysis, aw),
     }
+
+
+def _scale_payload(analysis: dict, analysis_width: int) -> dict | None:
+    """Hectáreas y km por píxel de ANÁLISIS si la escena tiene escala conocida (escala.json); si no, None (píxeles)."""
+    esc = (analysis.get("meta") or {}).get("escala") or analysis.get("scene", {}).get("escala")
+    orig = analysis.get("scene", {}).get("orig_size")
+    if not esc or not orig:
+        return None
+    k = orig[1] / analysis_width                       # píxeles originales por píxel de análisis
+    mx, my = esc["m_por_px_x"] * k, esc["m_por_px_y"] * k
+    return {"ha_px": mx * my / 1e4, "km_px": (mx + my) / 2 / 1000,
+            "m_px_original": esc.get("m_por_px_original", [esc["m_por_px_x"], esc["m_por_px_y"]]), "fuente": esc.get("fuente", "")}
 
 
 def to_html(payload: dict) -> str:

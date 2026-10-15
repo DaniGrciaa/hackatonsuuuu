@@ -150,6 +150,13 @@ def run_all_layers(true_color: np.ndarray | None, swir: np.ndarray, wildfires: n
                 res["mask"], res["metrics"] = mask, mask_metrics(mask)
                 if layer.id == "fire":
                     res.update(_fire_extra(ctx))
+                if layer.id == "perimeter":
+                    # Perímetro del incendio = borde EXTERIOR suavizado, la misma medida que run.py
+                    # (perimetro_px suma además los bordes escalonados de las islas)
+                    from core.segmentation import perimeter
+                    polys = perimeter(mask)
+                    res["metrics"]["perimetro_exterior_px"] = round(float(sum(
+                        cv2.arcLength(np.array(p["exterior"], np.float32).reshape(-1, 1, 2), True) for p in polys)), 1)
             except Exception as e:  # noqa: BLE001 - una capa rota no tumba las demás
                 res["status"], res["error"] = "error", str(e) or repr(e)
         res["time_s"] = round(time.perf_counter() - t + (scene_time if i == 0 else 0.0), 3)

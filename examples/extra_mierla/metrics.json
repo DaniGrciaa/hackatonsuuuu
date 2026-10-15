@@ -30,7 +30,7 @@
   1546
  ],
  "unidades": "Píxeles de la imagen analizada. La imagen no está georreferenciada: no hay hectáreas ni km.",
- "tiempo_total_s": 1.435,
+ "tiempo_total_s": 1.358,
  "avisos": [
   "logo de Copernicus detectado en ['tc']; se enmascara la esquina"
  ],
@@ -39,7 +39,7 @@
    "nombre": "Zona quemada",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 1.294,
+   "tiempo_s": 1.217,
    "metricas": {
     "area_px": 419095,
     "pct_imagen": 10.843,
@@ -52,12 +52,13 @@
    "nombre": "Perímetro del incendio",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.002,
+   "tiempo_s": 0.004,
    "metricas": {
     "area_px": 419095,
     "pct_imagen": 10.843,
     "regiones": 4,
-    "perimetro_px": 21550.2
+    "perimetro_px": 21550.2,
+    "perimetro_exterior_px": 11825.2
    },
    "mascara": "masks/perimeter.png"
   },
@@ -65,7 +66,7 @@
    "nombre": "Fuego activo",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.106,
+   "tiempo_s": 0.104,
    "metricas": {
     "area_px": 977,
     "pct_imagen": 0.025,
@@ -148,7 +149,7 @@
    "nombre": "Suelo claro o campos secos",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.006,
+   "tiempo_s": 0.005,
    "metricas": {
     "area_px": 673669,
     "pct_imagen": 17.43,

@@ -17,7 +17,8 @@ def test_sin_wildfires_ejecuta_todas_las_capas(synthetic_scene):
         r = res["layers"][layer.id]
         assert r["status"] == "ok", (layer.id, r["error"])
         assert r["mask"].dtype == np.bool_ and r["mask"].shape == swir.shape[:2]
-        assert set(r["metrics"]) == {"area_px", "pct_imagen", "regiones", "perimetro_px"}
+        extra = {"perimetro_exterior_px"} if layer.id == "perimeter" else set()
+        assert set(r["metrics"]) == {"area_px", "pct_imagen", "regiones", "perimetro_px"} | extra
         assert r["time_s"] >= 0
     # sin hectáreas ni km en ningún sitio
     assert not any("ha" in k or "km" in k for r in res["layers"].values() for k in r["metrics"])

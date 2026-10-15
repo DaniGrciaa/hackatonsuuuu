@@ -267,6 +267,10 @@ footer b { color: var(--ink-2); font-weight: 500; }
 (() => {
 "use strict";
 const P = JSON.parse(document.getElementById("payload").textContent);
+// Superficie y longitud: hectáreas y km si la escena tiene escala conocida; si no, píxeles
+const SC = P.escala;
+function area(px) { return SC ? `${nf(px * SC.ha_px, px * SC.ha_px < 10 ? 1 : 0)} ha` : `${nf(px)} px`; }
+function len(px) { return SC ? `${nf(px * SC.km_px, 1)} km` : `${nf(px)} px`; }
 const W = P.ancho, H = P.alto;
 const $ = (id) => document.getElementById(id);
 const nf = (x, d = 0) => Number(x).toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d });
@@ -440,8 +444,8 @@ function metaText(L) {
   if (L.estado !== "ok") return "";
   const m = L.metricas;
   if (L.tipo === "puntos") return `${nf(m.regiones)} focos · ${nf(m.area_px)} px`;
-  if (L.tipo === "contorno") return `${nf(m.perimetro_px)} px de contorno`;
-  return `${nf(m.pct_imagen, m.pct_imagen < 1 ? 2 : 1)} % · ${nf(m.regiones)} zonas`;
+  if (L.tipo === "contorno") return `${len(m.perimetro_exterior_px ?? m.perimetro_px)} de perímetro exterior`;
+  return SC ? `${area(m.area_px)} · ${nf(m.regiones)} zonas` : `${nf(m.pct_imagen, m.pct_imagen < 1 ? 2 : 1)} % · ${nf(m.regiones)} zonas`;
 }
 
 function tipHtml(L) {
@@ -544,7 +548,8 @@ function figures() {
   if (ok("burn")) {
     const m = by.burn.metricas;
     rows.push(m.area_px > 0
-      ? [nf(m.pct_imagen, 1) + " %", `de la imagen aparece afectada por el fuego, repartida en ${nf(m.regiones)} ${m.regiones === 1 ? "zona" : "zonas"}.`, ""]
+      ? (SC ? [area(m.area_px), `de terreno afectado por el fuego (${nf(m.pct_imagen, 1)} % de la imagen), en ${nf(m.regiones)} ${m.regiones === 1 ? "zona" : "zonas"}.`, ""]
+            : [nf(m.pct_imagen, 1) + " %", `de la imagen aparece afectada por el fuego, repartida en ${nf(m.regiones)} ${m.regiones === 1 ? "zona" : "zonas"}.`, ""])
       : ["0 %", "No se ha encontrado zona quemada en esta imagen.", ""]);
   }
   if (ok("fire")) {
@@ -560,10 +565,13 @@ function figures() {
     rows.push([nf(p, 1) + " %", "de la zona quemada tiene todavía fuego muy cerca.", "ember"]);
   }
   if (ok("perimeter") && by.perimeter.metricas.area_px > 0) {
-    rows.push([nf(by.perimeter.metricas.perimetro_px), "píxeles mide el perímetro que rodea el incendio.", ""]);
+    const pe = by.perimeter.metricas.perimetro_exterior_px ?? by.perimeter.metricas.perimetro_px;
+    rows.push(SC ? [len(pe), "mide el perímetro exterior del incendio (aproximado).", ""]
+                 : [nf(pe), "píxeles mide el perímetro exterior del incendio.", ""]);
   }
   if (ok("burn_smoke") && by.burn_smoke.metricas.area_px > 0) {
-    rows.push([nf(by.burn_smoke.metricas.pct_imagen, 1) + " %", "más podría estar quemada bajo el humo (menos fiable, no sumado arriba).", ""]);
+    rows.push(SC ? [area(by.burn_smoke.metricas.area_px), "más podrían estar quemadas bajo el humo (menos fiable, no sumado arriba).", ""]
+                 : [nf(by.burn_smoke.metricas.pct_imagen, 1) + " %", "más podría estar quemada bajo el humo (menos fiable, no sumado arriba).", ""]);
   }
   if (ok("smoke") && by.smoke.metricas.area_px > 0) {
     rows.push([nf(by.smoke.metricas.pct_imagen, 1) + " %", "de la imagen está cubierta de humo.", ""]);
@@ -577,7 +585,9 @@ function figures() {
   }
   if (!rows.length) box.innerHTML = `<div class="txt" style="color:var(--ink-2)">No hay cifras disponibles.</div>`;
   const [aw, ah] = P.tamano_analisis || [W, H];
-  $("geoNote").textContent = `Cifras en píxeles de la imagen analizada (${nf(aw)} × ${nf(ah)} px). La imagen no lleva georreferenciación, así que no se dan hectáreas ni kilómetros.`;
+  $("geoNote").textContent = SC
+    ? `Escala: ${nf(SC.m_px_original[0], 2)} × ${nf(SC.m_px_original[1], 2)} m por píxel de la imagen original, medida alineando esta imagen con un GeoTIFF georreferenciado de la misma zona. Hectáreas y km aproximados.`
+    : `Cifras en píxeles de la imagen analizada (${nf(aw)} × ${nf(ah)} px). Esta imagen no trae escala, así que no se dan hectáreas ni kilómetros.`;
   $("footNote").textContent = (P.avisos || []).length ? "Avisos: " + P.avisos.join(" · ") : "";
   evalBox();
 }

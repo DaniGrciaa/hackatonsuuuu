@@ -2,6 +2,15 @@
  "titulo": "Ávila y Madrid",
  "orden": 2,
  "fecha": "26 de julio de 2026",
+ "escala": {
+  "m_por_px_x": 47.28589615384615,
+  "m_por_px_y": 47.04528461538462,
+  "m_por_px_original": [
+   12.381,
+   12.318
+  ],
+  "fuente": "alineación SIFT+RANSAC con 2026-07-26-00_00_2026-07-26-23_59_Sentinel-2_L2A_True_color.tiff (UTM, 34.95 x 33.45 m/px); 1478 puntos, error medio 0.75 px"
+ },
  "evaluacion": {
   "referencia": "anotación manual parcial (Jesús)",
   "cobertura_pct": 2.98,
@@ -29,20 +38,22 @@
   2600,
   1608
  ],
- "unidades": "Píxeles de la imagen analizada. La imagen no está georreferenciada: no hay hectáreas ni km.",
- "tiempo_total_s": 1.767,
+ "unidades": "Píxeles de la imagen analizada; con escala conocida (ver 'escala') también area_ha y perimetro_km.",
+ "tiempo_total_s": 1.537,
  "avisos": [],
  "capas": {
   "burn": {
    "nombre": "Zona quemada",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 1.604,
+   "tiempo_s": 1.378,
    "metricas": {
     "area_px": 218781,
     "pct_imagen": 5.233,
     "regiones": 20,
-    "perimetro_px": 17174.7
+    "perimetro_px": 17174.7,
+    "area_ha": 48669.5,
+    "perimetro_km": 810.05
    },
    "mascara": "masks/burn.png"
   },
@@ -50,12 +61,15 @@
    "nombre": "Perímetro del incendio",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.002,
+   "tiempo_s": 0.003,
    "metricas": {
     "area_px": 218781,
     "pct_imagen": 5.233,
     "regiones": 20,
-    "perimetro_px": 17174.7
+    "perimetro_px": 17174.7,
+    "perimetro_exterior_px": 12382.1,
+    "area_ha": 48669.5,
+    "perimetro_km": 584.01
    },
    "mascara": "masks/perimeter.png"
   },
@@ -63,12 +77,14 @@
    "nombre": "Fuego activo",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.121,
+   "tiempo_s": 0.117,
    "metricas": {
     "area_px": 574,
     "pct_imagen": 0.014,
     "regiones": 73,
-    "perimetro_px": 522.2
+    "perimetro_px": 522.2,
+    "area_ha": 127.7,
+    "perimetro_km": 24.63
    },
    "mascara": "masks/fire.png",
    "focos_por_ubicacion": {
@@ -86,7 +102,9 @@
     "area_px": 34772,
     "pct_imagen": 0.832,
     "regiones": 149,
-    "perimetro_px": 9931.5
+    "perimetro_px": 9931.5,
+    "area_ha": 7735.3,
+    "perimetro_km": 468.43
    },
    "mascara": "masks/burn_smoke.png"
   },
@@ -99,7 +117,9 @@
     "area_px": 27446,
     "pct_imagen": 0.656,
     "regiones": 35,
-    "perimetro_px": 4386.9
+    "perimetro_px": 4386.9,
+    "area_ha": 6105.6,
+    "perimetro_km": 206.91
    },
    "mascara": "masks/burn_active.png"
   },
@@ -112,7 +132,9 @@
     "area_px": 516249,
     "pct_imagen": 12.348,
     "regiones": 2,
-    "perimetro_px": 25514.4
+    "perimetro_px": 25514.4,
+    "area_ha": 114843.6,
+    "perimetro_km": 1203.4
    },
    "mascara": "masks/smoke.png"
   },
@@ -125,7 +147,9 @@
     "area_px": 15999,
     "pct_imagen": 0.383,
     "regiones": 53,
-    "perimetro_px": 4859.8
+    "perimetro_px": 4859.8,
+    "area_ha": 3559.1,
+    "perimetro_km": 229.22
    },
    "mascara": "masks/water.png"
   },
@@ -138,7 +162,9 @@
     "area_px": 0,
     "pct_imagen": 0.0,
     "regiones": 0,
-    "perimetro_px": 0.0
+    "perimetro_px": 0.0,
+    "area_ha": 0.0,
+    "perimetro_km": 0.0
    },
    "mascara": "masks/cloud.png"
   },
@@ -151,7 +177,9 @@
     "area_px": 446566,
     "pct_imagen": 10.681,
     "regiones": 1722,
-    "perimetro_px": 120782.3
+    "perimetro_px": 120782.3,
+    "area_ha": 99342.1,
+    "perimetro_km": 5696.77
    },
    "mascara": "masks/bare.png"
   },
@@ -164,7 +192,9 @@
     "area_px": 358516,
     "pct_imagen": 8.575,
     "regiones": 4,
-    "perimetro_px": 13953.3
+    "perimetro_px": 13953.3,
+    "area_ha": 79754.7,
+    "perimetro_km": 658.12
    },
    "mascara": "masks/urban.png"
   },
@@ -177,7 +207,9 @@
     "area_px": 0,
     "pct_imagen": 0.0,
     "regiones": 0,
-    "perimetro_px": 0.0
+    "perimetro_px": 0.0,
+    "area_ha": 0.0,
+    "perimetro_km": 0.0
    },
    "mascara": "masks/nodata.png"
   }
