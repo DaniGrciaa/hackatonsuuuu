@@ -39,6 +39,10 @@ def _perimeter(ctx) -> np.ndarray:
     return ctx.burn.copy()
 
 
+def _burn_under_smoke(ctx) -> np.ndarray:
+    return ctx.burn_details.get("under_smoke", np.zeros_like(ctx.burn))
+
+
 def _fire(ctx) -> np.ndarray:
     return ctx.fires
 
@@ -64,6 +68,8 @@ LAYERS: list[Layer] = [
           "#FFB000", "contorno", _perimeter, visible=True),
     Layer("fire", "Fuego activo", "Puntos muy calientes donde el fuego parece seguir encendido.",
           "#FF2E2E", "puntos", _fire, visible=True),
+    Layer("burn_smoke", "Posible zona quemada bajo el humo", "Menos fiable: bajo el humo denso el suelo no se ve bien; el infrarrojo apunta a zona quemada, pero puede ser bosque sano.",
+          "#C77DFF", "relleno", _burn_under_smoke, patron="diagonal", visible=True),
     Layer("burn_active", "Zona quemada que aún arde", "Parte de la zona quemada que tiene fuego activo muy cerca.",
           "#FF8A3D", "relleno", _burn_active, patron="cruzado"),
     Layer("smoke", "Humo", "Columnas de humo que tapan parcialmente el suelo.",

@@ -30,14 +30,14 @@
   1546
  ],
  "unidades": "Píxeles de la imagen analizada. La imagen no está georreferenciada: no hay hectáreas ni km.",
- "tiempo_total_s": 1.284,
+ "tiempo_total_s": 1.329,
  "avisos": [],
  "capas": {
   "burn": {
    "nombre": "Zona quemada",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 1.15,
+   "tiempo_s": 1.196,
    "metricas": {
     "area_px": 286939,
     "pct_imagen": 7.424,
@@ -63,7 +63,7 @@
    "nombre": "Fuego activo",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.1,
+   "tiempo_s": 0.098,
    "metricas": {
     "area_px": 7160,
     "pct_imagen": 0.185,
@@ -77,11 +77,24 @@
     "aislado": 1
    }
   },
+  "burn_smoke": {
+   "nombre": "Posible zona quemada bajo el humo",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.002,
+   "metricas": {
+    "area_px": 121584,
+    "pct_imagen": 3.146,
+    "regiones": 60,
+    "perimetro_px": 20994.6
+   },
+   "mascara": "masks/burn_smoke.png"
+  },
   "burn_active": {
    "nombre": "Zona quemada que aún arde",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.019,
+   "tiempo_s": 0.018,
    "metricas": {
     "area_px": 66846,
     "pct_imagen": 1.73,
@@ -120,7 +133,7 @@
    "nombre": "Nubes",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.002,
+   "tiempo_s": 0.001,
    "metricas": {
     "area_px": 31900,
     "pct_imagen": 0.825,
@@ -133,7 +146,7 @@
    "nombre": "Suelo claro o campos secos",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.005,
+   "tiempo_s": 0.004,
    "metricas": {
     "area_px": 810787,
     "pct_imagen": 20.978,

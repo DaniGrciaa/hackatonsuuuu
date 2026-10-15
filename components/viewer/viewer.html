@@ -562,6 +562,9 @@ function figures() {
   if (ok("perimeter") && by.perimeter.metricas.area_px > 0) {
     rows.push([nf(by.perimeter.metricas.perimetro_px), "píxeles mide el perímetro que rodea el incendio.", ""]);
   }
+  if (ok("burn_smoke") && by.burn_smoke.metricas.area_px > 0) {
+    rows.push([nf(by.burn_smoke.metricas.pct_imagen, 1) + " %", "más podría estar quemada bajo el humo (menos fiable, no sumado arriba).", ""]);
+  }
   if (ok("smoke") && by.smoke.metricas.area_px > 0) {
     rows.push([nf(by.smoke.metricas.pct_imagen, 1) + " %", "de la imagen está cubierta de humo.", ""]);
   }

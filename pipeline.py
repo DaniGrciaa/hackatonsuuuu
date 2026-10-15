@@ -71,8 +71,12 @@ class Context:
 
     @property
     def burn(self) -> np.ndarray:
+        return self.burn_details["mask"]
+
+    @property
+    def burn_details(self) -> dict:
         from core.segmentation import burn_details
-        return self._stage("burn", lambda: burn_details(self.bands, self.indices, self.masks)["mask"])
+        return self._stage("burn", lambda: burn_details(self.bands, self.indices, self.masks))
 
     @property
     def fires(self) -> np.ndarray:
