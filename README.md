@@ -84,11 +84,35 @@ Lo que se descarta (manchas pequeñas, sueltas o sin evidencia) va en `resultado
 | v2: + prior espacial | 4,1 % | 6,3 % | 8,5 % | 9,1 % (pierde una cicatriz) |
 | **v3: histéresis + evidencia** | **5,7 %** | **7,8 %** | **0,0 %** | **12,0 %** |
 
-- **El NBR a secas no basta.** Sin foto de antes, todo terreno seco tiene NBR bajo, y v0 marca más de un tercio de la escena.
+- **El NBR a secas no siempre basta.** Sin foto de antes, todo terreno seco tiene NBR bajo, y en Niebla y Ávila-Madrid v0 marca más de un tercio de la escena. Pero depende de la escena: en la de práctica del 26-07 (ver más abajo) v0 marca un 11 % y, de hecho, sale mejor que v3 en IoU.
 - **El tono rojizo como corte duro pierde cicatrices oscuras.** En la escena extra, v2 se dejaba una segunda cicatriz marrón oscura (RED_DOM −0,08). La histéresis la recupera sin dejar entrar el bosque oscuro: medido en Niebla y Ávila-Madrid, lo que se colaba era más claro que la ceniza (brillo mediano 0,33–0,41 frente a 0,24–0,25).
 - **Otsu siempre parte la escena en dos, haya incendio o no.** En una escena de junio sin incendio (`Browser_images-9`), v2 marcaba un 8,5 % de matorral pardo. Las cicatrices reales tienen NBR mediano −0,30 / −0,52, y ese matorral 0,00, así que se corta en −0,15. Ahora esa escena da 0,0 %.
 - **Solo SWIR:** el resultado es idéntico con o sin True Color (Niebla 7,79 % en los dos casos). Hoy la True Color solo se usa para la máscara de nubes y para dibujar.
 - **Calibración True Color ↔ SWIR:** B04 aparece en las dos imágenes (rojo de la True Color, azul de la SWIR). Una recta robusta los relaciona con correlación 0,93–0,95: azul SWIR ≈ 1,26·x − 101 (Ávila-Madrid), 1,48·x − 140 (Niebla) y 1,11·x − 81 (extra). Confirma que las imágenes están alineadas. La hipótesis de que esa recta también vale para el verde y el rojo de la SWIR **no se pudo comprobar**, porque son bandas que la True Color no tiene.
+
+## Medida contra una referencia (IoU)
+
+Con el lote de práctica `datos_16bit` (mismo incendio del 26-07 que Ávila-Madrid, 2500×1128, bandas crudas de dos fechas)
+se calcula una cicatriz de referencia con **dNBR** (NBR del 24-06 menos NBR del 26-07; umbral 0,27 = severidad moderada y
+0,10 = generosa; áreas 336 y 605 km², frente a ~348 y ~620 que da el lote). La solución solo usa la SWIR y la True Color del
+26-07, como en el reto real. Se ejecuta con `python tools_c/medir_dnbr.py`.
+
+| Variante | % imagen | vs dNBR>0,27: IoU / precisión / recall | vs dNBR>0,10: IoU / precisión / recall |
+|---|---|---|---|
+| v0 | 11,3 | 0,59 / 0,71 / 0,77 | 0,54 / 0,93 / 0,56 |
+| v1 | 5,9 | 0,46 / 0,87 / 0,49 | 0,30 / 0,97 / 0,30 |
+| v2 | 4,9 | 0,38 / 0,86 / 0,41 | 0,25 / 0,96 / 0,25 |
+| **v3 (por defecto)** | 8,3 | 0,53 / 0,78 / 0,63 | 0,40 / 0,93 / 0,42 |
+
+Lectura honesta:
+- **Lo que marcamos casi siempre es quemado:** la precisión contra la referencia generosa es 0,93.
+- **Nos dejamos mucha cicatriz:** el recall con v3 es 0,63 (0,42 contra la referencia generosa). El mapa de errores
+  (`debug/dnbr_0726/errores_v3.png`) lo atribuye sobre todo a las zonas bajo humo (sur y entre los embalses), donde
+  la cicatriz no se ve rojiza y los filtros la descartan.
+- **Los filtros que añadimos para quitar falsos positivos en otras escenas cuestan recall aquí:** v0 sale mejor que v3 en IoU
+  (0,59 frente a 0,53). Es un compromiso real, todavía sin resolver.
+- **Esta no es una prueba independiente:** es el mismo incendio que la escena Ávila-Madrid con la que desarrollamos.
+- dNBR es una referencia, no la verdad: puede incluir campos cosechados y cambios de estación entre las dos fechas.
 
 ## Limitaciones conocidas (honestas)
 
