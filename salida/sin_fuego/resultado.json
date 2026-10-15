@@ -406,7 +406,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.01)",
+   "reason": "sin evidencia de quemado (NBR mediano -0.01, NBR original +0.13)",
    "area": 98615,
    "centroid": [
     976.4112254727983,
@@ -414,7 +414,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano +0.02)",
+   "reason": "sin evidencia de quemado (NBR mediano +0.02, NBR original +0.15)",
    "area": 1185,
    "centroid": [
     544.3983122362869,
@@ -422,7 +422,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.04)",
+   "reason": "sin evidencia de quemado (NBR mediano -0.04, NBR original +0.09)",
    "area": 1528,
    "centroid": [
     575.0392670157069,
@@ -430,7 +430,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano +0.01)",
+   "reason": "sin evidencia de quemado (NBR mediano +0.01, NBR original +0.14)",
    "area": 5540,
    "centroid": [
     481.06498194945846,
@@ -438,7 +438,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.02)",
+   "reason": "sin evidencia de quemado (NBR mediano -0.02, NBR original +0.13)",
    "area": 8037,
    "centroid": [
     291.4636058230683,
@@ -446,7 +446,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.05)",
+   "reason": "sin evidencia de quemado (NBR mediano -0.05, NBR original +0.13)",
    "area": 4015,
    "centroid": [
     112.27023661270236,
@@ -454,7 +454,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.03)",
+   "reason": "sin evidencia de quemado (NBR mediano -0.03, NBR original +0.11)",
    "area": 2679,
    "centroid": [
     1204.5498320268757,
@@ -462,7 +462,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.03)",
+   "reason": "sin evidencia de quemado (NBR mediano -0.03, NBR original +0.12)",
    "area": 9220,
    "centroid": [
     351.85075921908896,
@@ -470,7 +470,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano +0.04)",
+   "reason": "sin evidencia de quemado (NBR mediano +0.04, NBR original +0.16)",
    "area": 13487,
    "centroid": [
     840.4247052717432,
@@ -478,7 +478,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.06)",
+   "reason": "sin evidencia de quemado (NBR mediano -0.06, NBR original +0.08)",
    "area": 807,
    "centroid": [
     945.8413878562577,
@@ -486,7 +486,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.04)",
+   "reason": "sin evidencia de quemado (NBR mediano -0.04, NBR original +0.10)",
    "area": 1986,
    "centroid": [
     763.6797583081571,
@@ -494,7 +494,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.11)",
+   "reason": "sin evidencia de quemado (NBR mediano -0.11, NBR original +0.05)",
    "area": 1442,
    "centroid": [
     1108.5492371705964,

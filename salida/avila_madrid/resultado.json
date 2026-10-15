@@ -18,15 +18,15 @@
  "perimetro_px_original": 41099.4,
  "porcentaje_agua": 0.76,
  "porcentaje_humo": 2.5,
- "pixeles_focos": 644,
- "num_focos": 84,
+ "pixeles_focos": 574,
+ "num_focos": 73,
  "focos_por_ubicacion": {
   "frente de la cicatriz": 56,
-  "junto al humo": 15,
-  "aislado": 13
+  "junto al humo": 7,
+  "aislado": 10
  },
- "porcentaje_quemado_con_actividad": 3.26,
- "porcentaje_quemado_sin_actividad": 96.74,
+ "porcentaje_quemado_con_actividad": 3.1,
+ "porcentaje_quemado_sin_actividad": 96.9,
  "focos": [
   {
    "centro": [
@@ -290,33 +290,23 @@
   },
   {
    "centro": [
-    3632.7,
-    3781.4
+    3630.2,
+    3780.4
    ],
-   "area_px": 36,
+   "area_px": 31,
    "dist_cicatriz_px": 0.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    3697.0,
-    3786.2
-   ],
-   "area_px": 22,
-   "dist_cicatriz_px": 0.0,
-   "ubicacion": "frente de la cicatriz",
-   "confianza": "alta"
-  },
-  {
-   "centro": [
-    7934.5,
-    3775.3
+    3656.9,
+    3784.9
    ],
    "area_px": 2,
-   "dist_cicatriz_px": 657.4,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
   },
   {
    "centro": [
@@ -324,6 +314,16 @@
     3781.0
    ],
    "area_px": 1,
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    3698.2,
+    3787.5
+   ],
+   "area_px": 19,
    "dist_cicatriz_px": 0.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
@@ -400,33 +400,13 @@
   },
   {
    "centro": [
-    3825.0,
-    3895.6
-   ],
-   "area_px": 2,
-   "dist_cicatriz_px": 0.0,
-   "ubicacion": "frente de la cicatriz",
-   "confianza": "alta"
-  },
-  {
-   "centro": [
     2864.4,
     3930.0
    ],
-   "area_px": 3,
-   "dist_cicatriz_px": 19.8,
+   "area_px": 1,
+   "dist_cicatriz_px": 20.0,
    "ubicacion": "aislado",
    "confianza": "baja"
-  },
-  {
-   "centro": [
-    3739.0,
-    3937.6
-   ],
-   "area_px": 1,
-   "dist_cicatriz_px": 0.0,
-   "ubicacion": "frente de la cicatriz",
-   "confianza": "alta"
   },
   {
    "centro": [
@@ -441,9 +421,9 @@
   {
    "centro": [
     2940.8,
-    3977.7
+    3975.8
    ],
-   "area_px": 2,
+   "area_px": 1,
    "dist_cicatriz_px": 14.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
@@ -480,10 +460,10 @@
   },
   {
    "centro": [
-    1460.9,
-    4176.3
+    1461.5,
+    4177.0
    ],
-   "area_px": 4,
+   "area_px": 3,
    "dist_cicatriz_px": 0.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
@@ -520,30 +500,50 @@
   },
   {
    "centro": [
-    2381.5,
-    4231.8
+    2381.2,
+    4231.7
    ],
-   "area_px": 42,
+   "area_px": 41,
    "dist_cicatriz_px": 23.2,
    "ubicacion": "junto al humo",
    "confianza": "media"
   },
   {
    "centro": [
-    1491.4,
-    4237.0
+    1493.3,
+    4227.9
    ],
-   "area_px": 8,
+   "area_px": 1,
+   "dist_cicatriz_px": 2.2,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1493.3,
+    4237.4
+   ],
+   "area_px": 2,
+   "dist_cicatriz_px": 3.6,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1485.7,
+    4239.3
+   ],
+   "area_px": 1,
    "dist_cicatriz_px": 2.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
   {
    "centro": [
-    1708.5,
-    4281.4
+    1709.1,
+    4279.4
    ],
-   "area_px": 3,
+   "area_px": 2,
    "dist_cicatriz_px": 13.6,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
@@ -551,40 +551,20 @@
   {
    "centro": [
     1733.9,
-    4290.9
+    4292.8
    ],
-   "area_px": 2,
-   "dist_cicatriz_px": 18.2,
+   "area_px": 1,
+   "dist_cicatriz_px": 19.0,
    "ubicacion": "junto al humo",
    "confianza": "media"
   },
   {
    "centro": [
-    1616.8,
-    4327.2
-   ],
-   "area_px": 3,
-   "dist_cicatriz_px": 29.6,
-   "ubicacion": "junto al humo",
-   "confianza": "media"
-  },
-  {
-   "centro": [
-    1908.1,
-    4328.7
-   ],
-   "area_px": 5,
-   "dist_cicatriz_px": 47.4,
-   "ubicacion": "junto al humo",
-   "confianza": "media"
-  },
-  {
-   "centro": [
-    1576.4,
+    1577.3,
     4367.3
    ],
-   "area_px": 4,
-   "dist_cicatriz_px": 33.6,
+   "area_px": 2,
+   "dist_cicatriz_px": 35.0,
    "ubicacion": "junto al humo",
    "confianza": "media"
   },
@@ -607,16 +587,6 @@
    "dist_cicatriz_px": 0.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
-  },
-  {
-   "centro": [
-    1581.2,
-    4382.6
-   ],
-   "area_px": 2,
-   "dist_cicatriz_px": 38.8,
-   "ubicacion": "junto al humo",
-   "confianza": "media"
   },
   {
    "centro": [
@@ -680,16 +650,6 @@
   },
   {
    "centro": [
-    1715.5,
-    4485.0
-   ],
-   "area_px": 6,
-   "dist_cicatriz_px": 66.6,
-   "ubicacion": "junto al humo",
-   "confianza": "media"
-  },
-  {
-   "centro": [
     4103.8,
     4480.0
    ],
@@ -710,10 +670,10 @@
   },
   {
    "centro": [
-    2422.0,
-    4519.4
+    2416.3,
+    4516.2
    ],
-   "area_px": 12,
+   "area_px": 6,
    "dist_cicatriz_px": 94.1,
    "ubicacion": "junto al humo",
    "confianza": "media"
@@ -730,31 +690,11 @@
   },
   {
    "centro": [
-    1775.9,
-    4552.5
+    867.7,
+    4604.1
    ],
-   "area_px": 1,
-   "dist_cicatriz_px": 88.9,
-   "ubicacion": "junto al humo",
-   "confianza": "media"
-  },
-  {
-   "centro": [
-    866.5,
-    4603.0
-   ],
-   "area_px": 23,
-   "dist_cicatriz_px": 1.4,
-   "ubicacion": "frente de la cicatriz",
-   "confianza": "alta"
-  },
-  {
-   "centro": [
-    882.2,
-    4594.5
-   ],
-   "area_px": 1,
-   "dist_cicatriz_px": 8.4,
+   "area_px": 10,
+   "dist_cicatriz_px": 4.0,
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
@@ -770,36 +710,6 @@
   },
   {
    "centro": [
-    1751.8,
-    4676.0
-   ],
-   "area_px": 3,
-   "dist_cicatriz_px": 119.6,
-   "ubicacion": "junto al humo",
-   "confianza": "media"
-  },
-  {
-   "centro": [
-    2219.0,
-    4699.6
-   ],
-   "area_px": 2,
-   "dist_cicatriz_px": 130.2,
-   "ubicacion": "aislado",
-   "confianza": "baja"
-  },
-  {
-   "centro": [
-    1501.0,
-    4735.8
-   ],
-   "area_px": 1,
-   "dist_cicatriz_px": 96.2,
-   "ubicacion": "aislado",
-   "confianza": "baja"
-  },
-  {
-   "centro": [
     1532.8,
     4748.6
    ],
@@ -810,31 +720,11 @@
   },
   {
    "centro": [
-    1730.1,
-    4743.5
-   ],
-   "area_px": 1,
-   "dist_cicatriz_px": 136.6,
-   "ubicacion": "junto al humo",
-   "confianza": "media"
-  },
-  {
-   "centro": [
-    1714.8,
-    4774.0
-   ],
-   "area_px": 1,
-   "dist_cicatriz_px": 142.0,
-   "ubicacion": "junto al humo",
-   "confianza": "media"
-  },
-  {
-   "centro": [
     798.2,
-    4840.9
+    4842.8
    ],
-   "area_px": 2,
-   "dist_cicatriz_px": 60.2,
+   "area_px": 1,
+   "dist_cicatriz_px": 61.2,
    "ubicacion": "aislado",
    "confianza": "baja"
   },
@@ -999,7 +889,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.06)",
+   "reason": "sin evidencia de quemado (NBR mediano -0.06, NBR original +0.00)",
    "area": 4417,
    "centroid": [
     1942.843558976681,
@@ -1007,7 +897,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano +0.06)",
+   "reason": "sin evidencia de quemado (NBR mediano +0.06, NBR original +0.09)",
    "area": 4584,
    "centroid": [
     1950.7809773123909,
@@ -1015,7 +905,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano +0.03)",
+   "reason": "sin evidencia de quemado (NBR mediano +0.03, NBR original +0.07)",
    "area": 4167,
    "centroid": [
     2025.2514998800095,
@@ -1023,7 +913,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano +0.11)",
+   "reason": "sin evidencia de quemado (NBR mediano +0.11, NBR original +0.12)",
    "area": 9683,
    "centroid": [
     1671.3378085304141,
@@ -1031,7 +921,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano +0.04)",
+   "reason": "sin evidencia de quemado (NBR mediano +0.04, NBR original +0.07)",
    "area": 3854,
    "centroid": [
     1586.51401141671,
@@ -1039,7 +929,7 @@
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.03)",
+   "reason": "sin evidencia de quemado (NBR mediano -0.03, NBR original +0.04)",
    "area": 11384,
    "centroid": [
     2243.92998945889,
@@ -7411,5 +7301,5 @@
   }
  ],
  "avisos": [],
- "tiempo_s": 2.76
+ "tiempo_s": 2.73
 }
