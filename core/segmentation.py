@@ -32,6 +32,8 @@ COMP_NBR_MAX = -0.15    # (NBR normalizado) una mancha cuenta como quemada solo 
 COMP_NBR_RAW_MAX = -0.05  # (NBR original) B12 CLARAMENTE sobre B8A: cicatrices reales -0,10 a -0,30; nubes/sombras grises ~-0,02
 NBR_FLOOR = 0.0         # v4: el corte del NBR nunca por debajo de 0
 SEED_RED_MIN = 0.0      # las semillas rojizas exigen B12 por encima de B8A y B04, diga lo que diga Otsu
+GREEN_NBR_RAW = 0.10    # isla verde dentro de la cicatriz: B8A claramente sobre B12 (barrido 0,05/0,10/0,15 en el README)
+GREEN_MIN_FRAC = 1.3e-5 # tamaño mínimo de isla (~50 px en 2500x1546)
 GROW_FRAC = 0.02        # v3: distancia máxima de crecimiento desde lo rojizo (fracción de la diagonal)
 
 
@@ -178,8 +180,28 @@ def burn_details(b: dict, ind: dict, masks: dict, variant: str = DEFAULT_VARIANT
         touches = st2[i, 0] == 0 or st2[i, 1] == 0 or st2[i, 0] + st2[i, 2] == m.shape[1] or st2[i, 1] + st2[i, 3] == m.shape[0]
         if not touches and st2[i, 4] < 4 * min_area:
             m[lab2 == i] = True
+    if variant != "v0":
+        m, steps["green_islands"] = remove_green_islands(m, ind, masks)
     m &= ~masks["water"] & valid
     return {"mask": m, "variant": variant, "steps": steps, "discarded": discarded, "thresholds": th}
+
+
+def remove_green_islands(m: np.ndarray, ind: dict, masks: dict) -> tuple[np.ndarray, np.ndarray]:
+    """Quita de la cicatriz las islas de vegetación sana que el cierre morfológico y el relleno de huecos habían tapado.
+    Verde = con los valores ORIGINALES de la SWIR, B8A claramente por encima de B12 (NBR original > GREEN_NBR_RAW).
+    Bajo el humo denso la SWIR sale turquesa y también parece "verde": ahí no se quita nada.
+    Medido (README): práctica IoU 0,56 -> 0,57 y precisión 0,75 -> 0,77 sin bajar el recall."""
+    smoke = masks.get("smoke_dense", masks["smoke"])
+    smoke = cv2.dilate(smoke.astype(np.uint8), np.ones((9, 9), np.uint8)).astype(bool)
+    green = (ind["NBR_RAW"] > GREEN_NBR_RAW) & m & ~smoke
+    green = cv2.morphologyEx(green.astype(np.uint8), cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
+    n, lab, st, _ = cv2.connectedComponentsWithStats(green, 8)
+    keep = np.zeros(n, bool)
+    keep[1:] = st[1:, cv2.CC_STAT_AREA] >= max(20, int(GREEN_MIN_FRAC * m.size))
+    islands = keep[lab]
+    # al recortar quedan migas sueltas de cicatriz (<0,4 % del área): se quitan para no ensuciar el dibujo ni el recuento
+    out = _remove_small(m & ~islands, max(20, int(GREEN_MIN_FRAC * m.size)))
+    return out, islands
 
 
 def burn_mask(ind: dict, masks: dict, variant: str = DEFAULT_VARIANT) -> np.ndarray:
