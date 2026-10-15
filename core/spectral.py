@@ -77,6 +77,7 @@ def indices(b: dict) -> dict:
         "BRIGHT": ((b12 + b8a + b04) / 3).astype(np.float32),
         "RED_DOM": (b12 - np.maximum(b8a, b04)).astype(np.float32),
         "SAT": ((mx - mn) / (mx + EPS)).astype(np.float32),
+        "_bands": b,   # referencia interna: permite burn_mask(indices, masks) sin pasar las bandas aparte
     }
 
 
@@ -89,6 +90,8 @@ def save_debug(scene: dict, b: dict, ind: dict, root: str = "debug") -> str:
     out = Path(root) / scene["name"]
     out.mkdir(parents=True, exist_ok=True)
     for k, v in ind.items():
+        if k.startswith("_"):
+            continue
         cm = cv2.applyColorMap((np.clip((v - np.percentile(v, 1)) / max(np.ptp(np.percentile(v, [1, 99])), EPS), 0, 1) * 255).astype(np.uint8), cv2.COLORMAP_VIRIDIS)
         cv2.imwrite(str(out / f"spec_{k}.png"), cm)
     return str(out)
@@ -113,6 +116,8 @@ if __name__ == "__main__":
                 print(f"  SWIR {n} -> escala TC: mediana {np.median(pred[v]):.0f} (TC R/G/B medianas "
                       f"{np.median(tc[..., 0][v]):.0f}/{np.median(tc[..., 1][v]):.0f}/{np.median(tc[..., 2][v]):.0f})")
         for k, v in ind.items():
+            if k.startswith("_"):
+                continue
             print(f"  {k:8s} p1/p50/p99 = {np.percentile(v[sc['valid']], [1, 50, 99]).round(2)}")
         print("  debug ->", save_debug(sc, b, ind))
 

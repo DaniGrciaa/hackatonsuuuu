@@ -157,11 +157,9 @@ def burn_details(b: dict, ind: dict, masks: dict, variant: str = DEFAULT_VARIANT
     return {"mask": m, "variant": variant, "steps": steps, "discarded": discarded, "thresholds": th}
 
 
-def burn_mask(ind: dict, masks: dict, b: dict | None = None, variant: str = DEFAULT_VARIANT) -> np.ndarray:
-    """Interfaz acordada: bool HxW. 'b' (bandas) es opcional pero necesario para v2 (fuego)."""
-    if b is None:
-        raise ValueError("burn_mask necesita las bandas (b=...) para localizar el fuego activo y la validez")
-    return burn_details(b, ind, masks, variant)["mask"]
+def burn_mask(ind: dict, masks: dict, variant: str = DEFAULT_VARIANT) -> np.ndarray:
+    """Interfaz acordada: burn_mask(indices, masks) -> bool HxW."""
+    return burn_details(ind["_bands"], ind, masks, variant)["mask"]
 
 
 def perimeter(mask: np.ndarray, scale: float = 1.0) -> list[dict]:
