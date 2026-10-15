@@ -12,7 +12,7 @@
   1546
  ],
  "unidades": "Píxeles de la imagen analizada. La imagen no está georreferenciada: no hay hectáreas ni km.",
- "tiempo_total_s": 1.425,
+ "tiempo_total_s": 1.351,
  "avisos": [
   "logo de Copernicus detectado en ['tc']; se enmascara la esquina"
  ],
@@ -21,7 +21,7 @@
    "nombre": "Zona quemada",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 1.209,
+   "tiempo_s": 1.158,
    "metricas": {
     "area_px": 453370,
     "pct_imagen": 11.73,
@@ -34,7 +34,7 @@
    "nombre": "Perímetro del incendio",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.057,
+   "tiempo_s": 0.055,
    "metricas": {
     "area_px": 453793,
     "pct_imagen": 11.741,
@@ -47,17 +47,17 @@
    "nombre": "Fuego activo",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.125,
+   "tiempo_s": 0.106,
    "metricas": {
-    "area_px": 1527,
-    "pct_imagen": 0.04,
-    "regiones": 75,
-    "perimetro_px": 1060.6
+    "area_px": 977,
+    "pct_imagen": 0.025,
+    "regiones": 53,
+    "perimetro_px": 752.8
    },
    "mascara": "masks/fire.png",
    "focos_por_ubicacion": {
-    "frente de la cicatriz": 48,
-    "junto al humo": 27,
+    "frente de la cicatriz": 36,
+    "junto al humo": 17,
     "aislado": 0
    }
   },
@@ -65,12 +65,12 @@
    "nombre": "Zona quemada que aún arde",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.02,
+   "tiempo_s": 0.018,
    "metricas": {
-    "area_px": 35560,
-    "pct_imagen": 0.92,
+    "area_px": 19053,
+    "pct_imagen": 0.493,
     "regiones": 16,
-    "perimetro_px": 3194.7
+    "perimetro_px": 2507.1
    },
    "mascara": "masks/burn_active.png"
   },
@@ -117,7 +117,7 @@
    "nombre": "Suelo claro o campos secos",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.006,
+   "tiempo_s": 0.005,
    "metricas": {
     "area_px": 673669,
     "pct_imagen": 17.43,
