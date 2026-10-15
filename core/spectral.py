@@ -40,23 +40,49 @@ def calibrate(tc: np.ndarray, swir: np.ndarray, valid: np.ndarray) -> dict | Non
     return {"a": float(a), "b": float(b), "corr": float(np.corrcoef(x, y)[0, 1])}
 
 
+def water_raw(swir: np.ndarray, valid: np.ndarray) -> tuple[np.ndarray, float]:
+    """Agua con los valores ORIGINALES de la SWIR: el agua absorbe el infrarrojo cercano (B8A) y el de onda corta (B12),
+    así que max(B12, B8A) forma un grupo en lo más oscuro, separado de la tierra por un hueco en el histograma.
+    El umbral es ese hueco, buscado en cada escena: sirve igual con un embalse pequeño que con media imagen de mar.
+    (La versión anterior suponía que el agua era como mucho ~10 % de la escena y fallaba con mucho mar.)"""
+    if not valid.any():
+        return np.zeros(valid.shape, bool), 0.0
+    mx = swir[..., :2].max(axis=2)
+    v = mx[valid]
+    med = float(np.median(v))
+    hist = np.bincount(v.ravel(), minlength=256)[:256].astype(np.float64)
+    hist = np.convolve(hist, np.ones(5) / 5, mode="same")                  # suaviza el histograma
+    lo, hi = max(1, int(0.25 * med)), max(2, int(0.5 * med))
+    peak = int(np.argmax(hist[: lo + 1]))                                   # modo oscuro (agua, si la hay)
+    t = float(peak + int(np.argmin(hist[peak: hi + 1])))                    # hueco entre el agua y la tierra
+    water = (mx <= t) & valid
+    water = cv2.morphologyEx(water.astype(np.uint8), cv2.MORPH_OPEN, np.ones((2, 2), np.uint8)).astype(bool)
+    return water, t
+
+
 def bands(scene: dict) -> dict:
     """Devuelve B02, B03, B04, B8A, B12 (float32, 0..1). Las que no se puedan obtener, ausentes.
     B12/B8A/B04 salen de la SWIR; B02/B03 solo existen si hay True Color.
     Claves extra: 'valid' (máscara), 'B04_tc' (B04 desde la TC), 'calib'."""
     valid = scene["valid"]
     swir, tc = scene["swir"], scene["tc"]
+    water, t_water = water_raw(swir, valid)
+    land = valid & ~water
+    stats = land if land.sum() > 0.05 * max(int(valid.sum()), 1) else valid   # percentiles sobre TIERRA: el mar no los arrastra
     out = {
-        "B12": pnorm(swir[..., 0].astype(np.float32), valid),
-        "B8A": pnorm(swir[..., 1].astype(np.float32), valid),
-        "B04": pnorm(swir[..., 2].astype(np.float32), valid),
+        "B12": pnorm(swir[..., 0].astype(np.float32), stats),
+        "B8A": pnorm(swir[..., 1].astype(np.float32), stats),
+        "B04": pnorm(swir[..., 2].astype(np.float32), stats),
         "valid": valid,
+        "land": stats,
+        "_water": water,
+        "_water_t": t_water,
         "_swir": swir,   # SWIR original sin recortar: los focos saturan B12 y el percentil 99 los aplanaría
     }
     if tc is not None:
-        out["B04_tc"] = pnorm(tc[..., 0].astype(np.float32), valid)
-        out["B03"] = pnorm(tc[..., 1].astype(np.float32), valid)
-        out["B02"] = pnorm(tc[..., 2].astype(np.float32), valid)
+        out["B04_tc"] = pnorm(tc[..., 0].astype(np.float32), stats)
+        out["B03"] = pnorm(tc[..., 1].astype(np.float32), stats)
+        out["B02"] = pnorm(tc[..., 2].astype(np.float32), stats)
         calibration = calibrate(tc, swir, valid)
         if calibration is not None:
             out["calib"] = calibration
@@ -172,41 +198,37 @@ def exclusion_masks(b: dict, ind: dict) -> dict:
     k = max(3, int(d / 400) | 1)
     k_open = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k))
 
-    # AGUA: histéresis. Semilla = núcleo muy negro (cola del 3 %); crece por lo oscuro (cola del 10 %).
-    # Un embalse tiene núcleo negro; la ceniza oscura y las sombras suelen no llegar a tanto.
-    loose = (mx < _otsu_tail(mx, valid, 10)) & valid
-    seed = (mx < _otsu_tail(mx, valid, 3)) & valid
-    seed = cv2.erode(seed.astype(np.uint8), np.ones((3, 3), np.uint8)).astype(bool)
-    n_l, lab, _, _ = cv2.connectedComponentsWithStats(loose.astype(np.uint8), 8)
-    has = np.zeros(n_l, bool)
-    has[np.unique(lab[seed])] = True
-    has[0] = False
-    water = _remove_small(has[lab], max(4, int(d / 700) ** 2))
+    # AGUA: ver water_raw() (hueco del histograma de max(B12, B8A) originales, calculado en bands()).
+    if "_water" in b:
+        water = _remove_small(b["_water"], max(4, int(d / 700) ** 2))
+    else:
+        water = np.zeros(shape, bool)
+    land = b.get("land", valid)          # los percentiles de las demás máscaras, solo sobre tierra
 
     # HUMO: turquesa = B8A y B04 claramente por encima de B12 (el rojo baja, azul y verde suben)
     cyan = np.minimum(b8a, b04) - b12
-    t_s = float(np.percentile(cyan[valid], 90))
+    t_s = float(np.percentile(cyan[land], 90))
     smoke = (cyan > max(t_s, 0.15)) & (sat > 0.15) & valid & ~water
     smoke = cv2.morphologyEx(smoke.astype(np.uint8), cv2.MORPH_OPEN, k_open).astype(bool)
     smoke = _remove_small(smoke, int(0.0002 * valid.size))
 
     # TIERRA CLARA / CAMPOS SECOS: muy brillante en SWIR (lo quemado y el matorral son oscuros)
-    t_b = float(np.percentile(bright[valid], 75))
-    bare = (bright > max(t_b, float(threshold_otsu(bright[valid][::13])))) & valid & ~water & ~smoke
+    t_b = float(np.percentile(bright[land], 75))
+    bare = (bright > max(t_b, float(threshold_otsu(bright[land][::13])))) & valid & ~water & ~smoke
     bare = cv2.morphologyEx(bare.astype(np.uint8), cv2.MORPH_OPEN, k_open).astype(bool)
 
     # NUBE: blanco (poco saturado) y muy brillante; con True Color se exige también que sea claro y gris allí
-    cloud = (bright > np.percentile(bright[valid], 97)) & (sat < np.percentile(sat[valid], 15)) & valid
+    cloud = (bright > np.percentile(bright[land], 97)) & (sat < np.percentile(sat[land], 15)) & valid
     if "B03" in b:
-        grey_tc = (b["B03"] > np.percentile(b["B03"][valid], 90)) & (b["B02"] > np.percentile(b["B02"][valid], 85))
+        grey_tc = (b["B03"] > np.percentile(b["B03"][land], 90)) & (b["B02"] > np.percentile(b["B02"][land], 85))
         cloud &= grey_tc
     cloud = _remove_small(cv2.morphologyEx(cloud.astype(np.uint8), cv2.MORPH_OPEN, k_open).astype(bool),
                           int(0.0003 * valid.size))
 
     # CIUDAD (EXPERIMENTAL, poco fiable: también marca parcelas): contraste fino denso + poca vegetación.
     hf = np.abs(bright - cv2.GaussianBlur(bright, (0, 0), 1.5))
-    dens = cv2.blur((hf > np.percentile(hf[valid], 70)).astype(np.float32), (k * 7, k * 7))
-    urban = (dens > np.percentile(dens[valid], 93)) & valid & ~water & ~smoke
+    dens = cv2.blur((hf > np.percentile(hf[land], 70)).astype(np.float32), (k * 7, k * 7))
+    urban = (dens > np.percentile(dens[land], 93)) & valid & ~water & ~smoke
     urban = cv2.morphologyEx(urban.astype(np.uint8), cv2.MORPH_CLOSE,
                              cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k * 8 + 1, k * 8 + 1))).astype(bool)
     urban = _remove_small(urban, int(0.002 * valid.size))

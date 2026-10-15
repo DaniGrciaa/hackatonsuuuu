@@ -37,8 +37,9 @@ Salida por escena en `salida/<escena>/`:
 
 | Archivo | Contenido |
 |---|---|
-| `perimetro_swir.png`, `perimetro_tc.png` | Imagen a resolucion de trabajo con el area quemada sombreada, el perímetro en amarillo, los huecos (embalses) en azul y los focos en rojo |
-| `mascara_quemado.png` | Máscara binaria (blanco = quemado) |
+| `perimetro_swir.png`, `perimetro_tc.png` | Imagen a resolución de trabajo con el perímetro en amarillo, la superficie afectada **sin actividad** en amarillo, la superficie **con posible actividad** en naranja, los posibles focos en rojo (píxeles y círculos), los huecos en azul, leyenda y una línea de resumen (% afectado, % con y sin actividad, nº de focos) |
+| `mascara_quemado.png` | Máscara binaria (blanco = quemado), resolución de trabajo |
+| `mascara_actividad.png` | Superficie afectada **con** posible actividad: lo quemado a menos de ~1 % de la diagonal (≈30 px) de un foco, más los propios focos. Es una definición nuestra, no una medida |
 | `capa_focos.png` | Capa RGBA transparente con los focos de A (vacía si `core/fire.py` no existe) |
 | `mascaras_descarte/*.png` | Agua, humo, tierra clara, nube y ciudad, por separado (para la vista explicable) |
 | `resultado.json` | % quemado, píxeles, nº de manchas y huecos, perímetro, polígonos, umbrales usados, manchas descartadas y por qué, tiempo y avisos |
@@ -77,12 +78,8 @@ Tarda **entre 0,2 y 2,6 s por escena** en un portátil.
 1. **Candidatos:** fuera el agua. Dentro del resto, lo oscuro (Otsu del brillo) con NBR bajo (Otsu del NBR, **nunca por debajo de 0**: es un criterio visual empirico que debe validarse con anotaciones).
 2. **Semillas:** de esos candidatos, lo claramente rojizo (Otsu de `RED_DOM`, nunca por debajo de 0).
 3. **Crecimiento:** desde las semillas se crece, como mucho un 2 % de la diagonal, por lo *muy* oscuro (segundo Otsu del brillo). Así entra la ceniza marrón oscura pegada a la cicatriz, pero no el bosque oscuro que no toca ninguna semilla.
-<<<<<<< HEAD
-4. **Evidencia de quemado:** una mancha solo cuenta si su NBR mediano es menor que −0,15. Es una regla empirica sobre los canales normalizados del JPEG, no una prueba fisica de quemado.
-=======
-4. **Evidencia de quemado:** una mancha solo cuenta si, con los valores originales de la SWIR, B12 supera a B8A de mediana (NBR original < 0) y además su NBR normalizado es < −0,15. Hace falta el NBR *original*: el normalizado por percentiles pierde el signo físico y dejaba pasar una zona de terreno seco como "cicatriz" en una escena de antes del incendio (marcaba un 21 %).
->>>>>>> c330661a52c9450ada88ce01578bada3281ea1a9
-5. **Prior espacial:** se quedan las manchas grandes y las pegadas al humo o al fuego. El matorral seco suelto se descarta.
+4. **Evidencia de quemado:** una mancha solo cuenta si (a) con los valores originales del JPEG SWIR, el canal rojo (B12) supera al verde (B8A) de mediana, y (b) su "NBR" normalizado es < −0,15. Son reglas empíricas sobre los canales de color del JPEG, no una prueba física de quemado. La (a) hizo falta porque el valor normalizado por percentiles pierde el orden entre canales y dejaba pasar una zona de terreno seco como "cicatriz" en una escena de antes del incendio (marcaba un 21 %).
+5. **Prior espacial:** se quedan las manchas grandes y las que están cerca del humo o del fuego **y además pegadas a la mancha principal** (un foco aislado en un campo no arrastra una "cicatriz" a su alrededor). El matorral seco suelto se descarta.
 6. **Huecos:** se rellenan los huecos pequeños (claros de ceniza) y se vuelve a restar el agua, así que los embalses de dentro no cuentan como quemado.
 7. **Perímetro:** contornos con huecos (`cv2.findContours`, `RETR_CCOMP`), simplificados.
 
@@ -94,7 +91,7 @@ Es la idea de los algoritmos de satélite de detección de incendios (MODIS/VIIR
 2. Es claramente naranja o rojo: `(R − max(G, B)) / R ≥ 0,40`. Así se descartan el suelo claro, las minas y las nubes (pálidos) y los campos pardos (más verde: G≈160 frente a 106–139 en los focos reales).
 3. Destaca sobre su entorno: supera la media del fondo en más de 3 desviaciones, en una ventana de 61 px. **El fondo se calcula sin los píxeles calientes**; si no, un frente largo se compara consigo mismo y no destaca. Con ese cambio, el recall en Niebla pasó del 3 % al 54 %.
 
-Cada foco se clasifica por **ubicación**: "frente de la cicatriz" (confianza alta), "junto al humo" (media) o "aislado" (baja). Esa confianza dice dónde está, no cuánto se parece a un fuego real. El JSON separa el **área quemada con actividad** (a menos de 7 px de un foco) de la **quemada sin actividad**.
+Cada foco se clasifica por **ubicación**: "frente de la cicatriz" (confianza alta), "junto al humo" (media) o "aislado" (baja). Esa confianza dice dónde está, no cuánto se parece a un fuego real. El JSON separa el **área quemada con actividad** (a menos de ~30 px de un foco) de la **quemada sin actividad**.
 
 **Lo que NO hacemos todavía:** no filtramos los focos con las máscaras de nube, ciudad o tierra clara (la tierra clara no sirve, porque el fuego también es brillante: el 57 % de los focos reales de la escena extra caen en ella), no clasificamos por intensidad ni por tipo, y la confianza no se calibra.
 
@@ -102,14 +99,15 @@ Medido **por focos** (cada mancha es un objeto, con 5 px de tolerancia):
 
 | Referencia | Focos detectados / de referencia | Precisión | Recall |
 |---|---|---|---|
-| Niebla, Wildfire | 61 / 113 | 0,75 | 0,54 |
-| Extra, Wildfire | 53 / 59 | 0,64 | 0,88 |
+| Niebla, Wildfire | 61 / 86 | 0,75 | 0,58 |
+| Extra, Wildfire | 53 / 27 | 0,64 | 0,96 |
 | Extra, marcas a mano de Jesús (solo zonas anotadas) | — | 1,00 | 0,82 |
 | Práctica 26-07, regla física de QuickFire (B11 + B12 > 1, bandas crudas) | 264 / 769 | 0,82 | 0,29 |
 
 **Escenas sin incendio** (`python tools_c/negativas.py`): 0, 1, 1 y 9 píxeles de fuego, y 0 % de cicatriz en las cuatro. Es el valor intermedio de un barrido de `RED_RATIO` (0,30 daba 0 / 16 / 16 / 108 píxeles y 0,45 daba 0 / 0 / 0 / 3, pero bajaba el recall frente a las marcas de Jesús a 0,68). **Se eligió mirando estas escenas y las de referencia: no hay ninguna reservada**, así que las cifras son optimistas.
 
-- La Wildfire es una referencia ruidosa: también pinta parcelas pálidas, asi que el acuerdo con ella no mide el recall real.
+- **La Wildfire se usa solo para validar: `core/` no la lee** y no entra en ninguna decisión del programa. Es una referencia ruidosa: el script de Copernicus marca como fuego todo lo muy brillante en la SWIR, y también pinta de rosa suelo pálido, minas y parcelas. Por eso el recall contra ella subestima al detector. `python tools_c/comparar_wildfire.py --montaje` lo hace visible: de los 36 objetos de Niebla que no detectamos, **35 son brillantes pero no naranjas en la SWIR** (suelo pálido probable) y 1 no llega al umbral de brillo. Si se suponen no-fuego, el recall sube a 0,98 (Niebla) y 1,00 (extra); es una **estimación**, comprobada a ojo con 6 de los 36 casos en el montaje, no una medida.
+- Las cifras de la tabla salen de ese script (ignora objetos de referencia de menos de 6 px, 5 px de tolerancia). Ajustar umbrales mirando esta comparación gasta Niebla y la extra como prueba independiente: para ajustar se usan antes las marcas a mano de Jesús, que sí distinguen fuego de suelo.
 - En Niebla se detecta el **foco aislado en los campos** (abajo a la derecha) y se marca con confianza baja.
 - **Se pierde mucho en la escena de práctica:** la mitad de sus focos físicos no son "rojos" en la SWIR, porque el humo sube el canal B04. Se probó a comparar solo B12 con B8A, que el humo no toca: ganaba de 3 a 5 puntos de recall, pero bajaba la precisión y daba píxeles falsos en la escena sin incendio. Se descartó.
 - Hay algún foco en mitad de la cicatriz (posibles rescoldos) que no podemos confirmar.
@@ -121,8 +119,8 @@ Medido **por focos** (cada mancha es un objeto, con 5 px de tolerancia):
 | v0: NBR + brillo con Otsu | 37,8 % | 35,4 % | 45,4 % | — |
 | v1: + tono rojizo | 4,3 % | 6,7 % | 16,2 % | — |
 | v2: + prior espacial | 4,1 % | 6,3 % | 8,5 % | 9,1 % (pierde una cicatriz) |
-| v3: histéresis + evidencia | 5,7 % | 7,8 % | 0,0 % | 12,0 % |
-| **v4: v3 + NBR nunca por debajo de 0** | **5,7 %** | **7,8 %** | **0,0 %** | **12,0 %** |
+| v3: histéresis + evidencia | 5,7 % | 8,0 % | 0,0 % | 12,0 % |
+| **v4: v3 + NBR nunca por debajo de 0** | **5,7 %** | **8,0 %** | **0,0 %** | **12,0 %** |
 
 - **El NBR a secas no siempre basta.** Sin foto de antes, todo terreno seco tiene NBR bajo, y en Niebla y Ávila-Madrid v0 marca más de un tercio de la escena. Pero depende de la escena: en la de práctica del 26-07 (ver más abajo) v0 marca un 11 % y, de hecho, sale mejor que v3 y v4 en IoU.
 - **El tono rojizo como corte duro pierde cicatrices oscuras.** En la escena extra, v2 se dejaba una segunda cicatriz marrón oscura (RED_DOM −0,08). La histéresis la recupera sin dejar entrar el bosque oscuro: medido en Niebla y Ávila-Madrid, lo que se colaba era más claro que la ceniza (brillo mediano 0,33–0,41 frente a 0,24–0,25).
@@ -142,12 +140,14 @@ se calcula una cicatriz de referencia con **dNBR** (NBR del 24-06 menos NBR del 
 | v0 | 11,3 | 0,59 / 0,71 / 0,77 | 0,54 / 0,93 / 0,56 |
 | v1 | 5,9 | 0,46 / 0,87 / 0,49 | 0,30 / 0,97 / 0,30 |
 | v2 | 4,9 | 0,38 / 0,86 / 0,41 | 0,25 / 0,96 / 0,25 |
-| v3 | 8,3 | 0,53 / 0,78 / 0,63 | 0,40 / 0,93 / 0,42 |
-| **v4 (por defecto)** | 9,3 | 0,55 / 0,75 / 0,67 | 0,44 / 0,92 / 0,46 |
+| v3 | 8,6 | 0,54 / 0,78 / 0,64 | 0,41 / 0,93 / 0,43 |
+| **v4 (por defecto)** | 9,5 | 0,55 / 0,74 / 0,68 | 0,45 / 0,92 / 0,47 |
+
+(Tras la corrección de Jesús en `fire_like` (canal rojo original) v4 llegó a 0,56 / 0,75 / 0,70, pero eso reactivaba la regla "conservar manchas pequeñas cerca de un foco" y dejaba dos manchas falsas en Niebla, una alrededor del foco aislado de los campos. Al exigir además que estén pegadas a la cicatriz principal, bajó a 0,55 / 0,74 / 0,68 y las manchas desaparecieron. Es el coste de no dibujar cicatriz donde no la hay.)
 
 Lectura honesta:
 - **Lo que marcamos casi siempre es quemado:** la precisión contra la referencia generosa es 0,93.
-- **Nos dejamos mucha cicatriz:** el recall con v4 es 0,67 (0,46 contra la referencia generosa). Las omisiones se ven en
+- **Nos dejamos mucha cicatriz:** el recall con v4 es 0,68 (0,47 contra la referencia generosa). Las omisiones se ven en
   el sur y entre los embalses (`debug/dnbr_0726/errores_v4.png`), pero **no son sobre todo por el humo** (solo un 3,6 %
   cae en humo denso). La causa es que, con una cicatriz tan grande, los Otsu parten la propia cicatriz en dos (severa y
   moderada) y dejan fuera la moderada. La v4 corrige eso en el NBR (+0,02 de IoU, +0,04 de recall, sin cambiar nada en las

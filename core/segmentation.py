@@ -23,13 +23,13 @@ from skimage.filters import threshold_otsu
 
 VARIANTS = ("v0", "v1", "v2", "v3", "v4")
 DEFAULT_VARIANT = "v4"
-KEEP_FRAC = 0.25        # v2: se conservan manchas con al menos esta fracción del área de la mayor
+KEEP_FRAC = 0.10        # v2: se conservan manchas con al menos esta fracción del área de la mayor (cicatrices secundarias)
 NEAR_FRAC = 0.03        # v2: "pegado al humo/fuego" = a menos de esta fracción de la diagonal
 # Evidencia mínima de quemado (física: en lo quemado B12 > B8A, o sea NBR < 0). Otsu SIEMPRE parte la escena
 # en dos, haya cicatriz o no; esto evita "encontrar" una cicatriz en una escena sin incendio.
 # Medido: cicatrices reales NBR mediano -0,30 / -0,52; falso positivo en escena sin fuego 0,00 -> corte en el medio.
 COMP_NBR_MAX = -0.15    # (NBR normalizado) una mancha cuenta como quemada solo si su NBR mediano es menor que esto
-COMP_NBR_RAW_MAX = 0.0  # (NBR con valores originales) y, además, B12 > B8A de mediana: lo físico, signo del NBR
+COMP_NBR_RAW_MAX = -0.05  # (NBR original) B12 CLARAMENTE sobre B8A: cicatrices reales -0,10 a -0,30; nubes/sombras grises ~-0,02
 NBR_FLOOR = 0.0         # v4: el corte del NBR nunca por debajo de 0
 SEED_RED_MIN = 0.0      # las semillas rojizas exigen B12 por encima de B8A y B04, diga lo que diga Otsu
 GROW_FRAC = 0.02        # v3: distancia máxima de crecimiento desde lo rojizo (fracción de la diagonal)
@@ -154,11 +154,21 @@ def burn_details(b: dict, ind: dict, masks: dict, variant: str = DEFAULT_VARIANT
         near = np.zeros(valid.shape, np.uint8)
         near[masks["smoke"] | fire_like(ind, b)] = 1
         near = cv2.dilate(near, _ellipse(int(NEAR_FRAC * d) * 2 + 1)).astype(bool)
+        # Cerca del humo/fuego NO basta: una mancha suelta junto a un foco aislado (campo, mina, parcela rosa) no es
+        # cicatriz. Además tiene que estar pegada a la mancha principal (el frente de un incendio sale de su cicatriz).
+        main = (lab == int(np.argmax(areas))).astype(np.uint8)
+        dist_main = cv2.distanceTransform(1 - main, cv2.DIST_L2, 5)
         for i in range(1, n):
-            if keep[i] and areas[i] < KEEP_FRAC * big and not near[lab == i].any():
+            if keep[i] and areas[i] < KEEP_FRAC * big:
+                comp = lab == i
+                if not near[comp].any():
+                    why = "suelta, lejos del humo/fuego"
+                elif float(dist_main[comp].min()) > NEAR_FRAC * d:
+                    why = "suelta: cerca de un foco, pero lejos de la cicatriz principal"
+                else:
+                    continue
                 keep[i] = False
-                discarded.append({"reason": "suelto, lejos del humo/fuego", "area": int(st[i, 4]),
-                                  "centroid": [float(cen[i][0]), float(cen[i][1])]})
+                discarded.append({"reason": why, "area": int(st[i, 4]), "centroid": [float(cen[i][0]), float(cen[i][1])]})
     m = keep[lab] if n > 1 else np.zeros_like(m)
 
     # Huecos: los pequeños se rellenan (ceniza clara, claros); el agua grande de dentro se vuelve a restar

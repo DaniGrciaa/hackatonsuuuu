@@ -3,3 +3,5 @@ __pycache__/
 data_test/
 debug/
 .DS_Store
+data_examen/
+salida_examen/
