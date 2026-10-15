@@ -31,7 +31,7 @@
  "num_componentes": 0,
  "num_huecos": 0,
  "perimetro_px_original": 0.0,
- "porcentaje_agua": 0.94,
+ "porcentaje_agua": 0.98,
  "porcentaje_humo": 0.0,
  "pixeles_focos": 0,
  "num_focos": 0,
@@ -47,485 +47,597 @@
  "descartados": [
   {
    "reason": "pequeño",
-   "area": 608,
+   "area": 200,
    "centroid": [
-    339.2138157894737,
-    16.692434210526315
+    512.245,
+    9.2
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 362,
+   "centroid": [
+    705.5718232044198,
+    13.751381215469614
    ]
   },
   {
    "reason": "pequeño",
    "area": 236,
    "centroid": [
-    268.1271186440678,
-    40.96610169491525
+    215.00423728813558,
+    23.766949152542374
    ]
   },
   {
    "reason": "pequeño",
-   "area": 77,
+   "area": 204,
    "centroid": [
-    974.0,
-    53.77922077922078
+    122.82352941176471,
+    36.52450980392157
    ]
   },
   {
    "reason": "pequeño",
-   "area": 1,
+   "area": 364,
    "centroid": [
-    925.0,
-    54.0
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 353,
-   "centroid": [
-    1200.328611898017,
-    80.12747875354107
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 324,
-   "centroid": [
-    675.1512345679013,
-    96.60185185185185
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 336,
-   "centroid": [
-    411.9702380952381,
-    102.85714285714286
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 235,
-   "centroid": [
-    38.48085106382979,
-    97.0468085106383
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 164,
-   "centroid": [
-    1071.0060975609756,
-    100.0670731707317
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 1,
-   "centroid": [
-    1083.0,
-    97.0
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 23,
-   "centroid": [
-    532.5217391304348,
-    100.21739130434783
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 156,
-   "centroid": [
-    962.75,
-    123.44871794871794
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 1,
-   "centroid": [
-    1190.0,
-    130.0
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 236,
-   "centroid": [
-    464.01271186440675,
-    148.44915254237287
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 335,
-   "centroid": [
-    134.65074626865672,
-    175.51940298507463
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 1,
-   "centroid": [
-    1027.0,
-    159.0
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 1,
-   "centroid": [
-    1086.0,
-    163.0
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 328,
-   "centroid": [
-    285.3506097560976,
-    199.54573170731706
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 57,
-   "centroid": [
-    625.3157894736842,
-    198.31578947368422
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 226,
-   "centroid": [
-    1221.5398230088495,
-    222.4867256637168
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 8,
-   "centroid": [
-    614.5,
-    227.0
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 165,
-   "centroid": [
-    1184.7151515151515,
-    247.35757575757575
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 219,
-   "centroid": [
-    713.2465753424658,
-    262.4657534246575
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 44,
-   "centroid": [
-    729.7045454545455,
-    264.22727272727275
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 1,
-   "centroid": [
-    958.0,
-    263.0
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 45,
-   "centroid": [
-    134.0,
-    273.4222222222222
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 513,
-   "centroid": [
-    163.7465886939571,
-    290.30409356725147
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 50,
-   "centroid": [
-    145.46,
-    280.18
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 9,
-   "centroid": [
-    276.6666666666667,
-    275.55555555555554
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 1,
-   "centroid": [
-    280.0,
-    276.0
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 272,
-   "centroid": [
-    61.36029411764706,
-    294.4852941176471
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 10,
-   "centroid": [
-    427.3,
-    306.7
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 404,
-   "centroid": [
-    214.56435643564356,
-    346.009900990099
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 13,
-   "centroid": [
-    223.23076923076923,
-    335.2307692307692
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 414,
-   "centroid": [
-    605.8888888888889,
-    346.9951690821256
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 580,
-   "centroid": [
-    135.2051724137931,
-    378.201724137931
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 87,
-   "centroid": [
-    809.3908045977012,
-    368.6666666666667
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 83,
-   "centroid": [
-    225.32530120481928,
-    423.5421686746988
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 8,
-   "centroid": [
-    760.5,
-    419.0
-   ]
-  },
-  {
-   "reason": "pequeño",
-   "area": 240,
-   "centroid": [
-    1210.7625,
-    430.4875
+    268.1236263736264,
+    39.26923076923077
    ]
   },
   {
    "reason": "pequeño",
    "area": 12,
    "centroid": [
-    1023.4166666666666,
-    445.0
+    776.75,
+    23.0
    ]
   },
   {
    "reason": "pequeño",
-   "area": 313,
+   "area": 616,
    "centroid": [
-    1240.888178913738,
-    497.49840255591056
+    676.0454545454545,
+    54.62337662337662
    ]
   },
   {
    "reason": "pequeño",
-   "area": 483,
+   "area": 237,
    "centroid": [
-    934.48033126294,
-    501.7142857142857
+    310.73839662447256,
+    81.9704641350211
    ]
   },
   {
    "reason": "pequeño",
-   "area": 16,
+   "area": 408,
    "centroid": [
-    1082.0625,
-    503.4375
+    478.828431372549,
+    89.55147058823529
    ]
   },
   {
    "reason": "pequeño",
-   "area": 597,
+   "area": 219,
    "centroid": [
-    1204.3400335008375,
-    529.4254606365159
+    376.21004566210047,
+    85.08219178082192
    ]
   },
   {
    "reason": "pequeño",
-   "area": 159,
+   "area": 486,
    "centroid": [
-    1177.937106918239,
-    529.5283018867924
+    413.43415637860085,
+    99.35802469135803
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 11,
+   "centroid": [
+    636.0,
+    99.27272727272727
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 263,
+   "centroid": [
+    436.3802281368821,
+    133.50190114068442
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 1,
+   "centroid": [
+    1067.0,
+    133.0
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 248,
+   "centroid": [
+    23.673387096774192,
+    147.6048387096774
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 262,
+   "centroid": [
+    464.1145038167939,
+    148.35496183206106
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 529,
+   "centroid": [
+    131.4328922495274,
+    171.47069943289225
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 6,
+   "centroid": [
+    590.8333333333334,
+    184.83333333333334
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 1,
+   "centroid": [
+    718.0,
+    189.0
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 229,
+   "centroid": [
+    48.23144104803494,
+    202.32751091703057
    ]
   },
   {
    "reason": "pequeño",
    "area": 5,
    "centroid": [
-    869.0,
-    559.0
+    10.0,
+    199.0
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.01, NBR original +0.13)",
-   "area": 98615,
+   "reason": "pequeño",
+   "area": 419,
    "centroid": [
-    976.4112254727983,
-    220.53312376413325
+    27.460620525059667,
+    211.25775656324583
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano +0.02, NBR original +0.15)",
-   "area": 1185,
+   "reason": "pequeño",
+   "area": 1,
    "centroid": [
-    544.3983122362869,
-    112.68185654008438
+    742.0,
+    198.0
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.04, NBR original +0.09)",
-   "area": 1528,
+   "reason": "pequeño",
+   "area": 246,
    "centroid": [
-    575.0392670157069,
-    151.52552356020942
+    1221.0243902439024,
+    222.0569105691057
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano +0.01, NBR original +0.14)",
-   "area": 5540,
+   "reason": "pequeño",
+   "area": 6,
    "centroid": [
-    481.06498194945846,
-    204.151083032491
+    13.166666666666666,
+    219.83333333333334
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.02, NBR original +0.13)",
-   "area": 8037,
+   "reason": "pequeño",
+   "area": 1,
    "centroid": [
-    291.4636058230683,
-    236.7271369914147
+    1144.0,
+    227.0
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.05, NBR original +0.13)",
-   "area": 4015,
+   "reason": "pequeño",
+   "area": 1,
    "centroid": [
-    112.27023661270236,
-    273.50236612702366
+    462.0,
+    229.0
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.03, NBR original +0.11)",
-   "area": 2679,
+   "reason": "pequeño",
+   "area": 200,
    "centroid": [
-    1204.5498320268757,
-    322.3967898469578
+    1184.77,
+    247.075
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.03, NBR original +0.12)",
-   "area": 9220,
+   "reason": "pequeño",
+   "area": 1,
    "centroid": [
-    351.85075921908896,
-    351.9650759219089
+    157.0,
+    241.0
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano +0.04, NBR original +0.16)",
-   "area": 13487,
+   "reason": "pequeño",
+   "area": 36,
    "centroid": [
-    840.4247052717432,
-    463.84763105212426
+    732.8611111111111,
+    260.97222222222223
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.06, NBR original +0.08)",
-   "area": 807,
+   "reason": "pequeño",
+   "area": 182,
    "centroid": [
-    945.8413878562577,
-    409.92069392812886
+    349.72527472527474,
+    267.9065934065934
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.04, NBR original +0.10)",
-   "area": 1986,
+   "reason": "pequeño",
+   "area": 610,
    "centroid": [
-    763.6797583081571,
-    535.6837865055388
+    162.77540983606556,
+    288.44262295081967
    ]
   },
   {
-   "reason": "sin evidencia de quemado (NBR mediano -0.11, NBR original +0.05)",
-   "area": 1442,
+   "reason": "pequeño",
+   "area": 5,
    "centroid": [
-    1108.5492371705964,
-    539.3640776699029
+    276.0,
+    276.0
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 1,
+   "centroid": [
+    279.0,
+    277.0
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 284,
+   "centroid": [
+    61.179577464788736,
+    293.443661971831
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 65,
+   "centroid": [
+    530.876923076923,
+    290.53846153846155
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 336,
+   "centroid": [
+    837.6369047619048,
+    307.8095238095238
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 1,
+   "centroid": [
+    1208.0,
+    305.0
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 397,
+   "centroid": [
+    606.4282115869017,
+    347.17884130982367
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 5,
+   "centroid": [
+    788.0,
+    359.0
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 23,
+   "centroid": [
+    340.1304347826087,
+    362.9130434782609
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 617,
+   "centroid": [
+    136.14424635332253,
+    377.77957860615885
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 374,
+   "centroid": [
+    1007.7860962566845,
+    385.30213903743316
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 68,
+   "centroid": [
+    150.22058823529412,
+    394.2647058823529
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 5,
+   "centroid": [
+    119.0,
+    394.0
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 24,
+   "centroid": [
+    130.0,
+    399.75
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 200,
+   "centroid": [
+    1206.89,
+    432.395
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 8,
+   "centroid": [
+    188.5,
+    431.5
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 11,
+   "centroid": [
+    188.0,
+    439.0
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 173,
+   "centroid": [
+    1190.2601156069363,
+    450.1965317919075
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 445,
+   "centroid": [
+    383.9325842696629,
+    469.8606741573034
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 573,
+   "centroid": [
+    933.588132635253,
+    501.0366492146597
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 400,
+   "centroid": [
+    1240.6825,
+    498.2225
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 476,
+   "centroid": [
+    1206.8172268907563,
+    531.1701680672269
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 553,
+   "centroid": [
+    1166.623869801085,
+    537.4339963833635
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 161,
+   "centroid": [
+    1225.0,
+    549.5031055900621
+   ]
+  },
+  {
+   "reason": "pequeño",
+   "area": 51,
+   "centroid": [
+    709.8235294117648,
+    551.7254901960785
+   ]
+  },
+  {
+   "reason": "sin evidencia de quemado (NBR mediano -0.24, NBR original +0.13)",
+   "area": 120699,
+   "centroid": [
+    970.8500898930397,
+    213.4492912120233
+   ]
+  },
+  {
+   "reason": "sin evidencia de quemado (NBR mediano -0.27, NBR original +0.10)",
+   "area": 1135,
+   "centroid": [
+    334.03083700440527,
+    16.074008810572685
+   ]
+  },
+  {
+   "reason": "sin evidencia de quemado (NBR mediano -0.21, NBR original +0.14)",
+   "area": 15900,
+   "centroid": [
+    529.3435849056604,
+    151.24075471698114
+   ]
+  },
+  {
+   "reason": "sin evidencia de quemado (NBR mediano -0.20, NBR original +0.14)",
+   "area": 645,
+   "centroid": [
+    1028.5131782945737,
+    38.778294573643414
+   ]
+  },
+  {
+   "reason": "sin evidencia de quemado (NBR mediano -0.24, NBR original +0.10)",
+   "area": 1144,
+   "centroid": [
+    39.61888111888112,
+    98.83041958041959
+   ]
+  },
+  {
+   "reason": "sin evidencia de quemado (NBR mediano -0.28, NBR original +0.08)",
+   "area": 690,
+   "centroid": [
+    667.1927536231884,
+    95.49710144927536
+   ]
+  },
+  {
+   "reason": "sin evidencia de quemado (NBR mediano -0.30, NBR original +0.12)",
+   "area": 9916,
+   "centroid": [
+    294.20683743444937,
+    235.26048810004033
+   ]
+  },
+  {
+   "reason": "sin evidencia de quemado (NBR mediano -0.39, NBR original +0.13)",
+   "area": 5021,
+   "centroid": [
+    115.28739294961163,
+    271.80800637323244
+   ]
+  },
+  {
+   "reason": "sin evidencia de quemado (NBR mediano -0.33, NBR original +0.22)",
+   "area": 941,
+   "centroid": [
+    15.823591923485653,
+    285.2731137088204
+   ]
+  },
+  {
+   "reason": "sin evidencia de quemado (NBR mediano -0.30, NBR original +0.12)",
+   "area": 1860,
+   "centroid": [
+    1192.2236559139785,
+    314.85537634408604
+   ]
+  },
+  {
+   "reason": "sin evidencia de quemado (NBR mediano -0.34, NBR original +0.11)",
+   "area": 1214,
+   "centroid": [
+    1228.2693574958814,
+    319.8517298187809
+   ]
+  },
+  {
+   "reason": "sin evidencia de quemado (NBR mediano -0.30, NBR original +0.13)",
+   "area": 12464,
+   "centroid": [
+    330.49783376123236,
+    353.96999358151476
+   ]
+  },
+  {
+   "reason": "sin evidencia de quemado (NBR mediano -0.07, NBR original +0.28)",
+   "area": 1711,
+   "centroid": [
+    826.9707773232028,
+    363.8305084745763
+   ]
+  },
+  {
+   "reason": "sin evidencia de quemado (NBR mediano -0.21, NBR original +0.15)",
+   "area": 18877,
+   "centroid": [
+    823.603061927213,
+    476.57276050219843
+   ]
+  },
+  {
+   "reason": "sin evidencia de quemado (NBR mediano -0.24, NBR original +0.10)",
+   "area": 1375,
+   "centroid": [
+    953.6727272727272,
+    402.8887272727273
+   ]
+  },
+  {
+   "reason": "sin evidencia de quemado (NBR mediano -0.37, NBR original +0.05)",
+   "area": 1628,
+   "centroid": [
+    1109.9625307125307,
+    538.458230958231
    ]
   }
  ],
  "umbrales": {
-  "bright": 0.5176,
-  "nbr": 0.2695,
-  "red_dom": 0.0,
-  "bright_ash": 0.3912,
+  "bright": 0.4668,
+  "nbr": 0.0977,
+  "red_dom": 0.0769,
+  "bright_ash": 0.3127,
   "grow_px": 27.0
  },
  "poligonos": [],
  "avisos": [],
- "tiempo_s": 0.21
+ "tiempo_s": 0.2
 }
