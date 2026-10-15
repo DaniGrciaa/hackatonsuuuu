@@ -1,6 +1,21 @@
 {
  "escena": "sin_fuego",
  "variante": "v4",
+ "archivos_entrada": {
+  "swir": "2026-06-26-00_00_2026-06-26-23_59_Sentinel-2_L2A_SWIR.jpg",
+  "tc": "2026-06-26-00_00_2026-06-26-23_59_Sentinel-2_L2A_True_color.jpg",
+  "wildfire": "2026-06-26-00_00_2026-06-26-23_59_Sentinel-2_L2A_Wildfires.jpg"
+ },
+ "mascaras_evaluacion": {
+  "affected": "affected.png",
+  "active": "active.png",
+  "valid": "valid.png"
+ },
+ "coordenadas_mascaras": "original",
+ "coordenadas_overlays": "trabajo",
+ "orden_dimensiones": "alto, ancho",
+ "estado_afectado": "disponible",
+ "estado_activo": "disponible",
  "tamano_trabajo": [
   564,
   1250
@@ -27,6 +42,7 @@
  },
  "porcentaje_quemado_con_actividad": 0.0,
  "porcentaje_quemado_sin_actividad": 0.0,
+ "radio_actividad_px": 8,
  "focos": [],
  "descartados": [
   {

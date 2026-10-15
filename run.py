@@ -21,9 +21,21 @@ from core.ingestion import IMG_EXT, load_scene
 from core.segmentation import DEFAULT_VARIANT, VARIANTS, burn_details, perimeter
 from core.spectral import bands, exclusion_masks, indices
 
-COL_PERIM = (0, 255, 255)   # amarillo (BGR) para el perímetro
-COL_HOLE = (255, 200, 0)    # azul claro para huecos (embalses)
+COL_PERIM = (0, 255, 255)   # amarillo (BGR): perímetro y relleno de lo quemado SIN actividad
+COL_ACTIVE = (0, 120, 255)  # naranja: superficie quemada CON actividad (junto a un foco)
+COL_HOLE = (255, 200, 0)    # azul claro para huecos (embalses, islas)
 COL_FIRE = (0, 0, 255)      # rojo para los focos
+ACTIVE_FRAC = 0.006         # "con actividad" = a menos de esta fracción de la diagonal de un foco (~18 px en 2500 px)
+
+
+def activity_zone(burn: np.ndarray, fires: np.ndarray) -> np.ndarray:
+    """Superficie con actividad: lo quemado cerca de un foco, más los propios píxeles de fuego
+    (el frente puede quedar justo fuera de la cicatriz). El resto de la cicatriz es 'sin actividad aparente'."""
+    if not fires.any():
+        return np.zeros_like(burn)
+    r = max(3, int(ACTIVE_FRAC * float(np.hypot(*burn.shape))))
+    near = cv2.dilate(fires.astype(np.uint8), cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2 * r + 1, 2 * r + 1))).astype(bool)
+    return (burn & near) | fires
 
 
 def find_scenes(root: str) -> list[Path]:
@@ -48,37 +60,52 @@ def detect_fires(b: dict, ind: dict, burn: np.ndarray, masks: dict):
         return np.zeros(burn.shape, bool), f"fire.detect_fires falló: {e!r}"
 
 
-def draw_overlay(base_rgb: np.ndarray, burn: np.ndarray, fires: np.ndarray, water: np.ndarray,
-                 foci: list | None = None, scale: float = 1.0) -> np.ndarray:
+def draw_overlay(base_rgb: np.ndarray, burn: np.ndarray, fires: np.ndarray, active: np.ndarray,
+                 foci: list | None = None, scale: float = 1.0, footer: str = "") -> np.ndarray:
     im = base_rgb[..., ::-1].copy()
     th = max(2, im.shape[1] // 800)
     tint = im.copy()
-    tint[burn] = (0.55 * tint[burn] + 0.45 * np.array(COL_PERIM)).astype(np.uint8)
-    im = cv2.addWeighted(tint, 0.6, im, 0.4, 0)
+    calm = burn & ~active
+    tint[calm] = (0.55 * tint[calm] + 0.45 * np.array(COL_PERIM)).astype(np.uint8)
+    tint[active] = (0.35 * tint[active] + 0.65 * np.array(COL_ACTIVE)).astype(np.uint8)
+    tint[fires] = COL_FIRE
+    im = cv2.addWeighted(tint, 0.7, im, 0.3, 0)
     cnts, hier = cv2.findContours(burn.astype(np.uint8), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
     for i, c in enumerate(cnts):
         cv2.drawContours(im, [c], -1, COL_HOLE if hier[0][i][3] != -1 else COL_PERIM, th)
-    if fires.any():
-        fc, _ = cv2.findContours(fires.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        cv2.drawContours(im, fc, -1, COL_FIRE, th + 1)
     # Círculos para que los focos (a menudo de 1-10 px) se vean; más finos si la confianza es baja
     r = max(8, im.shape[1] // 180)
     for f in foci or []:
         x, y = int(f["centro"][0] * scale), int(f["centro"][1] * scale)
         cv2.circle(im, (x, y), r, COL_FIRE, th + 1 if f["confianza"] != "baja" else th)
-    _legend(im, th)
+    _legend(im, th, footer)
     return im
 
 
-def _legend(im: np.ndarray, th: int):
+def _legend(im: np.ndarray, th: int, footer: str = ""):
+    """Leyenda (sin tildes: la fuente de OpenCV no las tiene). Rellenos como cuadrados, líneas como líneas."""
     s = im.shape[1] / 2500
     x0, y0, dy = int(20 * s), int(20 * s), int(42 * s)
-    cv2.rectangle(im, (x0 - 10, y0 - 10), (x0 + int(470 * s), y0 + 3 * dy), (0, 0, 0), -1)
-    items = [(COL_PERIM, "Perimetro area quemada"), (COL_HOLE, "Hueco: agua o isla no quemada"), (COL_FIRE, "Posible foco activo")]
-    for k, (col, txt) in enumerate(items):
+    items = [("line", COL_PERIM, "Perimetro del area afectada"),
+             ("fill", COL_PERIM, "Afectada SIN actividad aparente"),
+             ("fill", COL_ACTIVE, "Afectada CON posible fuego activo cerca"),
+             ("circle", COL_FIRE, "Posible foco activo"),
+             ("line", COL_HOLE, "Hueco: agua o isla no quemada")]
+    cv2.rectangle(im, (x0 - 10, y0 - 10), (x0 + int(640 * s), y0 + len(items) * dy), (0, 0, 0), -1)
+    for k, (kind, col, txt) in enumerate(items):
         y = y0 + k * dy + dy // 2
-        cv2.line(im, (x0, y), (x0 + int(50 * s), y), col, th + 2)
+        if kind == "line":
+            cv2.line(im, (x0, y), (x0 + int(50 * s), y), col, th + 2)
+        elif kind == "fill":
+            cv2.rectangle(im, (x0, y - int(12 * s)), (x0 + int(50 * s), y + int(12 * s)), col, -1)
+        else:
+            cv2.circle(im, (x0 + int(25 * s), y), int(13 * s), col, th + 1)
         cv2.putText(im, txt, (x0 + int(65 * s), y + int(10 * s)), cv2.FONT_HERSHEY_SIMPLEX, 0.9 * s, (255, 255, 255), max(1, th // 2))
+    if footer:
+        h = im.shape[0]
+        (tw, tht), _ = cv2.getTextSize(footer, cv2.FONT_HERSHEY_SIMPLEX, 0.9 * s, max(1, th // 2))
+        cv2.rectangle(im, (x0 - 10, h - y0 - tht - int(20 * s)), (x0 + tw + 10, h - y0 + int(5 * s)), (0, 0, 0), -1)
+        cv2.putText(im, footer, (x0, h - y0 - int(8 * s)), cv2.FONT_HERSHEY_SIMPLEX, 0.9 * s, (255, 255, 255), max(1, th // 2))
 
 
 def process(scene_dir: Path, out_root: Path, m_per_px: float | None, variant: str) -> dict:
@@ -97,14 +124,21 @@ def process(scene_dir: Path, out_root: Path, m_per_px: float | None, variant: st
     if fire_warn is None:
         from core.fire import fire_details
         foci = fire_details(fires, burn, masks, sc["scale"])
-    active = burn & cv2.dilate(fires.astype(np.uint8), np.ones((15, 15), np.uint8)).astype(bool)
+    active = activity_zone(burn, fires)
+    n_valid = int(sc["valid"].sum())
+    n_burn = int(burn.sum())
+    n_act = int((active & burn).sum())
+    pct_act = round(100 * n_act / max(n_burn, 1), 1)
+    footer = (f"Afectada: {100 * n_burn / n_valid:.1f}% de la imagen  |  con actividad {pct_act}%  |  "
+              f"sin actividad {100 - pct_act if n_burn else 0:.1f}%  |  {len(foci)} posibles focos")
 
     out = out_root / sc["name"]
     (out / "mascaras_descarte").mkdir(parents=True, exist_ok=True)
-    cv2.imwrite(str(out / "perimetro_swir.png"), draw_overlay(sc["swir"], burn, fires, masks["water"], foci, sc["scale"]))
+    cv2.imwrite(str(out / "perimetro_swir.png"), draw_overlay(sc["swir"], burn, fires, active, foci, sc["scale"], footer))
     if sc["tc"] is not None:
-        cv2.imwrite(str(out / "perimetro_tc.png"), draw_overlay(sc["tc"], burn, fires, masks["water"], foci, sc["scale"]))
+        cv2.imwrite(str(out / "perimetro_tc.png"), draw_overlay(sc["tc"], burn, fires, active, foci, sc["scale"], footer))
     cv2.imwrite(str(out / "mascara_quemado.png"), burn.astype(np.uint8) * 255)
+    cv2.imwrite(str(out / "mascara_actividad.png"), active.astype(np.uint8) * 255)   # 1 canal, 0/255, resolución de trabajo
     # Canonical evaluation masks use original image coordinates. Existing
     # masks and overlays retain the working resolution for compatibility.
     height, width = sc["orig_size"]
@@ -121,8 +155,6 @@ def process(scene_dir: Path, out_root: Path, m_per_px: float | None, variant: st
     for k, m in masks.items():
         cv2.imwrite(str(out / "mascaras_descarte" / f"{k}.png"), m.astype(np.uint8) * 255)
 
-    n_valid = int(sc["valid"].sum())
-    n_burn = int(burn.sum())
     perim_px = float(sum(cv2.arcLength(np.array(p["exterior"], np.float32).reshape(-1, 1, 2), True) for p in polys))
     orig_px = n_burn / sc["scale"] ** 2           # píxeles equivalentes en la imagen original
     res = {
@@ -143,8 +175,9 @@ def process(scene_dir: Path, out_root: Path, m_per_px: float | None, variant: st
         "pixeles_focos": int(fires.sum()),
         "num_focos": len(foci),
         "focos_por_ubicacion": {k: sum(f["ubicacion"] == k for f in foci) for k in ("frente de la cicatriz", "junto al humo", "aislado")},
-        "porcentaje_quemado_con_actividad": round(100 * active.sum() / max(n_burn, 1), 2),
-        "porcentaje_quemado_sin_actividad": round(100 * (n_burn - active.sum()) / max(n_burn, 1), 2),
+        "porcentaje_quemado_con_actividad": round(100 * n_act / max(n_burn, 1), 2),
+        "porcentaje_quemado_sin_actividad": round(100 * (n_burn - n_act) / max(n_burn, 1), 2) if n_burn else 0.0,
+        "radio_actividad_px": max(3, int(ACTIVE_FRAC * float(np.hypot(*burn.shape)))),
         "focos": foci,
         "descartados": det["discarded"][:200], "umbrales": {k: round(v, 4) for k, v in det["thresholds"].items()},
         "poligonos": polys, "avisos": sc["warnings"] + ([fire_warn] if fire_warn else []),

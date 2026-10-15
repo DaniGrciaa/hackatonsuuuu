@@ -40,13 +40,9 @@
   "junto al humo": 0,
   "aislado": 1
  },
-<<<<<<< HEAD
- "porcentaje_quemado_con_actividad": 9.21,
- "porcentaje_quemado_sin_actividad": 90.79,
-=======
- "porcentaje_quemado_con_actividad": 9.1,
- "porcentaje_quemado_sin_actividad": 90.9,
->>>>>>> c330661a52c9450ada88ce01578bada3281ea1a9
+ "porcentaje_quemado_con_actividad": 15.44,
+ "porcentaje_quemado_sin_actividad": 84.56,
+ "radio_actividad_px": 17,
  "focos": [
   {
    "centro": [
@@ -653,13 +649,8 @@
     2393.5,
     1368.0
    ],
-<<<<<<< HEAD
-   "area_px": 12,
-   "dist_cicatriz_px": 19.2,
-=======
    "area_px": 8,
-   "dist_cicatriz_px": 1070.1,
->>>>>>> c330661a52c9450ada88ce01578bada3281ea1a9
+   "dist_cicatriz_px": 19.2,
    "ubicacion": "aislado",
    "confianza": "baja"
   }
@@ -4858,5 +4849,5 @@
   }
  ],
  "avisos": [],
- "tiempo_s": 8.51
+ "tiempo_s": 1.21
 }

@@ -39,8 +39,9 @@
   "junto al humo": 7,
   "aislado": 10
  },
- "porcentaje_quemado_con_actividad": 3.1,
- "porcentaje_quemado_sin_actividad": 96.9,
+ "porcentaje_quemado_con_actividad": 7.21,
+ "porcentaje_quemado_sin_actividad": 92.79,
+ "radio_actividad_px": 18,
  "focos": [
   {
    "centro": [
@@ -7315,9 +7316,5 @@
   }
  ],
  "avisos": [],
-<<<<<<< HEAD
- "tiempo_s": 19.79
-=======
- "tiempo_s": 2.73
->>>>>>> c330661a52c9450ada88ce01578bada3281ea1a9
+ "tiempo_s": 3.35
 }
