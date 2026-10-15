@@ -32,7 +32,7 @@
  "num_huecos": 6,
  "perimetro_px_original": 6100.6,
  "porcentaje_agua": 0.29,
- "porcentaje_humo": 2.53,
+ "porcentaje_humo": 20.08,
  "pixeles_focos": 7160,
  "num_focos": 61,
  "focos_por_ubicacion": {
@@ -3370,5 +3370,5 @@
   }
  ],
  "avisos": [],
- "tiempo_s": 1.22
+ "tiempo_s": 1.6
 }

@@ -31,13 +31,13 @@
  "num_huecos": 10,
  "perimetro_px_original": 34922.5,
  "porcentaje_agua": 0.38,
- "porcentaje_humo": 2.53,
+ "porcentaje_humo": 12.35,
  "pixeles_focos": 574,
  "num_focos": 73,
  "focos_por_ubicacion": {
   "frente de la cicatriz": 62,
-  "junto al humo": 5,
-  "aislado": 6
+  "junto al humo": 9,
+  "aislado": 2
  },
  "porcentaje_quemado_con_actividad": 14.4,
  "porcentaje_quemado_sin_actividad": 85.6,
@@ -740,8 +740,8 @@
    ],
    "area_px": 1,
    "dist_cicatriz_px": 62.0,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -750,8 +750,8 @@
    ],
    "area_px": 2,
    "dist_cicatriz_px": 83.0,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -760,8 +760,8 @@
    ],
    "area_px": 1,
    "dist_cicatriz_px": 89.4,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -770,8 +770,8 @@
    ],
    "area_px": 5,
    "dist_cicatriz_px": 122.6,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   }
  ],
  "descartados": [
@@ -4764,5 +4764,5 @@
   }
  ],
  "avisos": [],
- "tiempo_s": 2.89
+ "tiempo_s": 3.44
 }

@@ -152,7 +152,7 @@ def burn_details(b: dict, ind: dict, masks: dict, variant: str = DEFAULT_VARIANT
         areas = np.where(keep, st[:, cv2.CC_STAT_AREA], 0)
         big = areas.max()
         near = np.zeros(valid.shape, np.uint8)
-        near[masks["smoke"] | fire_like(ind, b)] = 1
+        near[masks.get("smoke_dense", masks["smoke"]) | fire_like(ind, b)] = 1
         near = cv2.dilate(near, _ellipse(int(NEAR_FRAC * d) * 2 + 1)).astype(bool)
         # Cerca del humo/fuego NO basta: una mancha suelta junto a un foco aislado (campo, mina, parcela rosa) no es
         # cicatriz. Además tiene que estar pegada a la mancha principal (el frente de un incendio sale de su cicatriz).

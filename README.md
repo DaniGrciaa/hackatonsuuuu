@@ -68,8 +68,8 @@ Tarda **entre 0,2 y 2,6 s por escena** en un portátil.
 ### 3. Máscaras de descarte
 | Máscara | Regla | Fiabilidad |
 |---|---|---|
-| Agua | Histéresis: núcleo muy negro en los tres canales (cola del 3 %) que crece por lo oscuro (cola del 10 %) | Buena con embalses; confunde algo de ceniza muy negra |
-| Humo | Turquesa en la SWIR: B8A y B04 claramente por encima de B12 | Coge el humo denso |
+| Agua | Hueco del histograma de max(B12, B8A) con los valores originales: el agua forma un grupo muy oscuro separado de la tierra. Vale igual con un embalse que con media imagen de mar. Después, **todos los percentiles se calculan solo sobre tierra** | Buena con embalses y con mar (comprobado en dos escenas costeras) |
+| Humo | **Denso:** turquesa en la SWIR (B8A y B04 claramente por encima de B12). **Fino:** gris en la True Color (saturación < Otsu, como mucho 0,15; medido 0,03–0,13 en humo frente a 0,20–0,51 en suelo, ciudad y monte), creciendo solo desde el humo denso o desde focos reales, sin nubes muy blancas | Buena en las 5 escenas con incendio; deja huecos en el humo más claro (sobre el mar en Tenerife). La cicatriz usa solo el denso (`smoke_dense`), así que este cambio no la altera |
 | Tierra clara | Muy brillante en la SWIR | Razonable |
 | Nube | Muy brillante y poco saturada; si hay True Color, también clara allí | Sin escena nubosa para comprobarla bien |
 | Ciudad | Contraste fino denso | **Experimental:** también marca parcelas. No se usa para restar área |
@@ -127,6 +127,14 @@ Medido **por focos** (cada mancha es un objeto, con 5 px de tolerancia):
 - **Otsu siempre parte la escena en dos, haya incendio o no.** En una escena de junio sin incendio (`Browser_images-9`), v2 marcaba un 8,5 % de matorral pardo; con solo el NBR normalizado, otra escena del 24-06 (antes del incendio) seguía dando un 21 %. Separa el NBR *original*: en las cicatrices reales la mediana es −0,10 a −0,27 (B12 sobre B8A, rojizas) y en ese terreno seco es +0,13 (verdoso). Con esa regla las 4 escenas sin incendio dan 0,00 % y las reales no cambian.
 - **Solo SWIR:** el resultado es idéntico con o sin True Color (Niebla 7,79 % en los dos casos). Hoy la True Color solo se usa para la máscara de nubes y para dibujar.
 - **Calibración True Color ↔ SWIR:** B04 aparece en las dos imágenes (rojo de la True Color, azul de la SWIR). Una recta robusta los relaciona con correlación 0,93–0,95: azul SWIR ≈ 1,26·x − 101 (Ávila-Madrid), 1,48·x − 140 (Niebla) y 1,11·x − 81 (extra). Es un diagnostico de semejanza entre canales; no certifica por si solo la alineacion geometrica. La hipótesis de que esa recta también vale para el verde y el rojo de la SWIR **no se pudo comprobar**, porque son bandas que la True Color no tiene.
+
+## Prueba con dos escenas nuevas (costa con mar y Tenerife)
+
+Con el código marcado `pre-examen` se pasaron una vez y sin tocar nada:
+- **Focos:** bien en las dos (frentes activos detectados). En Tenerife, unos 8 falsos sobre conos volcánicos rojizos.
+- **Cicatriz: 0 % en las dos.** Fallo de diseño: con mucho mar, el mar arrastraba los percentiles y el agua se detectaba mal (la regla suponía poca agua).
+
+Se corrigió (agua por hueco del histograma, percentiles solo sobre tierra, evidencia `NBR original < −0,05` y `KEEP_FRAC` 0,10). La costa pasó a 9,5 %, con la cicatriz bien dibujada. Tenerife queda en 0,2 %: su cicatriz está casi toda bajo el humo. Las demás escenas no empeoran (práctica IoU 0,56; escenas sin incendio 0 %; marcas de Jesús 0,99). **Estas dos escenas ya no son examen ciego.**
 
 ## Medida contra una referencia (IoU)
 

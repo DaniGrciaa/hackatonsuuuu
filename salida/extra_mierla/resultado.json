@@ -32,13 +32,13 @@
  "num_huecos": 4,
  "perimetro_px_original": 10060.2,
  "porcentaje_agua": 0.5,
- "porcentaje_humo": 0.57,
+ "porcentaje_humo": 5.23,
  "pixeles_focos": 977,
  "num_focos": 53,
  "focos_por_ubicacion": {
   "frente de la cicatriz": 36,
-  "junto al humo": 6,
-  "aislado": 11
+  "junto al humo": 17,
+  "aislado": 0
  },
  "porcentaje_quemado_con_actividad": 4.2,
  "porcentaje_quemado_sin_actividad": 95.8,
@@ -81,8 +81,8 @@
    ],
    "area_px": 77,
    "dist_cicatriz_px": 19.0,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -91,8 +91,8 @@
    ],
    "area_px": 3,
    "dist_cicatriz_px": 37.2,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -111,8 +111,8 @@
    ],
    "area_px": 1,
    "dist_cicatriz_px": 16.4,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -121,8 +121,8 @@
    ],
    "area_px": 8,
    "dist_cicatriz_px": 46.2,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -171,8 +171,8 @@
    ],
    "area_px": 12,
    "dist_cicatriz_px": 26.2,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -181,8 +181,8 @@
    ],
    "area_px": 1,
    "dist_cicatriz_px": 17.4,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -201,8 +201,8 @@
    ],
    "area_px": 1,
    "dist_cicatriz_px": 21.2,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -211,8 +211,8 @@
    ],
    "area_px": 9,
    "dist_cicatriz_px": 22.0,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -281,8 +281,8 @@
    ],
    "area_px": 5,
    "dist_cicatriz_px": 18.6,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -401,8 +401,8 @@
    ],
    "area_px": 2,
    "dist_cicatriz_px": 36.2,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -451,8 +451,8 @@
    ],
    "area_px": 3,
    "dist_cicatriz_px": 17.6,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -4533,5 +4533,5 @@
  "avisos": [
   "logo de Copernicus detectado en ['tc']; se enmascara la esquina"
  ],
- "tiempo_s": 1.32
+ "tiempo_s": 1.69
 }
