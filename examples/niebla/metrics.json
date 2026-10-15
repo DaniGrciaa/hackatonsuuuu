@@ -1,0 +1,154 @@
+{
+ "titulo": "Niebla",
+ "orden": 1,
+ "fecha": "8 de agosto de 2026",
+ "escena": "niebla",
+ "tamano_analisis": [
+  2500,
+  1546
+ ],
+ "tamano_original": [
+  2500,
+  1546
+ ],
+ "unidades": "Píxeles de la imagen analizada. La imagen no está georreferenciada: no hay hectáreas ni km.",
+ "tiempo_total_s": 4.69,
+ "avisos": [],
+ "capas": {
+  "burn": {
+   "nombre": "Zona quemada",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 3.709,
+   "metricas": {
+    "area_px": 310899,
+    "pct_imagen": 8.044,
+    "regiones": 17,
+    "perimetro_px": 10512.0
+   },
+   "mascara": "masks/burn.png"
+  },
+  "perimeter": {
+   "nombre": "Perímetro del incendio",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.123,
+   "metricas": {
+    "area_px": 313528,
+    "pct_imagen": 8.112,
+    "regiones": 9,
+    "perimetro_px": 9608.3
+   },
+   "mascara": "masks/perimeter.png"
+  },
+  "fire": {
+   "nombre": "Fuego activo",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.661,
+   "metricas": {
+    "area_px": 7160,
+    "pct_imagen": 0.185,
+    "regiones": 61,
+    "perimetro_px": 2483.6
+   },
+   "mascara": "masks/fire.png",
+   "focos_por_ubicacion": {
+    "frente de la cicatriz": 60,
+    "junto al humo": 0,
+    "aislado": 1
+   }
+  },
+  "burn_active": {
+   "nombre": "Zona quemada que aún arde",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.038,
+   "metricas": {
+    "area_px": 27409,
+    "pct_imagen": 0.709,
+    "regiones": 15,
+    "perimetro_px": 3536.8
+   },
+   "mascara": "masks/burn_active.png"
+  },
+  "smoke": {
+   "nombre": "Humo",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.026,
+   "metricas": {
+    "area_px": 92201,
+    "pct_imagen": 2.386,
+    "regiones": 23,
+    "perimetro_px": 13525.6
+   },
+   "mascara": "masks/smoke.png"
+  },
+  "water": {
+   "nombre": "Agua",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.024,
+   "metricas": {
+    "area_px": 41159,
+    "pct_imagen": 1.065,
+    "regiones": 79,
+    "perimetro_px": 12460.1
+   },
+   "mascara": "masks/water.png"
+  },
+  "cloud": {
+   "nombre": "Nubes",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.024,
+   "metricas": {
+    "area_px": 33132,
+    "pct_imagen": 0.857,
+    "regiones": 18,
+    "perimetro_px": 5273.7
+   },
+   "mascara": "masks/cloud.png"
+  },
+  "bare": {
+   "nombre": "Suelo claro o campos secos",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.033,
+   "metricas": {
+    "area_px": 813082,
+    "pct_imagen": 21.037,
+    "regiones": 544,
+    "perimetro_px": 94256.4
+   },
+   "mascara": "masks/bare.png"
+  },
+  "urban": {
+   "nombre": "Posible zona urbana (poco fiable)",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.022,
+   "metricas": {
+    "area_px": 247787,
+    "pct_imagen": 6.411,
+    "regiones": 7,
+    "perimetro_px": 9555.6
+   },
+   "mascara": "masks/urban.png"
+  },
+  "nodata": {
+   "nombre": "Sin datos",
+   "estado": "ok",
+   "error": null,
+   "tiempo_s": 0.028,
+   "metricas": {
+    "area_px": 0,
+    "pct_imagen": 0.0,
+    "regiones": 0,
+    "perimetro_px": 0.0
+   },
+   "mascara": "masks/nodata.png"
+  }
+ }
+}

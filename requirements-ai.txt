@@ -1,0 +1,6 @@
+# Dependencias opcionales que NO necesita la app desplegada.
+# Hoy no hay ninguna capa con modelos de IA: si se añade una (torch, SAM...), su paquete va aquí
+# y la capa declara `requiere=("torch",)` en layers.py para salir como "no disponible" sin él.
+-r requirements.txt
+tifffile>=2023.1      # tools_c/medir_dnbr.py: lectura de las bandas crudas de 16 bits (solo medida)
+pytest>=8.0           # tests

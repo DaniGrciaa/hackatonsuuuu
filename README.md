@@ -16,11 +16,71 @@ El banco de pruebas (B) y la app (D) van en sus propios módulos.
 ## Instalación
 
 ```bash
-python -m venv .venv && source .venv/bin/activate      # o: uv venv .venv
-pip install -r requirements.txt                          # numpy, scipy, opencv-python-headless, scikit-image, pillow
+python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
+pip install -r requirements.txt                          # numpy, scipy, opencv-python-headless, scikit-image, pillow, streamlit
+pip install -r requirements-ai.txt                       # opcional: tests (pytest) y herramientas de medida (tifffile)
 ```
 
-Sin redes neuronales, sin GPU y sin descargas.
+Sin redes neuronales, sin GPU y sin descargas. `requirements.txt` contiene solo lo que necesita la app; lo opcional
+va en `requirements-ai.txt`.
+
+## App web: «Mesa de luz»
+
+```bash
+streamlit run app.py          # abre http://localhost:8501
+```
+
+Tres pasos, indicados arriba en la app:
+
+1. **Imagen**: tres huecos de subida (True Color, SWIR imprescindible, Wildfires opcional) o una de las tres tarjetas
+   «Probar con un incendio real», que abren al instante un análisis precalculado.
+2. **Análisis**: progreso capa a capa con su tiempo. Si una capa falla se avisa y el resto sigue. El resultado se
+   guarda en caché (`st.cache_data`): volver a este paso o al siguiente no repite el análisis.
+3. **Explorar**: el visor a ancho completo y la descarga en zip de las máscaras PNG y `metrics.json`.
+
+Todas las cifras van en **píxeles** de la imagen analizada: sin georreferenciación no se dan hectáreas ni km.
+
+| Archivo | Qué hace |
+|---|---|
+| `layers.py` | Registro de capas: id, nombre llano, descripción, color, tipo (relleno, contorno o puntos), trama y función |
+| `pipeline.py` | `run_all_layers(true_color, swir, wildfires=None)`: ejecuta todas las capas, cada una aislada (try/except, tiempo, métricas). Reutiliza `core/` sin cambiar sus algoritmos |
+| `components/viewer/viewer.html` | Visor autónomo (HTML+CSS+JS sin dependencias): capas compuestas en canvas, modos Superponer / Cortina / Despiece 3D, lupa, zoom, captura PNG. Cambiar capas, opacidad o modo no recarga Streamlit |
+| `components/viewer/__init__.py` | Prepara el JSON del visor (bases JPEG de lado ≤ 2048 px, máscaras PNG de 1 bit) y lo incrusta |
+| `results_io.py` | Guarda y carga análisis (`examples/`) y genera el zip de descarga |
+| `precompute.py` | Regenera las escenas de ejemplo |
+| `.streamlit/config.toml` | Tema oscuro y sin menú ni pie de Streamlit |
+
+Capas: Zona quemada, Perímetro del incendio, Fuego activo, Zona quemada que aún arde, Humo, Agua, Nubes, Suelo claro
+o campos secos, Posible zona urbana (poco fiable) y Sin datos. Una capa que necesite un paquete no instalado
+(`requiere=(...)` en `layers.py`) aparece como «no disponible» en vez de romper la app.
+
+### Regenerar las escenas de ejemplo
+
+```bash
+python precompute.py                 # todas las escenas de data/  ->  examples/<escena>/
+python precompute.py data/niebla     # solo una
+```
+
+Cada `examples/<escena>/` guarda las imágenes base comprimidas (`tc.jpg`, `swir.jpg`, `wildfire.jpg`), `thumb.jpg`,
+`masks/<capa>.png` y `metrics.json`. **`examples/` se sube al repositorio** (unos 5 MB): la app desplegada abre los
+ejemplos desde ahí sin reanalizar y sin necesitar `data/`. El título y el orden de cada tarjeta están en `INFO`,
+dentro de `precompute.py`.
+
+### Desplegar en Streamlit Community Cloud
+
+1. Sube la rama a GitHub (con `examples/`, `.streamlit/config.toml` y `requirements.txt`).
+2. En [share.streamlit.io](https://share.streamlit.io) → *Create app* → elige el repositorio y la rama, y pon
+   `app.py` como *Main file path*. En *Advanced settings*, Python 3.12 o superior.
+3. Cloud instala solo `requirements.txt`. Usa `opencv-python-headless`, así que no hace falta `packages.txt`.
+
+Comprobado: la app arranca y analiza desde cero en un entorno virtual limpio con solo `pip install -r requirements.txt`.
+
+### Tests
+
+```bash
+pip install -r requirements-ai.txt
+python -m pytest
+```
 
 ## Uso
 

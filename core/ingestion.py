@@ -29,6 +29,18 @@ def _read_rgb(path: str) -> np.ndarray:
     im = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
     if im is None:
         raise ValueError(f"No se puede leer la imagen: {path}")
+    return _to_rgb(im)
+
+
+def rgb_from_bytes(data: bytes, label: str = "imagen") -> np.ndarray:
+    """Decodifica un archivo de imagen en memoria (p. ej. subido en la app) a RGB uint8."""
+    im = cv2.imdecode(np.frombuffer(data, np.uint8), cv2.IMREAD_UNCHANGED)
+    if im is None:
+        raise ValueError(f"No se puede leer la imagen: {label}")
+    return _to_rgb(im)
+
+
+def _to_rgb(im: np.ndarray) -> np.ndarray:
     if im.dtype == np.uint16:                     # GeoTIFF visual de 16 bits -> 8 bits
         im = (im / 257).round().astype(np.uint8)
     if im.ndim == 2:
@@ -148,6 +160,21 @@ def load_scene(src, name: str | None = None, max_side: int = MAX_SIDE) -> dict:
             continue
         imgs[k], files[k] = rgb, p
 
+    if name is None:
+        first = Path(paths[0])
+        name = Path(src).name if isinstance(src, (str, os.PathLike)) and Path(src).is_dir() else first.stem
+    return scene_from_arrays(imgs.get("swir"), imgs.get("tc"), imgs.get("wildfire"), name=name,
+                             max_side=max_side, files=files, warnings=warnings)
+
+
+def scene_from_arrays(swir: np.ndarray | None, tc: np.ndarray | None = None, wildfire: np.ndarray | None = None,
+                      name: str = "escena", max_side: int = MAX_SIDE, files: dict | None = None,
+                      warnings: list[str] | None = None) -> dict:
+    """Igual que load_scene pero a partir de imágenes RGB uint8 ya cargadas (p. ej. subidas en la app)."""
+    warnings = [] if warnings is None else warnings
+    files = {} if files is None else files
+    imgs = {k: im for k, im in (("swir", swir), ("tc", tc), ("wildfire", wildfire)) if im is not None}
+
     if "swir" not in imgs:
         raise ValueError("La escena no tiene imagen SWIR: es imprescindible para detectar la cicatriz")
 
@@ -175,10 +202,6 @@ def load_scene(src, name: str | None = None, max_side: int = MAX_SIDE) -> dict:
         valid = cv2.resize(valid.astype(np.uint8), (size[1], size[0]), interpolation=cv2.INTER_NEAREST).astype(bool)
     else:
         size = orig_size
-
-    if name is None:
-        first = Path(paths[0])
-        name = Path(src).name if isinstance(src, (str, os.PathLike)) and Path(src).is_dir() else first.stem
 
     return {
         "tc": imgs.get("tc"), "swir": imgs["swir"], "wildfire": imgs.get("wildfire"),
