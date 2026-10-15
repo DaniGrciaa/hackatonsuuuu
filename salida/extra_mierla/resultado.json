@@ -51,13 +51,13 @@
  "num_huecos": 4,
  "perimetro_px_original": 10060.2,
  "porcentaje_agua": 0.5,
- "porcentaje_humo": 0.57,
+ "porcentaje_humo": 5.23,
  "pixeles_focos": 977,
  "num_focos": 53,
  "focos_por_ubicacion": {
   "frente de la cicatriz": 36,
-  "junto al humo": 6,
-  "aislado": 11
+  "junto al humo": 17,
+  "aislado": 0
  },
  "porcentaje_quemado_con_actividad": 4.2,
  "porcentaje_quemado_sin_actividad": 95.8,
@@ -170,8 +170,33 @@
     275.0
    ],
 <<<<<<< HEAD
+<<<<<<< HEAD
    "area_px": 1,
    "dist_cicatriz_px": 12.0,
+=======
+   "area_px": 77,
+   "dist_cicatriz_px": 19.0,
+   "ubicacion": "junto al humo",
+   "confianza": "media"
+  },
+  {
+   "centro": [
+    1466.3,
+    276.3
+   ],
+   "area_px": 3,
+   "dist_cicatriz_px": 37.2,
+   "ubicacion": "junto al humo",
+   "confianza": "media"
+  },
+  {
+   "centro": [
+    1344.9,
+    293.3
+   ],
+   "area_px": 14,
+   "dist_cicatriz_px": 7.6,
+>>>>>>> f3546c5ae4cbcb00445743c19e80cfbfa0d6b266
    "ubicacion": "frente de la cicatriz",
    "confianza": "alta"
   },
@@ -237,8 +262,8 @@
 =======
    "area_px": 1,
    "dist_cicatriz_px": 16.4,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -247,9 +272,14 @@
    ],
    "area_px": 8,
    "dist_cicatriz_px": 46.2,
+<<<<<<< HEAD
 >>>>>>> 780e8800f29b01bfd5f85eabd21361031a3e781a
    "ubicacion": "aislado",
    "confianza": "baja"
+=======
+   "ubicacion": "junto al humo",
+   "confianza": "media"
+>>>>>>> f3546c5ae4cbcb00445743c19e80cfbfa0d6b266
   },
   {
    "centro": [
@@ -332,9 +362,14 @@
 =======
    "area_px": 12,
    "dist_cicatriz_px": 26.2,
+<<<<<<< HEAD
 >>>>>>> 780e8800f29b01bfd5f85eabd21361031a3e781a
    "ubicacion": "aislado",
    "confianza": "baja"
+=======
+   "ubicacion": "junto al humo",
+   "confianza": "media"
+>>>>>>> f3546c5ae4cbcb00445743c19e80cfbfa0d6b266
   },
   {
    "centro": [
@@ -343,8 +378,8 @@
    ],
    "area_px": 1,
    "dist_cicatriz_px": 17.4,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -363,8 +398,8 @@
    ],
    "area_px": 1,
    "dist_cicatriz_px": 21.2,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -377,9 +412,14 @@
 =======
    "area_px": 9,
    "dist_cicatriz_px": 22.0,
+<<<<<<< HEAD
 >>>>>>> 780e8800f29b01bfd5f85eabd21361031a3e781a
    "ubicacion": "aislado",
    "confianza": "baja"
+=======
+   "ubicacion": "junto al humo",
+   "confianza": "media"
+>>>>>>> f3546c5ae4cbcb00445743c19e80cfbfa0d6b266
   },
   {
    "centro": [
@@ -476,8 +516,8 @@
    ],
    "area_px": 5,
    "dist_cicatriz_px": 18.6,
-   "ubicacion": "aislado",
-   "confianza": "baja"
+   "ubicacion": "junto al humo",
+   "confianza": "media"
   },
   {
    "centro": [
@@ -696,9 +736,14 @@
 =======
    "area_px": 2,
    "dist_cicatriz_px": 36.2,
+<<<<<<< HEAD
 >>>>>>> 780e8800f29b01bfd5f85eabd21361031a3e781a
    "ubicacion": "aislado",
    "confianza": "baja"
+=======
+   "ubicacion": "junto al humo",
+   "confianza": "media"
+>>>>>>> f3546c5ae4cbcb00445743c19e80cfbfa0d6b266
   },
   {
    "centro": [
@@ -755,10 +800,17 @@
     1399.0,
     445.0
    ],
+<<<<<<< HEAD
    "area_px": 7,
    "dist_cicatriz_px": 17.4,
    "ubicacion": "aislado",
    "confianza": "baja"
+=======
+   "area_px": 3,
+   "dist_cicatriz_px": 17.6,
+   "ubicacion": "junto al humo",
+   "confianza": "media"
+>>>>>>> f3546c5ae4cbcb00445743c19e80cfbfa0d6b266
   },
   {
    "centro": [
@@ -4929,8 +4981,12 @@
   "logo de Copernicus detectado en ['tc']; se enmascara la esquina"
  ],
 <<<<<<< HEAD
+<<<<<<< HEAD
  "tiempo_s": 6.59
 =======
  "tiempo_s": 1.32
 >>>>>>> 780e8800f29b01bfd5f85eabd21361031a3e781a
+=======
+ "tiempo_s": 1.69
+>>>>>>> f3546c5ae4cbcb00445743c19e80cfbfa0d6b266
 }

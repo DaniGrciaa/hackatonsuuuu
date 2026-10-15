@@ -83,6 +83,7 @@ def bands(scene: dict) -> dict:
         out["B04_tc"] = pnorm(tc[..., 0].astype(np.float32), stats)
         out["B03"] = pnorm(tc[..., 1].astype(np.float32), stats)
         out["B02"] = pnorm(tc[..., 2].astype(np.float32), stats)
+        out["_tc"] = tc   # True Color original: el humo fino se ve aquí (gris, poco saturado), no en la SWIR
         calibration = calibrate(tc, swir, valid)
         if calibration is not None:
             out["calib"] = calibration
@@ -185,12 +186,40 @@ def _otsu_tail(x: np.ndarray, valid: np.ndarray, q: float) -> float:
     return float(threshold_otsu(v))
 
 
+def thin_smoke_tc(b: dict, seeds: np.ndarray, water: np.ndarray, valid: np.ndarray, land: np.ndarray) -> np.ndarray:
+    """Humo FINO con la True Color. La SWIR atraviesa el humo fino, así que solo ve el núcleo denso (turquesa).
+    En la True Color el humo es gris: poco saturado (medido 0,03-0,13) frente a suelo, ciudad y monte (0,22-0,51).
+    Semillas = humo denso de la SWIR + píxeles muy calientes (fuego). Crece por las zonas grises CONECTADAS a ellas,
+    así una ciudad o un campo gris lejos del incendio no entra. Las nubes blancas se excluyen por brillo."""
+    from skimage.morphology import reconstruction
+    tc = b["_tc"].astype(np.float32)
+    mx, mn = tc.max(axis=2), tc.min(axis=2)
+    sat = (mx - mn) / (mx + 1.0)
+    bright = tc.mean(axis=2)
+    if not land.any():
+        return np.zeros(valid.shape, bool)
+    # gris frente a color: Otsu por escena, pero nunca por encima de 0,15 (humo medido 0,03-0,13; tierra 0,20-0,51,
+    # incluida la tierra de una pasada velada de la True Color, ~0,20)
+    t_sat = min(float(threshold_otsu(sat[land][::7])), 0.15)
+    # nube = blanca y muy clara (medido ~246); el humo denso más claro medido ~183
+    t_cloud = min(float(np.percentile(bright[valid], 99)), 210.0)
+    t_dark = float(np.percentile(bright[valid], 10))                  # mar/agua o sombra muy oscura: no es humo
+    grey = (sat < t_sat) & (bright < t_cloud) & (bright > t_dark) & valid & ~water
+    grey = cv2.morphologyEx(grey.astype(np.uint8), cv2.MORPH_OPEN, np.ones((5, 5), np.uint8)).astype(bool)
+    from core.fire import fire_mask                                       # semilla = focos de verdad (naranja + brillo),
+    seed = (seeds | cv2.dilate(fire_mask(b).astype(np.uint8), np.ones((9, 9), np.uint8)).astype(bool)) & grey  # no solo brillo (la nube también brilla)
+    if not seed.any():
+        return np.zeros(valid.shape, bool)
+    grown = reconstruction(seed.astype(np.uint8), grey.astype(np.uint8), method="dilation").astype(bool)
+    return _remove_small(grown, int(0.0005 * valid.size))
+
+
 def exclusion_masks(b: dict, ind: dict) -> dict:
     """Máscaras booleanas HxW: water, cloud, bare, urban, smoke (todas adaptativas, por percentiles/Otsu)."""
     valid = b["valid"]
     shape = valid.shape
     if not valid.any():
-        return {key: np.zeros(shape, bool) for key in ("water", "cloud", "bare", "urban", "smoke")}
+        return {key: np.zeros(shape, bool) for key in ("water", "cloud", "bare", "urban", "smoke", "smoke_dense")}
     d = _diag(shape)
     mx = 1 - ind["WATER"]                       # máximo de los 3 canales SWIR
     bright, sat, nbr, red = ind["BRIGHT"], ind["SAT"], ind["NBR"], ind["RED_DOM"]
@@ -211,6 +240,7 @@ def exclusion_masks(b: dict, ind: dict) -> dict:
     smoke = (cyan > max(t_s, 0.15)) & (sat > 0.15) & valid & ~water
     smoke = cv2.morphologyEx(smoke.astype(np.uint8), cv2.MORPH_OPEN, k_open).astype(bool)
     smoke = _remove_small(smoke, int(0.0002 * valid.size))
+    smoke_dense = smoke
 
     # TIERRA CLARA / CAMPOS SECOS: muy brillante en SWIR (lo quemado y el matorral son oscuros)
     t_b = float(np.percentile(bright[land], 75))
@@ -233,7 +263,11 @@ def exclusion_masks(b: dict, ind: dict) -> dict:
                              cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k * 8 + 1, k * 8 + 1))).astype(bool)
     urban = _remove_small(urban, int(0.002 * valid.size))
 
-    return {"water": water, "cloud": cloud, "bare": bare, "urban": urban, "smoke": smoke}
+    if "_tc" in b:
+        smoke = smoke_dense | thin_smoke_tc(b, smoke_dense, water, valid, land)
+    # "smoke" = denso (SWIR) + fino (True Color), para mostrar y para A. "smoke_dense" = solo el de la SWIR, que es el que
+    # usa la cicatriz: así el cambio del humo no altera la segmentación ya medida.
+    return {"water": water, "cloud": cloud, "bare": bare, "urban": urban, "smoke": smoke, "smoke_dense": smoke_dense}
 
 
 def save_mask_debug(scene: dict, masks: dict, root: str = "debug") -> str:

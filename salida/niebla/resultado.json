@@ -44,7 +44,7 @@
  "num_huecos": 6,
  "perimetro_px_original": 6100.6,
  "porcentaje_agua": 0.29,
- "porcentaje_humo": 2.53,
+ "porcentaje_humo": 20.08,
  "pixeles_focos": 7160,
  "num_focos": 61,
 >>>>>>> 780e8800f29b01bfd5f85eabd21361031a3e781a
@@ -3454,8 +3454,12 @@
  ],
  "avisos": [],
 <<<<<<< HEAD
+<<<<<<< HEAD
  "tiempo_s": 5.76
 =======
  "tiempo_s": 1.22
 >>>>>>> 780e8800f29b01bfd5f85eabd21361031a3e781a
+=======
+ "tiempo_s": 1.6
+>>>>>>> f3546c5ae4cbcb00445743c19e80cfbfa0d6b266
 }
