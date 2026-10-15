@@ -1,0 +1,28 @@
+{
+  "escena": "2026-07-21-00_00_2026-07-21-23_59_Sentinel-2_L2A_True_color.jpg",
+  "alcance": "Solo regiones anotadas y válidas",
+  "afectado": {
+    "tp": 56329,
+    "fp": 0,
+    "fn": 0,
+    "tn": 319026,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "iou": 1.0,
+    "valid_pixels": 375355,
+    "coverage_pct": 9.711642949547219
+  },
+  "activo": {
+    "tp": 445,
+    "fp": 0,
+    "fn": 0,
+    "tn": 374910,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "iou": 1.0,
+    "valid_pixels": 375355,
+    "coverage_pct": 9.711642949547219
+  }
+}
