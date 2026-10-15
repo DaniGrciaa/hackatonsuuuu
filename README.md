@@ -99,14 +99,15 @@ Medido **por focos** (cada mancha es un objeto, con 5 px de tolerancia):
 
 | Referencia | Focos detectados / de referencia | Precisión | Recall |
 |---|---|---|---|
-| Niebla, Wildfire | 61 / 113 | 0,75 | 0,54 |
-| Extra, Wildfire | 53 / 59 | 0,64 | 0,88 |
+| Niebla, Wildfire | 61 / 86 | 0,75 | 0,58 |
+| Extra, Wildfire | 53 / 27 | 0,64 | 0,96 |
 | Extra, marcas a mano de Jesús (solo zonas anotadas) | — | 1,00 | 0,82 |
 | Práctica 26-07, regla física de QuickFire (B11 + B12 > 1, bandas crudas) | 264 / 769 | 0,82 | 0,29 |
 
 **Escenas sin incendio** (`python tools_c/negativas.py`): 0, 1, 1 y 9 píxeles de fuego, y 0 % de cicatriz en las cuatro. Es el valor intermedio de un barrido de `RED_RATIO` (0,30 daba 0 / 16 / 16 / 108 píxeles y 0,45 daba 0 / 0 / 0 / 3, pero bajaba el recall frente a las marcas de Jesús a 0,68). **Se eligió mirando estas escenas y las de referencia: no hay ninguna reservada**, así que las cifras son optimistas.
 
-- La Wildfire es una referencia ruidosa: también pinta parcelas pálidas, asi que el acuerdo con ella no mide el recall real.
+- **La Wildfire se usa solo para validar: `core/` no la lee** y no entra en ninguna decisión del programa. Es una referencia ruidosa: el script de Copernicus marca como fuego todo lo muy brillante en la SWIR, y también pinta de rosa suelo pálido, minas y parcelas. Por eso el recall contra ella subestima al detector. `python tools_c/comparar_wildfire.py --montaje` lo hace visible: de los 36 objetos de Niebla que no detectamos, **35 son brillantes pero no naranjas en la SWIR** (suelo pálido probable) y 1 no llega al umbral de brillo. Si se suponen no-fuego, el recall sube a 0,98 (Niebla) y 1,00 (extra); es una **estimación**, comprobada a ojo con 6 de los 36 casos en el montaje, no una medida.
+- Las cifras de la tabla salen de ese script (ignora objetos de referencia de menos de 6 px, 5 px de tolerancia). Ajustar umbrales mirando esta comparación gasta Niebla y la extra como prueba independiente: para ajustar se usan antes las marcas a mano de Jesús, que sí distinguen fuego de suelo.
 - En Niebla se detecta el **foco aislado en los campos** (abajo a la derecha) y se marca con confianza baja.
 - **Se pierde mucho en la escena de práctica:** la mitad de sus focos físicos no son "rojos" en la SWIR, porque el humo sube el canal B04. Se probó a comparar solo B12 con B8A, que el humo no toca: ganaba de 3 a 5 puntos de recall, pero bajaba la precisión y daba píxeles falsos en la escena sin incendio. Se descartó.
 - Hay algún foco en mitad de la cicatriz (posibles rescoldos) que no podemos confirmar.
