@@ -1,5 +1,7 @@
-numpy
-scipy
-opencv-python-headless
-scikit-image
-pillow
+# Lo que necesita la app (y run.py / precompute.py). Sin GPU ni redes neuronales.
+numpy>=1.26
+scipy>=1.11
+opencv-python-headless>=4.8
+scikit-image>=0.22
+pillow>=10.0
+streamlit>=1.50
