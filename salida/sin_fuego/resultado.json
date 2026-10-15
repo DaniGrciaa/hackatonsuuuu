@@ -42,7 +42,7 @@
  },
  "porcentaje_quemado_con_actividad": 0.0,
  "porcentaje_quemado_sin_actividad": 0.0,
- "radio_actividad_px": 8,
+ "radio_actividad_px": 13,
  "focos": [],
  "descartados": [
   {

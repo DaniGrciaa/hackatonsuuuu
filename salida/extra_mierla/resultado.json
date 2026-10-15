@@ -40,9 +40,9 @@
   "junto al humo": 6,
   "aislado": 8
  },
- "porcentaje_quemado_con_actividad": 1.91,
- "porcentaje_quemado_sin_actividad": 98.09,
- "radio_actividad_px": 17,
+ "porcentaje_quemado_con_actividad": 4.53,
+ "porcentaje_quemado_sin_actividad": 95.47,
+ "radio_actividad_px": 29,
  "focos": [
   {
    "centro": [
@@ -6029,5 +6029,5 @@
  "avisos": [
   "logo de Copernicus detectado en ['tc']; se enmascara la esquina"
  ],
- "tiempo_s": 1.28
+ "tiempo_s": 1.3
 }

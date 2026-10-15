@@ -39,7 +39,7 @@ Salida por escena en `salida/<escena>/`:
 |---|---|
 | `perimetro_swir.png`, `perimetro_tc.png` | Imagen a resolución de trabajo con el perímetro en amarillo, la superficie afectada **sin actividad** en amarillo, la superficie **con posible actividad** en naranja, los posibles focos en rojo (píxeles y círculos), los huecos en azul, leyenda y una línea de resumen (% afectado, % con y sin actividad, nº de focos) |
 | `mascara_quemado.png` | Máscara binaria (blanco = quemado), resolución de trabajo |
-| `mascara_actividad.png` | Superficie afectada **con** posible actividad: lo quemado a menos de ~0,6 % de la diagonal (≈18 px) de un foco, más los propios focos. Es una definición nuestra, no una medida |
+| `mascara_actividad.png` | Superficie afectada **con** posible actividad: lo quemado a menos de ~1 % de la diagonal (≈30 px) de un foco, más los propios focos. Es una definición nuestra, no una medida |
 | `capa_focos.png` | Capa RGBA transparente con los focos de A (vacía si `core/fire.py` no existe) |
 | `mascaras_descarte/*.png` | Agua, humo, tierra clara, nube y ciudad, por separado (para la vista explicable) |
 | `resultado.json` | % quemado, píxeles, nº de manchas y huecos, perímetro, polígonos, umbrales usados, manchas descartadas y por qué, tiempo y avisos |
@@ -79,7 +79,7 @@ Tarda **entre 0,2 y 2,6 s por escena** en un portátil.
 2. **Semillas:** de esos candidatos, lo claramente rojizo (Otsu de `RED_DOM`, nunca por debajo de 0).
 3. **Crecimiento:** desde las semillas se crece, como mucho un 2 % de la diagonal, por lo *muy* oscuro (segundo Otsu del brillo). Así entra la ceniza marrón oscura pegada a la cicatriz, pero no el bosque oscuro que no toca ninguna semilla.
 4. **Evidencia de quemado:** una mancha solo cuenta si (a) con los valores originales del JPEG SWIR, el canal rojo (B12) supera al verde (B8A) de mediana, y (b) su "NBR" normalizado es < −0,15. Son reglas empíricas sobre los canales de color del JPEG, no una prueba física de quemado. La (a) hizo falta porque el valor normalizado por percentiles pierde el orden entre canales y dejaba pasar una zona de terreno seco como "cicatriz" en una escena de antes del incendio (marcaba un 21 %).
-5. **Prior espacial:** se quedan las manchas grandes y las pegadas al humo o al fuego. El matorral seco suelto se descarta.
+5. **Prior espacial:** se quedan las manchas grandes y las que están cerca del humo o del fuego **y además pegadas a la mancha principal** (un foco aislado en un campo no arrastra una "cicatriz" a su alrededor). El matorral seco suelto se descarta.
 6. **Huecos:** se rellenan los huecos pequeños (claros de ceniza) y se vuelve a restar el agua, así que los embalses de dentro no cuentan como quemado.
 7. **Perímetro:** contornos con huecos (`cv2.findContours`, `RETR_CCOMP`), simplificados.
 
@@ -91,7 +91,7 @@ Es la idea de los algoritmos de satélite de detección de incendios (MODIS/VIIR
 2. Es claramente naranja o rojo: `(R − max(G, B)) / R ≥ 0,40`. Así se descartan el suelo claro, las minas y las nubes (pálidos) y los campos pardos (más verde: G≈160 frente a 106–139 en los focos reales).
 3. Destaca sobre su entorno: supera la media del fondo en más de 3 desviaciones, en una ventana de 61 px. **El fondo se calcula sin los píxeles calientes**; si no, un frente largo se compara consigo mismo y no destaca. Con ese cambio, el recall en Niebla pasó del 3 % al 54 %.
 
-Cada foco se clasifica por **ubicación**: "frente de la cicatriz" (confianza alta), "junto al humo" (media) o "aislado" (baja). Esa confianza dice dónde está, no cuánto se parece a un fuego real. El JSON separa el **área quemada con actividad** (a menos de 7 px de un foco) de la **quemada sin actividad**.
+Cada foco se clasifica por **ubicación**: "frente de la cicatriz" (confianza alta), "junto al humo" (media) o "aislado" (baja). Esa confianza dice dónde está, no cuánto se parece a un fuego real. El JSON separa el **área quemada con actividad** (a menos de ~30 px de un foco) de la **quemada sin actividad**.
 
 **Lo que NO hacemos todavía:** no filtramos los focos con las máscaras de nube, ciudad o tierra clara (la tierra clara no sirve, porque el fuego también es brillante: el 57 % de los focos reales de la escena extra caen en ella), no clasificamos por intensidad ni por tipo, y la confianza no se calibra.
 
@@ -139,14 +139,14 @@ se calcula una cicatriz de referencia con **dNBR** (NBR del 24-06 menos NBR del 
 | v0 | 11,3 | 0,59 / 0,71 / 0,77 | 0,54 / 0,93 / 0,56 |
 | v1 | 5,9 | 0,46 / 0,87 / 0,49 | 0,30 / 0,97 / 0,30 |
 | v2 | 4,9 | 0,38 / 0,86 / 0,41 | 0,25 / 0,96 / 0,25 |
-| v3 | 8,6 | 0,55 / 0,78 / 0,65 | 0,42 / 0,93 / 0,43 |
-| **v4 (por defecto)** | 9,7 | 0,56 / 0,75 / 0,70 | 0,46 / 0,92 / 0,48 |
+| v3 | 8,6 | 0,54 / 0,78 / 0,64 | 0,41 / 0,93 / 0,43 |
+| **v4 (por defecto)** | 9,5 | 0,55 / 0,74 / 0,68 | 0,45 / 0,92 / 0,47 |
 
-(Tras la corrección de Jesús en `fire_like`, que ahora usa el canal rojo original: antes v4 daba 0,55 / 0,75 / 0,67.)
+(Tras la corrección de Jesús en `fire_like` (canal rojo original) v4 llegó a 0,56 / 0,75 / 0,70, pero eso reactivaba la regla "conservar manchas pequeñas cerca de un foco" y dejaba dos manchas falsas en Niebla, una alrededor del foco aislado de los campos. Al exigir además que estén pegadas a la cicatriz principal, bajó a 0,55 / 0,74 / 0,68 y las manchas desaparecieron. Es el coste de no dibujar cicatriz donde no la hay.)
 
 Lectura honesta:
 - **Lo que marcamos casi siempre es quemado:** la precisión contra la referencia generosa es 0,93.
-- **Nos dejamos mucha cicatriz:** el recall con v4 es 0,70 (0,48 contra la referencia generosa). Las omisiones se ven en
+- **Nos dejamos mucha cicatriz:** el recall con v4 es 0,68 (0,47 contra la referencia generosa). Las omisiones se ven en
   el sur y entre los embalses (`debug/dnbr_0726/errores_v4.png`), pero **no son sobre todo por el humo** (solo un 3,6 %
   cae en humo denso). La causa es que, con una cicatriz tan grande, los Otsu parten la propia cicatriz en dos (severa y
   moderada) y dejan fuera la moderada. La v4 corrige eso en el NBR (+0,02 de IoU, +0,04 de recall, sin cambiar nada en las

@@ -25,7 +25,7 @@ COL_PERIM = (0, 255, 255)   # amarillo (BGR): perímetro y relleno de lo quemado
 COL_ACTIVE = (0, 120, 255)  # naranja: superficie quemada CON actividad (junto a un foco)
 COL_HOLE = (255, 200, 0)    # azul claro para huecos (embalses, islas)
 COL_FIRE = (0, 0, 255)      # rojo para los focos
-ACTIVE_FRAC = 0.006         # "con actividad" = a menos de esta fracción de la diagonal de un foco (~18 px en 2500 px)
+ACTIVE_FRAC = 0.010         # "con actividad" = a menos de esta fracción de la diagonal de un foco (~30 px en 2500 px)
 
 
 def activity_zone(burn: np.ndarray, fires: np.ndarray) -> np.ndarray:
@@ -67,7 +67,7 @@ def draw_overlay(base_rgb: np.ndarray, burn: np.ndarray, fires: np.ndarray, acti
     tint = im.copy()
     calm = burn & ~active
     tint[calm] = (0.55 * tint[calm] + 0.45 * np.array(COL_PERIM)).astype(np.uint8)
-    tint[active] = (0.35 * tint[active] + 0.65 * np.array(COL_ACTIVE)).astype(np.uint8)
+    tint[active] = (0.2 * tint[active] + 0.8 * np.array(COL_ACTIVE)).astype(np.uint8)
     tint[fires] = COL_FIRE
     im = cv2.addWeighted(tint, 0.7, im, 0.3, 0)
     cnts, hier = cv2.findContours(burn.astype(np.uint8), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
