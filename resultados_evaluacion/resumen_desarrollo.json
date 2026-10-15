@@ -1,5 +1,5 @@
 {
-  "fecha_utc": "2026-10-15T13:05:09.834293+00:00",
+  "fecha_utc": "2026-10-15T14:31:07.994961+00:00",
   "alcance": "referencias parciales; coverage_pct es cobertura anotada, no confianza",
   "escenas": [
     {
@@ -43,7 +43,7 @@
           "referencia": "d6fcc5d98eccf0ddfab8b605e7f15d4950610463dd8b146ad07dbb17014ef149"
         },
         "activo": {
-          "prediccion": "c2f308286b5bf800521032d9a420af4753ffde81da54a83883b240ac2edb62b1",
+          "prediccion": "a464c4b73f5b1818e2a6b7bbe94ed2945175b173a9074c944235edd8bf40e8ad",
           "referencia": "6d81ee64e845c519c53ee95d4f1240fc859c45420f1cb65a8fb76e771cbdf06e"
         },
         "valid_referencia": "ea116c8a3ad947cc8f2b25f1353a236aedb5d7ee254178de8d21410eee9464b9",
@@ -56,13 +56,101 @@
       "escena": "avila_madrid",
       "grupo": "adquisicion_2026_07_26",
       "split": "desarrollo",
-      "estado": "sin_referencia"
+      "estado": "evaluado",
+      "alcance": "solo regiones humanas anotadas",
+      "variante": "v4",
+      "tamano_original": [
+        6141,
+        9930
+      ],
+      "afectado": {
+        "tp": 167661,
+        "fp": 14564,
+        "fn": 9283,
+        "tn": 1624134,
+        "precision": 0.9200768280971326,
+        "recall": 0.9475370738764807,
+        "f1": 0.9336050717071908,
+        "iou": 0.8754777868287487,
+        "valid_pixels": 1815642,
+        "coverage_pct": 2.9774321569993374
+      },
+      "activo": {
+        "tp": 1655,
+        "fp": 0,
+        "fn": 3154,
+        "tn": 1810833,
+        "precision": 1.0,
+        "recall": 0.3441463921813267,
+        "f1": 0.5120668316831684,
+        "iou": 0.3441463921813267,
+        "valid_pixels": 1815642,
+        "coverage_pct": 2.9774321569993374
+      },
+      "sha256": {
+        "afectado": {
+          "prediccion": "4acabc0097f2f1600a070ffe77822f593a1ed3cc0f6a20bd1560de32f893ef4f",
+          "referencia": "3795349dc442d51c24186f7f8bb18d3498bd1141d5e586b63aa613b0f7cec13d"
+        },
+        "activo": {
+          "prediccion": "002409154f57c7ace22dedce5388ba71090c8e5306a7aa24e8c141ea5a843bb5",
+          "referencia": "cd8349fb2414df060590729dc967931fe53cc3449f2feb4a53e74f18b594d6b2"
+        },
+        "valid_referencia": "627e4113367e04aa9950b3717a78104e981352fc36f10d070faab6c5fa736609",
+        "valid_imagen": "c449781981ba6714278f4f6314207920ea0f43f6748046400103fc880204e731"
+      },
+      "estado_afectado": "disponible",
+      "estado_activo": "disponible"
     },
     {
       "escena": "niebla",
       "grupo": "adquisicion_2026_08_08",
       "split": "desarrollo",
-      "estado": "sin_referencia"
+      "estado": "evaluado",
+      "alcance": "solo regiones humanas anotadas",
+      "variante": "v4",
+      "tamano_original": [
+        1546,
+        2500
+      ],
+      "afectado": {
+        "tp": 42744,
+        "fp": 59,
+        "fn": 942,
+        "tn": 160236,
+        "precision": 0.9986215919444899,
+        "recall": 0.9784370278807856,
+        "f1": 0.9884262738614159,
+        "iou": 0.9771173848439821,
+        "valid_pixels": 203981,
+        "coverage_pct": 5.27764553686934
+      },
+      "activo": {
+        "tp": 851,
+        "fp": 37,
+        "fn": 821,
+        "tn": 202272,
+        "precision": 0.9583333333333334,
+        "recall": 0.5089712918660287,
+        "f1": 0.66484375,
+        "iou": 0.49795201872440026,
+        "valid_pixels": 203981,
+        "coverage_pct": 5.27764553686934
+      },
+      "sha256": {
+        "afectado": {
+          "prediccion": "fe91cd1e0b1721acb39f1a7062195f972ac3cc5aa78cc7ac8a9ed4a3ccfcf624",
+          "referencia": "35d1963a27bdcba510f788e624091bf77fffbd9d70af72719a3d096d8a5a6a1b"
+        },
+        "activo": {
+          "prediccion": "d9f9fa1cdf66b4c93beca2b4abf3418b6bdba0dd7d84a9771778ef822652ab46",
+          "referencia": "63f1d23d4ba2477a4ed66c37c8976149656ecf90e3ded8c4d3fc05dad86f3ede"
+        },
+        "valid_referencia": "49d625936b607f9331f7ab7e38bb98e024a9103237da5feeb4c4556f68491309",
+        "valid_imagen": "88ee4ebb0b1b82974f2b6c214143337265aa370ec0a8bea33d2c5951f66b0198"
+      },
+      "estado_afectado": "disponible",
+      "estado_activo": "disponible"
     }
   ]
 }

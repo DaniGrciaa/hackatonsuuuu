@@ -22,8 +22,8 @@ import cv2
 import numpy as np
 
 HOT_PCT = 99.5      # percentil de B12 para ser candidato
-RED_RATIO = 0.40    # (R - max(G, B)) / R mínimo: naranja/rojo vivo, no pardo ni pálido (ver README: barrido)
-Z_CTX = 3.0         # cuántas desviaciones por encima del fondo local
+RED_RATIO = 0.30    # (R - max(G, B)) / R mínimo: naranja/rojo vivo, no pardo ni pálido (ver README: barrido)
+Z_CTX = 2.5         # cuántas desviaciones por encima del fondo local
 WIN = 61            # ventana del fondo (px a resolución de trabajo)
 NEAR_SCAR_PX = 15   # foco "en el frente" si está a menos de esto de la cicatriz
 

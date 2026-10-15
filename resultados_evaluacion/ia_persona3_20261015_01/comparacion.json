@@ -1,0 +1,588 @@
+{
+  "fecha_utc": "2026-10-15T14:09:21.579128+00:00",
+  "alcance": "Validacion de desarrollo por grupos de adquisicion, sobre referencias humanas parciales a resolucion original.",
+  "configuracion": {
+    "rf": {
+      "n_estimators": 96,
+      "max_depth": 16,
+      "min_samples_leaf": 3,
+      "max_features": "sqrt",
+      "n_jobs": 2,
+      "random_state": 20261015
+    },
+    "umbral": 0.5,
+    "muestras_por_clase": 8000,
+    "features": [
+      "tc_r",
+      "tc_g",
+      "tc_b",
+      "tc_h",
+      "tc_s",
+      "tc_v",
+      "tc_lab_l",
+      "tc_lab_a",
+      "tc_lab_b",
+      "tc_gray_mean7",
+      "tc_gray_std7",
+      "tc_gray_mean31",
+      "tc_gray_std31",
+      "tc_chromatic_r",
+      "tc_chromatic_g",
+      "swir_r",
+      "swir_g",
+      "swir_b",
+      "swir_h",
+      "swir_s",
+      "swir_v",
+      "swir_lab_l",
+      "swir_lab_a",
+      "swir_lab_b",
+      "swir_gray_mean7",
+      "swir_gray_std7",
+      "swir_gray_mean31",
+      "swir_gray_std31",
+      "swir_chromatic_r",
+      "swir_chromatic_g"
+    ],
+    "seed": 20261015
+  },
+  "versiones": {
+    "python": "3.14.7 (tags/v3.14.7:823f032, Aug  5 2026, 10:51:32) [MSC v.1944 64 bit (AMD64)]",
+    "sklearn": "1.9.1",
+    "numpy": "2.5.4",
+    "opencv": "5.0.0"
+  },
+  "muestras": {
+    "extra_mierla": {
+      "disponibles": {
+        "0": 319026,
+        "1": 55884,
+        "2": 445
+      },
+      "usadas": {
+        "0": 8000,
+        "1": 8000,
+        "2": 445
+      }
+    },
+    "avila_madrid": {
+      "disponibles": {
+        "0": 1638698,
+        "1": 172135,
+        "2": 4809
+      },
+      "usadas": {
+        "0": 8000,
+        "1": 8000,
+        "2": 4809
+      }
+    },
+    "niebla": {
+      "disponibles": {
+        "0": 160295,
+        "1": 42014,
+        "2": 1672
+      },
+      "usadas": {
+        "0": 8000,
+        "1": 8000,
+        "2": 1672
+      }
+    }
+  },
+  "escenas": [
+    {
+      "escena": "extra_mierla",
+      "grupo_evaluado": "adquisicion_2026_07_21",
+      "entrenamiento": [
+        "avila_madrid",
+        "niebla"
+      ],
+      "segundos_entrenamiento": {
+        "afectado": 10.614126300002681,
+        "activo": 7.388887299999624
+      },
+      "base": {
+        "afectado": {
+          "tp": 56005,
+          "fp": 0,
+          "fn": 324,
+          "tn": 319026,
+          "precision": 1.0,
+          "recall": 0.9942480782545403,
+          "f1": 0.997115744120213,
+          "iou": 0.9942480782545403,
+          "valid_pixels": 375355,
+          "coverage_pct": 9.711642949547219
+        },
+        "activo": {
+          "tp": 119,
+          "fp": 0,
+          "fn": 326,
+          "tn": 374910,
+          "precision": 1.0,
+          "recall": 0.26741573033707866,
+          "f1": 0.4219858156028369,
+          "iou": 0.26741573033707866,
+          "valid_pixels": 375355,
+          "coverage_pct": 9.711642949547219
+        }
+      },
+      "rf": {
+        "afectado": {
+          "tp": 55883,
+          "fp": 7014,
+          "fn": 446,
+          "tn": 312012,
+          "precision": 0.8884843474251554,
+          "recall": 0.9920822311775462,
+          "f1": 0.9374297552547263,
+          "iou": 0.8822285019654895,
+          "valid_pixels": 375355,
+          "coverage_pct": 9.711642949547219
+        },
+        "activo": {
+          "tp": 358,
+          "fp": 163,
+          "fn": 87,
+          "tn": 374747,
+          "precision": 0.6871401151631478,
+          "recall": 0.8044943820224719,
+          "f1": 0.7412008281573499,
+          "iou": 0.5888157894736842,
+          "valid_pixels": 375355,
+          "coverage_pct": 9.711642949547219
+        }
+      },
+      "segundos_evaluacion_anotaciones": 9.734602599997743,
+      "evidencias_rf": [
+        {
+          "archivo": "errores/extra_mierla_afectado_fp_1.png",
+          "cabeza": "afectado",
+          "tipo": "fp",
+          "bbox_original": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "pixeles_error": 3124
+        },
+        {
+          "archivo": "errores/extra_mierla_activo_fp_1.png",
+          "cabeza": "activo",
+          "tipo": "fp",
+          "bbox_original": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "pixeles_error": 128
+        },
+        {
+          "archivo": "errores/extra_mierla_afectado_fp_2.png",
+          "cabeza": "afectado",
+          "tipo": "fp",
+          "bbox_original": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "pixeles_error": 289
+        },
+        {
+          "archivo": "errores/extra_mierla_afectado_fn_1.png",
+          "cabeza": "afectado",
+          "tipo": "fn",
+          "bbox_original": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "pixeles_error": 44
+        },
+        {
+          "archivo": "errores/extra_mierla_activo_fn_1.png",
+          "cabeza": "activo",
+          "tipo": "fn",
+          "bbox_original": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "pixeles_error": 48
+        },
+        {
+          "archivo": "errores/extra_mierla_afectado_fn_2.png",
+          "cabeza": "afectado",
+          "tipo": "fn",
+          "bbox_original": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "pixeles_error": 24
+        },
+        {
+          "archivo": "errores/extra_mierla_activo_fn_2.png",
+          "cabeza": "activo",
+          "tipo": "fn",
+          "bbox_original": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "pixeles_error": 39
+        },
+        {
+          "archivo": "errores/extra_mierla_activo_fp_2.png",
+          "cabeza": "activo",
+          "tipo": "fp",
+          "bbox_original": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "pixeles_error": 34
+        }
+      ]
+    },
+    {
+      "escena": "avila_madrid",
+      "grupo_evaluado": "adquisicion_2026_07_26",
+      "entrenamiento": [
+        "extra_mierla",
+        "niebla"
+      ],
+      "segundos_entrenamiento": {
+        "afectado": 8.866741800000455,
+        "activo": 4.467972000002192
+      },
+      "base": {
+        "afectado": {
+          "tp": 167661,
+          "fp": 14564,
+          "fn": 9283,
+          "tn": 1624134,
+          "precision": 0.9200768280971326,
+          "recall": 0.9475370738764807,
+          "f1": 0.9336050717071908,
+          "iou": 0.8754777868287487,
+          "valid_pixels": 1815642,
+          "coverage_pct": 2.9774321569993374
+        },
+        "activo": {
+          "tp": 1506,
+          "fp": 0,
+          "fn": 3303,
+          "tn": 1810833,
+          "precision": 1.0,
+          "recall": 0.31316281971303805,
+          "f1": 0.4769596199524941,
+          "iou": 0.31316281971303805,
+          "valid_pixels": 1815642,
+          "coverage_pct": 2.9774321569993374
+        }
+      },
+      "rf": {
+        "afectado": {
+          "tp": 174062,
+          "fp": 38915,
+          "fn": 2882,
+          "tn": 1599783,
+          "precision": 0.8172807392347531,
+          "recall": 0.9837123609729632,
+          "f1": 0.8928064915713696,
+          "iou": 0.8063689723384246,
+          "valid_pixels": 1815642,
+          "coverage_pct": 2.9774321569993374
+        },
+        "activo": {
+          "tp": 3461,
+          "fp": 4581,
+          "fn": 1348,
+          "tn": 1806252,
+          "precision": 0.4303655807013181,
+          "recall": 0.719692243709711,
+          "f1": 0.538635125671154,
+          "iou": 0.36858359957401493,
+          "valid_pixels": 1815642,
+          "coverage_pct": 2.9774321569993374
+        }
+      },
+      "segundos_evaluacion_anotaciones": 38.22856669999965,
+      "evidencias_rf": [
+        {
+          "archivo": "errores/avila_madrid_afectado_fp_1.png",
+          "cabeza": "afectado",
+          "tipo": "fp",
+          "bbox_original": [
+            0,
+            0,
+            512,
+            512
+          ],
+          "pixeles_error": 28
+        },
+        {
+          "archivo": "errores/avila_madrid_afectado_fp_2.png",
+          "cabeza": "afectado",
+          "tipo": "fp",
+          "bbox_original": [
+            512,
+            0,
+            1024,
+            512
+          ],
+          "pixeles_error": 1285
+        },
+        {
+          "archivo": "errores/avila_madrid_activo_fp_1.png",
+          "cabeza": "activo",
+          "tipo": "fp",
+          "bbox_original": [
+            3584,
+            1536,
+            4096,
+            2048
+          ],
+          "pixeles_error": 16
+        },
+        {
+          "archivo": "errores/avila_madrid_activo_fp_2.png",
+          "cabeza": "activo",
+          "tipo": "fp",
+          "bbox_original": [
+            3072,
+            2048,
+            3584,
+            2560
+          ],
+          "pixeles_error": 118
+        },
+        {
+          "archivo": "errores/avila_madrid_afectado_fn_1.png",
+          "cabeza": "afectado",
+          "tipo": "fn",
+          "bbox_original": [
+            3584,
+            2560,
+            4096,
+            3072
+          ],
+          "pixeles_error": 243
+        },
+        {
+          "archivo": "errores/avila_madrid_afectado_fn_2.png",
+          "cabeza": "afectado",
+          "tipo": "fn",
+          "bbox_original": [
+            3072,
+            3072,
+            3584,
+            3584
+          ],
+          "pixeles_error": 2037
+        },
+        {
+          "archivo": "errores/avila_madrid_activo_fn_1.png",
+          "cabeza": "activo",
+          "tipo": "fn",
+          "bbox_original": [
+            3584,
+            3584,
+            4096,
+            4096
+          ],
+          "pixeles_error": 1348
+        }
+      ]
+    },
+    {
+      "escena": "niebla",
+      "grupo_evaluado": "adquisicion_2026_08_08",
+      "entrenamiento": [
+        "extra_mierla",
+        "avila_madrid"
+      ],
+      "segundos_entrenamiento": {
+        "afectado": 11.894094399998721,
+        "activo": 6.67279039999994
+      },
+      "base": {
+        "afectado": {
+          "tp": 42744,
+          "fp": 59,
+          "fn": 942,
+          "tn": 160236,
+          "precision": 0.9986215919444899,
+          "recall": 0.9784370278807856,
+          "f1": 0.9884262738614159,
+          "iou": 0.9771173848439821,
+          "valid_pixels": 203981,
+          "coverage_pct": 5.27764553686934
+        },
+        "activo": {
+          "tp": 828,
+          "fp": 37,
+          "fn": 844,
+          "tn": 202272,
+          "precision": 0.9572254335260115,
+          "recall": 0.49521531100478466,
+          "f1": 0.6527394560504532,
+          "iou": 0.4844938560561732,
+          "valid_pixels": 203981,
+          "coverage_pct": 5.27764553686934
+        }
+      },
+      "rf": {
+        "afectado": {
+          "tp": 42256,
+          "fp": 2178,
+          "fn": 1430,
+          "tn": 158117,
+          "precision": 0.9509834811180627,
+          "recall": 0.9672664011353752,
+          "f1": 0.9590558329550612,
+          "iou": 0.9213326356183499,
+          "valid_pixels": 203981,
+          "coverage_pct": 5.27764553686934
+        },
+        "activo": {
+          "tp": 1350,
+          "fp": 840,
+          "fn": 322,
+          "tn": 201469,
+          "precision": 0.6164383561643836,
+          "recall": 0.8074162679425837,
+          "f1": 0.6991196271361989,
+          "iou": 0.5374203821656051,
+          "valid_pixels": 203981,
+          "coverage_pct": 5.27764553686934
+        }
+      },
+      "segundos_evaluacion_anotaciones": 6.489913000001252,
+      "evidencias_rf": [
+        {
+          "archivo": "errores/niebla_afectado_fp_1.png",
+          "cabeza": "afectado",
+          "tipo": "fp",
+          "bbox_original": [
+            1024,
+            0,
+            1536,
+            512
+          ],
+          "pixeles_error": 140
+        },
+        {
+          "archivo": "errores/niebla_afectado_fp_2.png",
+          "cabeza": "afectado",
+          "tipo": "fp",
+          "bbox_original": [
+            0,
+            512,
+            512,
+            1024
+          ],
+          "pixeles_error": 38
+        },
+        {
+          "archivo": "errores/niebla_afectado_fn_1.png",
+          "cabeza": "afectado",
+          "tipo": "fn",
+          "bbox_original": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "pixeles_error": 358
+        },
+        {
+          "archivo": "errores/niebla_activo_fp_1.png",
+          "cabeza": "activo",
+          "tipo": "fp",
+          "bbox_original": [
+            512,
+            512,
+            1024,
+            1024
+          ],
+          "pixeles_error": 252
+        },
+        {
+          "archivo": "errores/niebla_afectado_fn_2.png",
+          "cabeza": "afectado",
+          "tipo": "fn",
+          "bbox_original": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "pixeles_error": 1044
+        },
+        {
+          "archivo": "errores/niebla_activo_fp_2.png",
+          "cabeza": "activo",
+          "tipo": "fp",
+          "bbox_original": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "pixeles_error": 582
+        },
+        {
+          "archivo": "errores/niebla_activo_fn_1.png",
+          "cabeza": "activo",
+          "tipo": "fn",
+          "bbox_original": [
+            1024,
+            512,
+            1536,
+            1024
+          ],
+          "pixeles_error": 147
+        },
+        {
+          "archivo": "errores/niebla_activo_fn_2.png",
+          "cabeza": "activo",
+          "tipo": "fn",
+          "bbox_original": [
+            1024,
+            1024,
+            1536,
+            1536
+          ],
+          "pixeles_error": 175
+        }
+      ]
+    }
+  ],
+  "decision": {
+    "afectado": {
+      "f1_base_macro": 0.9730490298962732,
+      "f1_rf_macro": 0.9297640265937189,
+      "mejora_pp": -4.328500330255425,
+      "candidato_a_integracion": false,
+      "decision": "mantener detector base"
+    },
+    "activo": {
+      "f1_base_macro": 0.5172282972019281,
+      "f1_rf_macro": 0.6596518603215676,
+      "mejora_pp": 14.242356311963956,
+      "candidato_a_integracion": false,
+      "decision": "mantener detector base"
+    }
+  }
+}

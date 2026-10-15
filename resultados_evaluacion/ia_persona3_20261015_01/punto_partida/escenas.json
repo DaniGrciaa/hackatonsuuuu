@@ -1,0 +1,7 @@
+{
+  "escenas": [
+    {"id": "extra_mierla", "grupo": "adquisicion_2026_07_21", "split": "desarrollo", "imagenes": "data/extra_mierla"},
+    {"id": "avila_madrid", "grupo": "adquisicion_2026_07_26", "split": "desarrollo", "imagenes": "data/avila_madrid"},
+    {"id": "niebla", "grupo": "adquisicion_2026_08_08", "split": "desarrollo", "imagenes": "data/niebla"}
+  ]
+}

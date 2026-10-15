@@ -1,0 +1,156 @@
+{
+  "fecha_utc": "2026-10-15T13:53:16.054482+00:00",
+  "alcance": "referencias parciales; coverage_pct es cobertura anotada, no confianza",
+  "escenas": [
+    {
+      "escena": "extra_mierla",
+      "grupo": "adquisicion_2026_07_21",
+      "split": "desarrollo",
+      "estado": "evaluado",
+      "alcance": "solo regiones humanas anotadas",
+      "variante": "v4",
+      "tamano_original": [
+        1546,
+        2500
+      ],
+      "afectado": {
+        "tp": 56005,
+        "fp": 0,
+        "fn": 324,
+        "tn": 319026,
+        "precision": 1.0,
+        "recall": 0.9942480782545403,
+        "f1": 0.997115744120213,
+        "iou": 0.9942480782545403,
+        "valid_pixels": 375355,
+        "coverage_pct": 9.711642949547219
+      },
+      "activo": {
+        "tp": 119,
+        "fp": 0,
+        "fn": 326,
+        "tn": 374910,
+        "precision": 1.0,
+        "recall": 0.26741573033707866,
+        "f1": 0.4219858156028369,
+        "iou": 0.26741573033707866,
+        "valid_pixels": 375355,
+        "coverage_pct": 9.711642949547219
+      },
+      "sha256": {
+        "afectado": {
+          "prediccion": "490c56f0fb74105f890f3ff58145eb9af911d553ee1ab47b2369b432a4d8d714",
+          "referencia": "d6fcc5d98eccf0ddfab8b605e7f15d4950610463dd8b146ad07dbb17014ef149"
+        },
+        "activo": {
+          "prediccion": "cf2b948c3bc3cb59e05f6da4ba9e11e85d594995f30cb2926b046271e50939c3",
+          "referencia": "6d81ee64e845c519c53ee95d4f1240fc859c45420f1cb65a8fb76e771cbdf06e"
+        },
+        "valid_referencia": "ea116c8a3ad947cc8f2b25f1353a236aedb5d7ee254178de8d21410eee9464b9",
+        "valid_imagen": "42b9c230101d074c199d4097a8d06df2eaf7bd85abf153b8a16fef7da2be48ae"
+      },
+      "estado_afectado": "disponible",
+      "estado_activo": "disponible"
+    },
+    {
+      "escena": "avila_madrid",
+      "grupo": "adquisicion_2026_07_26",
+      "split": "desarrollo",
+      "estado": "evaluado",
+      "alcance": "solo regiones humanas anotadas",
+      "variante": "v4",
+      "tamano_original": [
+        6141,
+        9930
+      ],
+      "afectado": {
+        "tp": 167661,
+        "fp": 14564,
+        "fn": 9283,
+        "tn": 1624134,
+        "precision": 0.9200768280971326,
+        "recall": 0.9475370738764807,
+        "f1": 0.9336050717071908,
+        "iou": 0.8754777868287487,
+        "valid_pixels": 1815642,
+        "coverage_pct": 2.9774321569993374
+      },
+      "activo": {
+        "tp": 1506,
+        "fp": 0,
+        "fn": 3303,
+        "tn": 1810833,
+        "precision": 1.0,
+        "recall": 0.31316281971303805,
+        "f1": 0.4769596199524941,
+        "iou": 0.31316281971303805,
+        "valid_pixels": 1815642,
+        "coverage_pct": 2.9774321569993374
+      },
+      "sha256": {
+        "afectado": {
+          "prediccion": "4acabc0097f2f1600a070ffe77822f593a1ed3cc0f6a20bd1560de32f893ef4f",
+          "referencia": "3795349dc442d51c24186f7f8bb18d3498bd1141d5e586b63aa613b0f7cec13d"
+        },
+        "activo": {
+          "prediccion": "8ba9d691c5ded2f20ca7d2c455b03124b6b5fb8adff9c1a40af185be90a35bb9",
+          "referencia": "cd8349fb2414df060590729dc967931fe53cc3449f2feb4a53e74f18b594d6b2"
+        },
+        "valid_referencia": "627e4113367e04aa9950b3717a78104e981352fc36f10d070faab6c5fa736609",
+        "valid_imagen": "c449781981ba6714278f4f6314207920ea0f43f6748046400103fc880204e731"
+      },
+      "estado_afectado": "disponible",
+      "estado_activo": "disponible"
+    },
+    {
+      "escena": "niebla",
+      "grupo": "adquisicion_2026_08_08",
+      "split": "desarrollo",
+      "estado": "evaluado",
+      "alcance": "solo regiones humanas anotadas",
+      "variante": "v4",
+      "tamano_original": [
+        1546,
+        2500
+      ],
+      "afectado": {
+        "tp": 42744,
+        "fp": 59,
+        "fn": 942,
+        "tn": 160236,
+        "precision": 0.9986215919444899,
+        "recall": 0.9784370278807856,
+        "f1": 0.9884262738614159,
+        "iou": 0.9771173848439821,
+        "valid_pixels": 203981,
+        "coverage_pct": 5.27764553686934
+      },
+      "activo": {
+        "tp": 828,
+        "fp": 37,
+        "fn": 844,
+        "tn": 202272,
+        "precision": 0.9572254335260115,
+        "recall": 0.49521531100478466,
+        "f1": 0.6527394560504532,
+        "iou": 0.4844938560561732,
+        "valid_pixels": 203981,
+        "coverage_pct": 5.27764553686934
+      },
+      "sha256": {
+        "afectado": {
+          "prediccion": "fe91cd1e0b1721acb39f1a7062195f972ac3cc5aa78cc7ac8a9ed4a3ccfcf624",
+          "referencia": "35d1963a27bdcba510f788e624091bf77fffbd9d70af72719a3d096d8a5a6a1b"
+        },
+        "activo": {
+          "prediccion": "eafb8dba83a3461c9b288fad22cd84734782f85831cad71fe6bc4bb6cd615342",
+          "referencia": "63f1d23d4ba2477a4ed66c37c8976149656ecf90e3ded8c4d3fc05dad86f3ede"
+        },
+        "valid_referencia": "49d625936b607f9331f7ab7e38bb98e024a9103237da5feeb4c4556f68491309",
+        "valid_imagen": "88ee4ebb0b1b82974f2b6c214143337265aa370ec0a8bea33d2c5951f66b0198"
+      },
+      "estado_afectado": "disponible",
+      "estado_activo": "disponible"
+    }
+  ]
+}
