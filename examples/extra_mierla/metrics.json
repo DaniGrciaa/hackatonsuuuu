@@ -2,24 +2,6 @@
  "titulo": "La Mierla",
  "orden": 3,
  "fecha": "21 de julio de 2026",
- "evaluacion": {
-  "referencia": "anotación manual parcial (Jesús)",
-  "cobertura_pct": 9.71,
-  "afectada": {
-   "iou": 0.979104901560475,
-   "dice": 0.9894421470923296,
-   "precision": 1.0,
-   "recall": 0.979104901560475
-  },
-  "focos": {
-   "precision": 1.0,
-   "recall": 1.0,
-   "f1": 1.0,
-   "detectados": 4,
-   "anotados": 3,
-   "tolerancia_px": 5
-  }
- },
  "escena": "extra_mierla",
  "tamano_analisis": [
   2500,
@@ -30,7 +12,7 @@
   1546
  ],
  "unidades": "Píxeles de la imagen analizada. La imagen no está georreferenciada: no hay hectáreas ni km.",
- "tiempo_total_s": 1.358,
+ "tiempo_total_s": 1.372,
  "avisos": [
   "logo de Copernicus detectado en ['tc']; se enmascara la esquina"
  ],
@@ -39,7 +21,7 @@
    "nombre": "Zona quemada",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 1.217,
+   "tiempo_s": 1.231,
    "metricas": {
     "area_px": 419095,
     "pct_imagen": 10.843,
