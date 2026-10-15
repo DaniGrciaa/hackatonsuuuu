@@ -12,7 +12,7 @@
   1546
  ],
  "unidades": "Píxeles de la imagen analizada. La imagen no está georreferenciada: no hay hectáreas ni km.",
- "tiempo_total_s": 1.351,
+ "tiempo_total_s": 1.352,
  "avisos": [
   "logo de Copernicus detectado en ['tc']; se enmascara la esquina"
  ],
@@ -21,12 +21,12 @@
    "nombre": "Zona quemada",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 1.158,
+   "tiempo_s": 1.156,
    "metricas": {
-    "area_px": 453370,
-    "pct_imagen": 11.73,
-    "regiones": 3,
-    "perimetro_px": 11228.3
+    "area_px": 419095,
+    "pct_imagen": 10.843,
+    "regiones": 4,
+    "perimetro_px": 21550.2
    },
    "mascara": "masks/burn.png"
   },
@@ -34,12 +34,12 @@
    "nombre": "Perímetro del incendio",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.055,
+   "tiempo_s": 0.059,
    "metricas": {
-    "area_px": 453793,
-    "pct_imagen": 11.741,
-    "regiones": 3,
-    "perimetro_px": 11058.6
+    "area_px": 445382,
+    "pct_imagen": 11.523,
+    "regiones": 4,
+    "perimetro_px": 13031.7
    },
    "mascara": "masks/perimeter.png"
   },
@@ -47,7 +47,7 @@
    "nombre": "Fuego activo",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.106,
+   "tiempo_s": 0.107,
    "metricas": {
     "area_px": 977,
     "pct_imagen": 0.025,
@@ -67,10 +67,10 @@
    "error": null,
    "tiempo_s": 0.018,
    "metricas": {
-    "area_px": 19053,
-    "pct_imagen": 0.493,
+    "area_px": 18407,
+    "pct_imagen": 0.476,
     "regiones": 16,
-    "perimetro_px": 2507.1
+    "perimetro_px": 2686.3
    },
    "mascara": "masks/burn_active.png"
   },
@@ -130,7 +130,7 @@
    "nombre": "Posible zona urbana (poco fiable)",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.002,
+   "tiempo_s": 0.001,
    "metricas": {
     "area_px": 294381,
     "pct_imagen": 7.617,
@@ -143,7 +143,7 @@
    "nombre": "Sin datos",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.002,
+   "tiempo_s": 0.001,
    "metricas": {
     "area_px": 20300,
     "pct_imagen": 0.525,

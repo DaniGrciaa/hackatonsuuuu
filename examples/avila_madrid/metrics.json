@@ -12,19 +12,19 @@
   1608
  ],
  "unidades": "Píxeles de la imagen analizada. La imagen no está georreferenciada: no hay hectáreas ni km.",
- "tiempo_total_s": 1.567,
+ "tiempo_total_s": 1.572,
  "avisos": [],
  "capas": {
   "burn": {
    "nombre": "Zona quemada",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 1.35,
+   "tiempo_s": 1.351,
    "metricas": {
-    "area_px": 245885,
-    "pct_imagen": 5.881,
-    "regiones": 1,
-    "perimetro_px": 10999.3
+    "area_px": 218781,
+    "pct_imagen": 5.233,
+    "regiones": 20,
+    "perimetro_px": 17174.7
    },
    "mascara": "masks/burn.png"
   },
@@ -32,12 +32,12 @@
    "nombre": "Perímetro del incendio",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.063,
+   "tiempo_s": 0.065,
    "metricas": {
-    "area_px": 247790,
-    "pct_imagen": 5.927,
-    "regiones": 1,
-    "perimetro_px": 10168.5
+    "area_px": 227805,
+    "pct_imagen": 5.449,
+    "regiones": 20,
+    "perimetro_px": 13901.6
    },
    "mascara": "masks/perimeter.png"
   },
@@ -45,7 +45,7 @@
    "nombre": "Fuego activo",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.117,
+   "tiempo_s": 0.121,
    "metricas": {
     "area_px": 574,
     "pct_imagen": 0.014,
@@ -63,12 +63,12 @@
    "nombre": "Zona quemada que aún arde",
    "estado": "ok",
    "error": null,
-   "tiempo_s": 0.021,
+   "tiempo_s": 0.02,
    "metricas": {
-    "area_px": 35417,
-    "pct_imagen": 0.847,
-    "regiones": 12,
-    "perimetro_px": 3546.8
+    "area_px": 27446,
+    "pct_imagen": 0.656,
+    "regiones": 35,
+    "perimetro_px": 4386.9
    },
    "mascara": "masks/burn_active.png"
   },
