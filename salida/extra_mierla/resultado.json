@@ -18,7 +18,707 @@
  "perimetro_px_original": 11673.3,
  "porcentaje_agua": 0.67,
  "porcentaje_humo": 0.55,
- "pixeles_focos": 0,
+ "pixeles_focos": 1492,
+ "num_focos": 69,
+ "focos_por_ubicacion": {
+  "frente de la cicatriz": 48,
+  "junto al humo": 7,
+  "aislado": 14
+ },
+ "porcentaje_quemado_con_actividad": 1.0,
+ "porcentaje_quemado_sin_actividad": 99.0,
+ "focos": [
+  {
+   "centro": [
+    1277.0,
+    227.0
+   ],
+   "area_px": 1,
+   "dist_cicatriz_px": 88.3,
+   "ubicacion": "junto al humo",
+   "confianza": "media"
+  },
+  {
+   "centro": [
+    1257.3,
+    233.5
+   ],
+   "area_px": 34,
+   "dist_cicatriz_px": 80.6,
+   "ubicacion": "junto al humo",
+   "confianza": "media"
+  },
+  {
+   "centro": [
+    1302.0,
+    249.5
+   ],
+   "area_px": 2,
+   "dist_cicatriz_px": 63.0,
+   "ubicacion": "aislado",
+   "confianza": "baja"
+  },
+  {
+   "centro": [
+    1157.0,
+    259.5
+   ],
+   "area_px": 230,
+   "dist_cicatriz_px": 78.9,
+   "ubicacion": "junto al humo",
+   "confianza": "media"
+  },
+  {
+   "centro": [
+    1351.0,
+    253.0
+   ],
+   "area_px": 1,
+   "dist_cicatriz_px": 27.2,
+   "ubicacion": "aislado",
+   "confianza": "baja"
+  },
+  {
+   "centro": [
+    1350.7,
+    256.5
+   ],
+   "area_px": 6,
+   "dist_cicatriz_px": 22.6,
+   "ubicacion": "aislado",
+   "confianza": "baja"
+  },
+  {
+   "centro": [
+    1151.0,
+    272.9
+   ],
+   "area_px": 9,
+   "dist_cicatriz_px": 80.4,
+   "ubicacion": "junto al humo",
+   "confianza": "media"
+  },
+  {
+   "centro": [
+    1434.0,
+    275.0
+   ],
+   "area_px": 1,
+   "dist_cicatriz_px": 12.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1429.1,
+    282.8
+   ],
+   "area_px": 92,
+   "dist_cicatriz_px": 1.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1466.5,
+    276.5
+   ],
+   "area_px": 4,
+   "dist_cicatriz_px": 27.6,
+   "ubicacion": "aislado",
+   "confianza": "baja"
+  },
+  {
+   "centro": [
+    1466.0,
+    282.5
+   ],
+   "area_px": 2,
+   "dist_cicatriz_px": 24.0,
+   "ubicacion": "aislado",
+   "confianza": "baja"
+  },
+  {
+   "centro": [
+    1344.5,
+    292.9
+   ],
+   "area_px": 25,
+   "dist_cicatriz_px": 6.4,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1468.2,
+    293.9
+   ],
+   "area_px": 9,
+   "dist_cicatriz_px": 21.2,
+   "ubicacion": "aislado",
+   "confianza": "baja"
+  },
+  {
+   "centro": [
+    1238.0,
+    295.0
+   ],
+   "area_px": 1,
+   "dist_cicatriz_px": 27.6,
+   "ubicacion": "junto al humo",
+   "confianza": "media"
+  },
+  {
+   "centro": [
+    1143.7,
+    296.3
+   ],
+   "area_px": 3,
+   "dist_cicatriz_px": 58.2,
+   "ubicacion": "junto al humo",
+   "confianza": "media"
+  },
+  {
+   "centro": [
+    1230.0,
+    305.0
+   ],
+   "area_px": 1,
+   "dist_cicatriz_px": 23.2,
+   "ubicacion": "junto al humo",
+   "confianza": "media"
+  },
+  {
+   "centro": [
+    1378.0,
+    308.0
+   ],
+   "area_px": 1,
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1444.0,
+    316.6
+   ],
+   "area_px": 144,
+   "dist_cicatriz_px": 2.8,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1430.0,
+    313.0
+   ],
+   "area_px": 1,
+   "dist_cicatriz_px": 1.4,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1464.9,
+    325.6
+   ],
+   "area_px": 13,
+   "dist_cicatriz_px": 18.8,
+   "ubicacion": "aislado",
+   "confianza": "baja"
+  },
+  {
+   "centro": [
+    1446.0,
+    326.0
+   ],
+   "area_px": 1,
+   "dist_cicatriz_px": 16.4,
+   "ubicacion": "aislado",
+   "confianza": "baja"
+  },
+  {
+   "centro": [
+    1443.0,
+    328.5
+   ],
+   "area_px": 2,
+   "dist_cicatriz_px": 13.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1450.0,
+    331.0
+   ],
+   "area_px": 1,
+   "dist_cicatriz_px": 20.2,
+   "ubicacion": "aislado",
+   "confianza": "baja"
+  },
+  {
+   "centro": [
+    1461.5,
+    331.0
+   ],
+   "area_px": 2,
+   "dist_cicatriz_px": 19.4,
+   "ubicacion": "aislado",
+   "confianza": "baja"
+  },
+  {
+   "centro": [
+    1457.0,
+    334.5
+   ],
+   "area_px": 10,
+   "dist_cicatriz_px": 18.6,
+   "ubicacion": "aislado",
+   "confianza": "baja"
+  },
+  {
+   "centro": [
+    1408.3,
+    337.3
+   ],
+   "area_px": 3,
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1175.0,
+    355.2
+   ],
+   "area_px": 342,
+   "dist_cicatriz_px": 1.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1165.0,
+    355.0
+   ],
+   "area_px": 1,
+   "dist_cicatriz_px": 15.4,
+   "ubicacion": "aislado",
+   "confianza": "baja"
+  },
+  {
+   "centro": [
+    1399.6,
+    362.2
+   ],
+   "area_px": 8,
+   "dist_cicatriz_px": 1.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1403.2,
+    371.3
+   ],
+   "area_px": 29,
+   "dist_cicatriz_px": 2.8,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1395.5,
+    376.5
+   ],
+   "area_px": 4,
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1399.0,
+    377.0
+   ],
+   "area_px": 1,
+   "dist_cicatriz_px": 1.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1407.0,
+    379.0
+   ],
+   "area_px": 1,
+   "dist_cicatriz_px": 6.2,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1421.2,
+    380.0
+   ],
+   "area_px": 4,
+   "dist_cicatriz_px": 12.8,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1409.7,
+    382.3
+   ],
+   "area_px": 13,
+   "dist_cicatriz_px": 2.2,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1265.7,
+    389.7
+   ],
+   "area_px": 3,
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1413.4,
+    391.1
+   ],
+   "area_px": 15,
+   "dist_cicatriz_px": 2.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1267.2,
+    391.8
+   ],
+   "area_px": 4,
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1155.0,
+    400.5
+   ],
+   "area_px": 87,
+   "dist_cicatriz_px": 1.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1377.7,
+    400.4
+   ],
+   "area_px": 16,
+   "dist_cicatriz_px": 1.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1123.2,
+    404.8
+   ],
+   "area_px": 4,
+   "dist_cicatriz_px": 5.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1376.7,
+    405.7
+   ],
+   "area_px": 3,
+   "dist_cicatriz_px": 2.8,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1317.0,
+    407.5
+   ],
+   "area_px": 4,
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1372.0,
+    408.5
+   ],
+   "area_px": 2,
+   "dist_cicatriz_px": 1.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1360.4,
+    412.4
+   ],
+   "area_px": 18,
+   "dist_cicatriz_px": 1.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1369.5,
+    411.0
+   ],
+   "area_px": 2,
+   "dist_cicatriz_px": 1.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1119.0,
+    413.5
+   ],
+   "area_px": 4,
+   "dist_cicatriz_px": 1.4,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1372.7,
+    412.3
+   ],
+   "area_px": 3,
+   "dist_cicatriz_px": 2.8,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1350.7,
+    416.2
+   ],
+   "area_px": 18,
+   "dist_cicatriz_px": 7.8,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1120.0,
+    417.5
+   ],
+   "area_px": 4,
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1413.0,
+    418.0
+   ],
+   "area_px": 3,
+   "dist_cicatriz_px": 27.4,
+   "ubicacion": "aislado",
+   "confianza": "baja"
+  },
+  {
+   "centro": [
+    1298.0,
+    426.5
+   ],
+   "area_px": 2,
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1498.3,
+    427.7
+   ],
+   "area_px": 3,
+   "dist_cicatriz_px": 10.6,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1115.3,
+    428.4
+   ],
+   "area_px": 7,
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1114.0,
+    431.8
+   ],
+   "area_px": 4,
+   "dist_cicatriz_px": 1.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1095.0,
+    435.5
+   ],
+   "area_px": 4,
+   "dist_cicatriz_px": 1.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1399.0,
+    445.0
+   ],
+   "area_px": 7,
+   "dist_cicatriz_px": 17.4,
+   "ubicacion": "aislado",
+   "confianza": "baja"
+  },
+  {
+   "centro": [
+    1009.3,
+    463.9
+   ],
+   "area_px": 131,
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1022.5,
+    477.1
+   ],
+   "area_px": 40,
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1031.0,
+    478.0
+   ],
+   "area_px": 1,
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1014.7,
+    481.5
+   ],
+   "area_px": 6,
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1391.9,
+    498.3
+   ],
+   "area_px": 9,
+   "dist_cicatriz_px": 2.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1385.2,
+    510.3
+   ],
+   "area_px": 65,
+   "dist_cicatriz_px": 1.4,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1012.0,
+    522.4
+   ],
+   "area_px": 10,
+   "dist_cicatriz_px": 2.8,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1386.0,
+    525.0
+   ],
+   "area_px": 1,
+   "dist_cicatriz_px": 2.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1388.0,
+    535.5
+   ],
+   "area_px": 2,
+   "dist_cicatriz_px": 1.4,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1216.2,
+    878.3
+   ],
+   "area_px": 6,
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1231.0,
+    911.0
+   ],
+   "area_px": 1,
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  },
+  {
+   "centro": [
+    1266.0,
+    932.0
+   ],
+   "area_px": 1,
+   "dist_cicatriz_px": 0.0,
+   "ubicacion": "frente de la cicatriz",
+   "confianza": "alta"
+  }
+ ],
  "descartados": [
   {
    "reason": "pequeño",
@@ -5471,8 +6171,7 @@
   }
  ],
  "avisos": [
-  "logo de Copernicus detectado en ['tc']; se enmascara la esquina",
-  "core/fire.py no existe todavía: capa de focos vacía"
+  "logo de Copernicus detectado en ['tc']; se enmascara la esquina"
  ],
- "tiempo_s": 1.12
+ "tiempo_s": 1.24
 }

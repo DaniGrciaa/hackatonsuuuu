@@ -47,6 +47,7 @@ def bands(scene: dict) -> dict:
         "B8A": pnorm(swir[..., 1].astype(np.float32), valid),
         "B04": pnorm(swir[..., 2].astype(np.float32), valid),
         "valid": valid,
+        "_swir": swir,   # SWIR original sin recortar: los focos saturan B12 y el percentil 99 los aplanaría
     }
     if tc is not None:
         out["B04_tc"] = pnorm(tc[..., 0].astype(np.float32), valid)

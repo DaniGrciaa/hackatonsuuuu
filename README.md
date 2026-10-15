@@ -1,8 +1,8 @@
 # Detección de área quemada en Sentinel-2 (III Malackathon, reto Indra Space)
 
-Parte **C** del equipo: delimita la cicatriz del incendio y su perímetro a partir de imágenes Sentinel-2
-de un solo instante (sin foto de antes), y genera la salida visual y las estadísticas.
-Los focos activos (A), el banco de pruebas (B) y la app (D) van en sus propios módulos.
+Delimita la cicatriz del incendio y su perímetro, y detecta los focos de fuego activo, a partir de imágenes
+Sentinel-2 de un solo instante (sin foto de antes). Genera la salida visual y las estadísticas.
+El banco de pruebas (B) y la app (D) van en sus propios módulos.
 
 ## Instalación
 
@@ -74,6 +74,28 @@ Tarda **entre 0,2 y 2,6 s por escena** en un portátil.
 7. **Perímetro:** contornos con huecos (`cv2.findContours`, `RETR_CCOMP`), simplificados.
 
 Lo que se descarta (manchas pequeñas, sueltas o sin evidencia) va en `resultado.json → descartados`, con área, centroide y motivo, para que el detector de focos pueda revisarlo.
+
+### 5. Focos de fuego activo (`core/fire.py`, nivel avanzado)
+Es la idea de los algoritmos de satélite de detección de incendios (MODIS/VIIRS), adaptada a la SWIR de Copernicus. Un píxel es foco si cumple las tres condiciones:
+1. Está entre el 0,5 % más brillante de la escena en B12 (canal rojo de la SWIR **sin recortar**, porque el fuego lo satura).
+2. Es claramente rojo o naranja: `(R − max(G, B)) / R ≥ 0,3`. Así se descartan el suelo claro, las minas y las nubes, que son pálidos.
+3. Destaca sobre su entorno: supera la media del fondo en más de 3 desviaciones, en una ventana de 61 px. **El fondo se calcula sin los píxeles calientes**; si no, un frente largo se compara consigo mismo y no destaca. Con ese cambio, el recall en Niebla pasó del 3 % al 54 %.
+
+Cada foco se clasifica como "frente de la cicatriz" (confianza alta), "junto al humo" (media) o "aislado" (baja). El JSON separa el **área quemada con actividad** (a menos de 7 px de un foco) de la **quemada sin actividad**.
+
+Medido **por focos** (cada mancha es un objeto, con 5 px de tolerancia):
+
+| Referencia | Focos detectados / de referencia | Precisión | Recall |
+|---|---|---|---|
+| Niebla, Wildfire | 65 / 113 | 0,71 | 0,54 |
+| Extra, Wildfire | 69 / 59 | 0,57 | 0,92 |
+| Práctica 26-07, regla física de QuickFire (B11 + B12 > 1, bandas crudas) | 327 / 769 | 0,76 | 0,32 |
+| Escena sin incendio | 0 píxeles | — | — |
+
+- La Wildfire es una referencia ruidosa: también pinta parcelas pálidas, así que el recall contra ella sale más bajo de lo real.
+- En Niebla se detecta el **foco aislado en los campos** (abajo a la derecha) y se marca con confianza baja.
+- **Se pierde mucho en la escena de práctica:** la mitad de sus focos físicos no son "rojos" en la SWIR, porque el humo sube el canal B04. Se probó a comparar solo B12 con B8A, que el humo no toca: ganaba de 3 a 5 puntos de recall, pero bajaba la precisión y daba píxeles falsos en la escena sin incendio. Se descartó.
+- Hay algún foco en mitad de la cicatriz (posibles rescoldos) que no podemos confirmar.
 
 ## Por qué así: decisiones y medidas
 

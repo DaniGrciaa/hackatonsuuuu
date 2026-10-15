@@ -19,6 +19,15 @@
  "porcentaje_agua": 0.94,
  "porcentaje_humo": 0.0,
  "pixeles_focos": 0,
+ "num_focos": 0,
+ "focos_por_ubicacion": {
+  "frente de la cicatriz": 0,
+  "junto al humo": 0,
+  "aislado": 0
+ },
+ "porcentaje_quemado_con_actividad": 0.0,
+ "porcentaje_quemado_sin_actividad": 0.0,
+ "focos": [],
  "descartados": [
   {
    "reason": "pequeño",
@@ -501,8 +510,6 @@
   "grow_px": 27.0
  },
  "poligonos": [],
- "avisos": [
-  "core/fire.py no existe todavía: capa de focos vacía"
- ],
- "tiempo_s": 0.19
+ "avisos": [],
+ "tiempo_s": 0.21
 }
